@@ -30,5 +30,5 @@ CommentIcon,
 SaveIcon,
 UnsaveIcon,
 DirectIcon,
-EmojiIcon
+EmojiIcon,
 } 

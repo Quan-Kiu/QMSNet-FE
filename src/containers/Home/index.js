@@ -25,7 +25,7 @@ const HomePage = (props) => {
             <Container className="container" gutter={[32,32]}>
                 <Col xl={5} lg={5} md={3} sm={4} xs={4}>
                     <Sidebar className="left-bar">
-                        <Box className={"box-shadow"}>
+                        {/* <Box className={"box-shadow"}>
                             <AvatarCard src="https://imgt.taimienphi.vn/cf/Images/np/2021/11/26/hinh-anh-avatar-dep-2.jpg" content={
                                 <>
                                 <div className="username">
@@ -36,10 +36,9 @@ const HomePage = (props) => {
                             </div>
                                 </>
                             }/>
-                        </Box>
+                        </Box> */}
 
                         <Box className="box-shadow" style={{
-                            margin: '4rem 0',
                             paddingTop: '0',
                             paddingBottom: '0',
                         }}>

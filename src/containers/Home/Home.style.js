@@ -8,6 +8,10 @@ export const HomeWrapper = styledComponents.div`
     }
     .container{
 
+        .left-bar{
+            z-index: 999;
+        }
+
         & > .ant-col:nth-child(3){
             padding: 0!important;
             
@@ -26,11 +30,9 @@ export const HomeWrapper = styledComponents.div`
             .left-bar{
                 
                          position: fixed;
-                         z-index:999;
                          .navbar-item{
                              .ant-col{
                                  padding-left: 16px !important;
-                                 padding-right: 0px !important;
                                 }
                             }
                         }

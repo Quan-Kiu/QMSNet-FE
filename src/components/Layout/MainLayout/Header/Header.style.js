@@ -14,7 +14,6 @@ background: ${(themes)=>themes.theme.bg};
 
 
     .header__content{
-
         &__logo{
             img{
                 width: 10rem;
