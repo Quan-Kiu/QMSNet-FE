@@ -33,15 +33,29 @@ export const NavBarWrapper = styledComponents.div`
        
 
         .navbar__item__content{
+            overflow-y:scroll;
             position: absolute;
-            width: 400px;
+            width: 360px;
             display:none;
             height: 100vh;
             left: 100%;
-            padding: 1rem;
+            padding: 1rem 2rem;
             background: white;
             top: -10rem;
+            opacity: 1;
+            cursor: auto;
+            
             border: 1px solid rgba(0,0,0,0.2);
+
+            &::-webkit-scrollbar {
+                width: 8px;
+              }
+              
+        &::-webkit-scrollbar-thumb {
+          background: rgba(0,0,0,0.2); 
+        
+          border-radius: 10px;
+        }
             .title{
                 font-size: 2.5rem;
                 font-weight: bold;

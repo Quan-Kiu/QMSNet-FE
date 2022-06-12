@@ -5,6 +5,15 @@ export const UploadWrapper = styledComponents(Upload)`
 
 
 .media-preview {
+
+    .ant-progress{
+        position: absolute;
+        top:50%;
+        left:50%;
+        transform: translate(-50%, -50%);
+
+    }
+
     width: 100%;
     height: 100%;
     img,video{
@@ -23,6 +32,9 @@ export const UploadWrapper = styledComponents(Upload)`
     }
 
     &:hover{
+        .ant-progress{
+            display: none;
+        }
         .mark{
 
             display: flex;

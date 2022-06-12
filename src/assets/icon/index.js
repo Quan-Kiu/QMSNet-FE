@@ -13,6 +13,8 @@ import { ReactComponent as SaveIcon } from './save.svg';
 import { ReactComponent as UnsaveIcon } from './unsave.svg';
 import { ReactComponent as DirectIcon } from './direct.svg';
 import { ReactComponent as EmojiIcon } from './emoji.svg';
+import { ReactComponent as CreateMessageIcon } from './createmessage.svg';
+import { ReactComponent as ImageIcon } from './image.svg';
 
 
 export {
@@ -30,5 +32,7 @@ CommentIcon,
 SaveIcon,
 UnsaveIcon,
 DirectIcon,
+CreateMessageIcon,
 EmojiIcon,
+ImageIcon,
 } 

@@ -1,9 +1,6 @@
-export const arrayToString = (data) => {
-    const filesUrl = [];
-    for (let index = 0; index < data.length; index++) {
-        const res = data[index]?.response || data[index];
-        filesUrl.push(res);
-    }
-
-    return filesUrl;
+export const toMediaArr = (data) => {
+    return data.reduce((pre,next)=>([...pre,{
+        public_id: next.response.public_id,
+        url: next.response.url
+    }]),[]);
 };

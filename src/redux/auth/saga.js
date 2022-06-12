@@ -1,34 +1,96 @@
 import { message } from "antd";
-import { call, fork, put, takeEvery } from "redux-saga/effects";
-import { authEndPoint, POST } from "../../constants";
+import { call, fork, put, takeEvery,all } from "redux-saga/effects";
+import { authEndPoint, GET, PATCH, POST } from "../../constants";
 import callAPi from "../../utils/apiRequest";
-import { setItem } from "../../utils/localStorage";
-import { setAppLoading } from "../app/action";
-import { authFailed, loginSuccess, LOGIN_START, setAuthModal } from "./action";
+import { setItem,getItem, removeItem } from "../../utils/localStorage";
+import { authFailed, loginSuccess, LOGIN_START, LOGOUT, logoutSuccess, REFRESH_TOKEN, REGISTER, updateProfileSuccess, UPDATE_PROFILE } from "./action";
 
-function *handleLogin(action){
-    try {
-        const res = yield call(callAPi,authEndPoint.LOGIN,POST,action.payload);
-        if(res && res.success){
-            yield fork(setItem,'token',res.token);
-            yield fork(setItem,'profile',res.user);
-            yield put(loginSuccess(res));
-            yield put(setAuthModal(null));
-            yield put(setAppLoading({
-                path: '/',
-                duration: 3,
-            }));
+
+function *handleLogin(){
+    yield takeEvery(LOGIN_START, function*(action){
+        try {
+            const res = yield call(callAPi,authEndPoint.LOGIN,POST,action.payload);
+            if(res && res.success){
+                yield fork(setItem,'token',res.data.accessToken);
+                yield put(loginSuccess(res.data));
+              
+            }else{
+                throw new Error(res.message)
+            }
+        } catch (error) {
+            yield put(authFailed());
+            message.error(error.message);
         }
-    } catch (error) {
-        yield put(authFailed());
-        message.error(error.message);
-    }
+    })
+    
+} 
+function *handleRegister(){
+    yield takeEvery(REGISTER, function*(action){
+        try {
+            const res = yield call(callAPi,authEndPoint.REGISTER,POST,action.payload);
+            if(res && res.success){
+                message.success(res.message);
+            }else{
+                throw new Error(res.message)
+            }
+        } catch (error) {
+            yield put(authFailed());
+            message.error(error.message);
+        }
+    })
+   
 } 
 
+function* handleRefreshToken(){
+    yield takeEvery(REFRESH_TOKEN,function*(){
+        try {
+            const res = yield call(callAPi,authEndPoint.REFRESH_TOKEN,GET);
+            if(res && res?.success){
+                yield fork(setItem,'token',res.data.accessToken);
+                yield put(loginSuccess(res.data));
+            }
+        } catch (error) {
+            message.error(error.message);
+        }
+    })
+}
+function* handleLogout(){
+    yield takeEvery(LOGOUT,function*(){
+        yield fork(removeItem,'token');
+        yield put(logoutSuccess());
+        yield call(callAPi,authEndPoint.LOGOUT,POST);
+    })
+}
+
+function* handleUpdateProfile(){
+    yield takeEvery(UPDATE_PROFILE, function*({payload}){
+        try {
+            const res = yield call(callAPi,authEndPoint.UPDATE_PROFILE,PATCH,payload);
+            if(res && res.success){
+                yield put(updateProfileSuccess(res.data));
+                message.success(res.message);
+              
+            }else{
+                throw new Error(res.message)
+            }
+        } catch (error) {
+            yield put(authFailed());
+            message.error(error.message);
+        }
+
+
+    })
+}
 
 
 function *rootSaga(){
-    yield takeEvery(LOGIN_START,handleLogin);
+    yield all([
+        fork(handleLogin),
+        fork(handleRefreshToken),
+        fork(handleUpdateProfile),
+        fork(handleLogout),
+        fork(handleRegister)
+    ]);
 }
 
 export default rootSaga;

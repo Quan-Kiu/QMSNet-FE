@@ -1,10 +1,12 @@
+import { Col, Row } from 'antd'
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { NavBarWrapper } from './NavBar.style'
-import { Col, Input, Row } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { ContactIcon, HomeIcon, MessageIcon, NotifyIcon, SearchIcon, SettingIcon } from '../../../../assets/icon'
-import {SearchOutlined} from '@ant-design/icons';
+import Conversation from './Conversation'
+import { NavBarWrapper } from './NavBar.style'
+import Notifies from './Notifies'
+import Search from './Search'
+import ConversationPopup from '../../../Common/ConversationPopup';
 
 const NavBarItem = props =>{
     const navigate =  useNavigate();
@@ -26,8 +28,7 @@ const NavBarItem = props =>{
                 {props.label}
             </Col>
             <div className="navbar__item__content">
-                <div className="title">Tìm kiếm</div>
-                <Input size="large" prefix={<SearchOutlined />} placeholder="Tìm kiếm" ></Input>
+                {props?.popup}
             </div>
         </Row>
     )
@@ -43,19 +44,20 @@ const navbars = [
         label: 'Tìm kiếm',
         key: 'search',
         icon: <SearchIcon/>,
-        popup: true,
+        popup: <Search/>,
+        
     },
     {
         label: 'Thông báo',
         key: 'notify',
         icon: <NotifyIcon/>,
-        popup: true,
+        popup: <Notifies/>,
     },
     {
         label: 'Tin nhắn',
         key: 'message',
         icon: <MessageIcon/>,
-        popup: true,
+        popup: <Conversation/>
     },
     {
         label: 'Bạn bè',
@@ -72,9 +74,12 @@ const navbars = [
 const NavBar = props => {
     const [activeKey,setActiveKey] = useState(navbars[0].label);
   return (
+          <>
       <NavBarWrapper>
           {navbars.map((nav)=><NavBarItem popup={nav?.popup} active={activeKey===nav.label} key={props.key} label={nav.label} icon={nav.icon} setActiveKey={setActiveKey} />)}
       </NavBarWrapper>
+          </>
+
   )
 }
 

@@ -4,10 +4,17 @@ import { AuthWrapper } from '../Auth.style'
 import { MailOutlined,LockOutlined,FacebookOutlined} from '@ant-design/icons'
 import Box from '../../../components/Common/Box'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { loginStart } from '../../../redux/auth/action'
 
 const SignIn = () => {
+const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const {loading} = useSelector((state)=>state.auth);
 
-    const [form] = Form.useForm()
+  const handleOnFinishForm = (values)=>{
+    dispatch(loginStart(values))
+  }
 
   return (
     <AuthWrapper>
@@ -18,7 +25,7 @@ const SignIn = () => {
         <Box width="400px" className="">
             <img className="main__box__logo" src="https://www.instagram.com/static/images/web/logged_out_wordmark.png/7a252de00b20.png" alt="" />
             
-            <Form form={form} name="horizontal_login" layout="horizontal" >
+            <Form form={form} onFinish={handleOnFinishForm} name="horizontal_login" layout="horizontal" >
       <Form.Item
         name="email"
         rules={[{type:"email", required: true, message: 'Vui lòng nhập Email!' }]}
@@ -38,6 +45,7 @@ const SignIn = () => {
       <Form.Item shouldUpdate>
         {() => (
           <Button
+            loading={loading}
             type="primary"
             htmlType="submit"
             disabled={

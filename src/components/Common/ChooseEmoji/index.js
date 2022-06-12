@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { EmojiIcon } from '../../../assets/icon';
 import { ChooseEmojiWrapper } from './ChooseEmoji.style';
 
-const ChooseEmoji = ({ setContent, content }) => {
+const ChooseEmoji = ({ setContent,id }) => {
     const emojiRef = useRef();
     const reactions = [
         '❤️',
@@ -32,12 +32,12 @@ const ChooseEmoji = ({ setContent, content }) => {
     ];
 
     return (
-        <ChooseEmojiWrapper>
+        <ChooseEmojiWrapper attr-id={id}>
             
                     <EmojiIcon onClick={() => emojiRef.current.focus()}/>
                    
-                    <input ref={emojiRef} autoFocus={true}  type="text" id="emoji"/>
-                    <label htmlFor="emoji"
+                    <input ref={emojiRef} className={'emoji'}  type="text" id={id}/>
+                    <label htmlFor={id}
                         className="icons__list"
                     >
                         <p>Chọn cảm xúc</p>
@@ -46,10 +46,10 @@ const ChooseEmoji = ({ setContent, content }) => {
                         }}  className="reactions">
                             {reactions.map((icon) => (
                                 <span
-                               
                                 key={icon}
                                 onMouseDown={(e) =>{
                                     e.preventDefault();
+                                    e.stopPropagation();
                                     setContent(
                                         icon
                                     )

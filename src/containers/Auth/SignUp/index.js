@@ -4,9 +4,15 @@ import Box from '../../../components/Common/Box'
 import { AuthWrapper } from '../Auth.style'
 import {FacebookOutlined} from '@ant-design/icons'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { register } from '../../../redux/auth/action'
 
 const SignUp = () => {
     const [form] = Form.useForm(); 
+    const dispatch = useDispatch();
+    const onSubmit = (values)=>{
+        dispatch(register(values))
+    }
   return (
     <AuthWrapper>
       <div className="pseudo"></div>
@@ -25,7 +31,7 @@ const SignUp = () => {
             <FacebookOutlined /> Đăng nhập bằng Facebook
         </div>
         </Button>
-        <Form form={form} name="horizontal_login" layout="horizontal" >
+        <Form form={form} onFinish={onSubmit} name="horizontal_login" layout="horizontal" >
   <Form.Item
     name="email"
     rules={[{type:"email", required: true, message: 'Please input your email!' }]}

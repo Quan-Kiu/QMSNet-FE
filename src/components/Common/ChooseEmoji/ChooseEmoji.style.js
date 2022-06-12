@@ -1,6 +1,10 @@
 import styledComponents from "styled-components";
 
+import theme from "../../../configs/theme"
+
 export const ChooseEmojiWrapper = styledComponents.div`
+
+
 position: relative;
 z-index: 9999999;
 .icons__list{
@@ -17,14 +21,19 @@ z-index: 9999999;
     }
 }
 
+
+
 label{
     display:none;
 }
-#emoji:focus + label{
+
+.emoji:focus + label{
     display: block;
 }
 
-#emoji{
+
+
+.emoji{
     width: 0;
     height: 0;
     outline: none;

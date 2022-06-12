@@ -1,14 +1,16 @@
 import axios from 'axios';
+import { getItem } from '../utils/localStorage';
 
 const axiosClient = axios.create({
     baseURL: 'http://localhost:5000/api',
     headers: {
         'content-type': 'application/json',
     },
+    withCredentials: true
 });
 
 axiosClient.interceptors.request.use(async (config) => {
-    const token = localStorage.getItem('token');
+    const token = getItem('token');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }

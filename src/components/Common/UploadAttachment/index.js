@@ -1,11 +1,11 @@
-import { Col, Image, Modal, Progress, Row, Upload } from 'antd';
+import { Col, Image, Progress, Row } from 'antd';
 // import { imageUrl } from '../../constants/ApiUrl';
 // import { arrayToString } from '../../util/handleImage';
+import { CloseOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import axios from 'axios';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { UploadWrapper } from './UploadAttachment.style';
-import {EyeOutlined,DeleteOutlined,CloseOutlined} from '@ant-design/icons';
-import { arrayToString } from '../../../utils/image_utils';
+import { toMediaArr } from '../../../utils/image_utils';
 
 const UploadAttachment = ({ onImageChange, maxCount }) => {
 
@@ -13,7 +13,7 @@ const UploadAttachment = ({ onImageChange, maxCount }) => {
     const [preview, setPreview] = useState(false);
     const [videoPreview, setVideoPreview] = useState(false);
 
-    const onChange = ({ fileList: newFileList }) => {
+    const onChange = ({ fileList: newFileList,file }) => {
         if (newFileList.length === 0) {
             onImageChange(null);
             setFileList(newFileList);
@@ -21,9 +21,9 @@ const UploadAttachment = ({ onImageChange, maxCount }) => {
            
                 setFileList(newFileList);
                 
-                if (newFileList[newFileList.length - 1]?.status === 'done') {
-                    const filesUrl = arrayToString(newFileList);
-                    onImageChange(filesUrl);
+                if (file?.status === 'done') {
+                    const final = toMediaArr(newFileList);
+                    onImageChange(final);
                 }
             
         }
@@ -93,11 +93,11 @@ const UploadAttachment = ({ onImageChange, maxCount }) => {
                         <div className="mark">
                             <Row gutter={12}>
                                 <Col><EyeOutlined onClick={()=>{
-                                    console.log(file.type.match('image.*'))
                                     file.type.match('image.*')? setPreview(file?.response?.url):setVideoPreview(file?.response?.url)}}/></Col>
                                 <Col><DeleteOutlined onClick={actions.remove} /></Col>
                             </Row>
                         </div>
+                        <Progress type="circle" status={file.status==="error"?"exception":file.status==="done"?"success":"active"}  width={60} percent={file.percent.toFixed(2)} />
                     </div> 
                 }}
                 fileList={fileList}

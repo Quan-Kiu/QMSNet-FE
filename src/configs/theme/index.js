@@ -23,6 +23,7 @@ const theme = {
     dangerClr: '#dc3545',
     lightClr: '#f8f9fa',
     headingTextClr: '#0D0C40',
+    emoji_message: 'emoji-message'
 };
 
 export default theme;

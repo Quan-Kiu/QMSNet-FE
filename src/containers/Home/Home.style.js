@@ -9,14 +9,25 @@ export const HomeWrapper = styledComponents.div`
     .container{
 
         .left-bar{
-            z-index: 999;
+            z-index: 1000;
         }
+        
 
         & > .ant-col:nth-child(3){
             padding: 0!important;
             
         }
         & .ant-col:nth-child(1){
+
+            .left-bar{
+                
+                position: fixed;
+                .navbar-item{
+                    .ant-col{
+                        padding-left: 16px !important;
+                       }
+                   }
+               }
             
             ${useResponsive`${lg};
             .box-shadow{
@@ -27,15 +38,7 @@ export const HomeWrapper = styledComponents.div`
                 }
             }
 
-            .left-bar{
-                
-                         position: fixed;
-                         .navbar-item{
-                             .ant-col{
-                                 padding-left: 16px !important;
-                                }
-                            }
-                        }
+         
                         
                     }
                         `}
@@ -63,6 +66,7 @@ export const HomeWrapper = styledComponents.div`
 `;
 
 export const MainContentWrapper = styledComponents.div`
+margin-top: 5rem;
 .new-post{
     &__content{
         input{

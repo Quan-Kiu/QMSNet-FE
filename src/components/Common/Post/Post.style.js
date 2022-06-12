@@ -23,6 +23,22 @@ export const PostWrapper = styledComponents.div`
         font-size:1.6rem;
     }
 
+    .text-content{
+        white-space: pre-line;
+        font-size: 2rem;
+        &.with-style{
+            text-align: center;
+            word-break: break-all;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height:400px;
+            padding: 3rem;
+        }
+
+    }
+
 
     .post__comment{
         &__stats{
@@ -33,6 +49,25 @@ export const PostWrapper = styledComponents.div`
             margin: .5rem 0;
         }
     }
-
+    .media-content{
+        position: relative;
+        
+        .slick-track{
+            display: flex !important;
+            align-items:center;
+        }
+        
+        .actions{
+            position: absolute;
+            top:50%;
+            transform: translateY(-50%); 
+            &.next{
+                right: 10px;
+            }
+            &.prev{
+                left: 10px;
+            }
+        }
+    }
   
 `;

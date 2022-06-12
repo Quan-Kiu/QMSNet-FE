@@ -10,7 +10,7 @@ left: 0;
 right: 0;
 z-index: 999;
 background: ${(themes)=>themes.theme.bg};
-
+top: 0;
 
 
     .header__content{

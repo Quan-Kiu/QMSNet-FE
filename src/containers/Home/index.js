@@ -11,49 +11,34 @@ import Contacts from './Contacts';
 import { HomeWrapper, MainContentWrapper } from './Home.style';
 import Requests from './Requests';
 import { posts } from '../../data/post';
+import { useDispatch, useSelector } from 'react-redux';
+import { PostSelector } from '../../redux/post/reducer';
+import { toggleModal } from '../../redux/post/action';
 
 
 
 const HomePage = (props) => {
     const [windowSize] = UseWindow()
+    const {data} = useSelector(PostSelector); 
+    const dispatch = useDispatch();
 
 
    
     return (
         <HomeWrapper>
-            
-            <Container className="container" gutter={[32,32]}>
-                <Col xl={5} lg={5} md={3} sm={4} xs={4}>
-                    <Sidebar className="left-bar">
-                        {/* <Box className={"box-shadow"}>
-                            <AvatarCard src="https://imgt.taimienphi.vn/cf/Images/np/2021/11/26/hinh-anh-avatar-dep-2.jpg" content={
-                                <>
-                                <div className="username">
-                                Alexandra Borke
-                            </div>    
-                            <div className="id">
-                                @alexsunshine
-                            </div>
-                                </>
-                            }/>
-                        </Box> */}
-
-                        <Box className="box-shadow" style={{
-                            paddingTop: '0',
-                            paddingBottom: '0',
-                        }}>
-                            <NavBar/>
-                        </Box>
-                    </Sidebar>
-                </Col>
-                <Col xl={12} lg={12} md={20} sm={20}   xs={20} >
+            <Container className="container" >
+                <Col xl={16} lg={16} md={24} sm={24} xs={24} style={{
+                    paddingRight: '5rem',
+                }}>
                 <MainContentWrapper>
-                        <Box className="new-post box-shadow">
+                        <Box className="new-post box-shadow" >
                             <Row align="middle">
                                 <Col>
                                     <AvatarCard src="https://imgt.taimienphi.vn/cf/Images/np/2021/11/26/hinh-anh-avatar-dep-2.jpg" />
                                 </Col >
-                                <Col className="new-post__content" flex={1}>
+                                <Col onClick={()=>{
+                                        dispatch(toggleModal())
+                                    }} className="new-post__content" flex={1}>
                                     <Input  size="large" placeholder="Bạn đang nghĩ gì?"></Input>
                                 </Col>
                             </Row>
@@ -63,16 +48,11 @@ const HomePage = (props) => {
                         <div className="posts" style={{
                             marginTop: '2rem'
                         }}>
-                            
-                           <Post post={posts[0]}/>
-                           <Post post={posts[0]}/>
-                           <Post post={posts[0]}/>
-                           <Post post={posts[0]}/>
-                           <Post post={posts[0]}/>
+                            {data?.posts.map((post)=><Post post={post}/>)}
                         </div>
                 </MainContentWrapper>
                 </Col>
-                <Col xl={7} lg={7} md={0}>
+                <Col xl={8} lg={8} md={0}>
                 <Sidebar style={
                     {
                         height: windowSize.height-100

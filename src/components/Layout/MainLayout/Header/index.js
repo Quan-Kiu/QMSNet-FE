@@ -1,8 +1,13 @@
-import { SearchOutlined } from '@ant-design/icons'
-import { Avatar, Button, Col, Input, Modal, Radio, Row, Select,Image, Form } from 'antd'
+import { DownOutlined, ProfileOutlined, SearchOutlined } from '@ant-design/icons'
+import { Avatar, Button, Col, Input, Modal, Radio, Row, Select,Image, Form, Dropdown, Space, Menu } from 'antd'
 import React, { useCallback, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { CreateIcon } from '../../../../assets/icon'
+import { CreateIcon, ProfileIcon } from '../../../../assets/icon'
+import { logout } from '../../../../redux/auth/action'
+import { authSelector } from '../../../../redux/auth/reducer'
+import { addPost, toggleModal } from '../../../../redux/post/action'
+import { PostSelector } from '../../../../redux/post/reducer'
 import AvatarCard from '../../../Common/AvatarCard'
 import ChooseEmoji from '../../../Common/ChooseEmoji'
 import UploadAttachment from '../../../Common/UploadAttachment'
@@ -25,43 +30,76 @@ const bgs=[{
 ]
 
 const Header = props => {
-  const [isNewPostModalShow,setIsNewPostModalShow]=useState(false);
   const textInputRef = useRef();
+  const {user} = useSelector(authSelector);
+  const {showModal} = useSelector(PostSelector);
   const textAreaInputRef = useRef();
-  const navigate = useNavigate();
   const [currentBG,setCurrentBG] = useState({ background: '#fff',
   color: 'black',});
   const [form]= Form.useForm();
+  const dispatch = useDispatch();
 
-  const handleShowModal = ()=>{
-    setIsNewPostModalShow(true)
+  const handleModal = ()=>{
+    dispatch(toggleModal())
   }
 
-  const handleCancelModal = ()=>{
-    setIsNewPostModalShow(false)
-  }
 
   const onImageChange = useCallback((files)=>{
     form.setFieldsValue({
-      files
+      media: files
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
+
+  const handleSubmit = ()=>{
+      const formData = form.getFieldValue();
+      formData.status = formData?.status|| 1;
+      formData.styles = currentBG;
+      formData.content = textAreaInputRef.current?.value;
+      dispatch(addPost(formData))
+
+  }
+
+  const menu = (
+    <Menu
+      items={[
+        {
+          icon: <ProfileIcon/>, 
+          label: <Link to={'/profile'}>Trang cá nhân</Link>,
+          key: '0',
+        },
+        {
+          type: 'divider',
+        },
+        {
+          icon: <i className='close-icon'></i>,
+          label: <Button onClick={()=>{
+            dispatch(logout())
+          }} type="text">Đăng xuất</Button>  ,
+          key: '3',
+        },
+      ]}
+    />
+  );
   
 
   return (
     <HeaderWrapper>
     
-      <Modal wrapClassName="new-post-modal"  title="Tạo bài viết"  onOk={handleShowModal} onCancel={handleCancelModal} visible={isNewPostModalShow} width={500} footer={<Button size="large" className="q-button" onClick={()=>{
-          console.log(form.getFieldValue());
-      }} type="primary">Đăng</Button>}>
+      <Modal afterClose={()=>{
+        form.resetFields()
+      }} destroyOnClose={true} wrapClassName="new-post-modal"  title="Tạo bài viết"  onOk={handleModal} onCancel={handleModal} visible={showModal} width={500} footer={<Button size="large" className="q-button" onClick={handleSubmit} type="primary">Đăng</Button>}>
           <AvatarCard src="" content={<>
             <div className="username">
-              QuanKiu
+              {user.username}
             </div>
-            <Select className="scope" size="small" defaultValue={"1"}>
-              <Select.Option value="1">Công khai</Select.Option>
-              <Select.Option value="2">Riêng tư</Select.Option>
+            <Select className="scope" defaultValue={1} onChange={(value)=>{
+              form.setFieldsValue({
+                status: value,
+              })
+            }} size="small" >
+              <Select.Option value={1}>Công khai</Select.Option>
+              <Select.Option value={2}>Riêng tư</Select.Option>
             </Select>
           </>}>
           <div className="post__content">
@@ -78,13 +116,13 @@ const Header = props => {
 
           }} onChange={(e)=>{
             if(textInputRef.current.offsetHeight<=200){
-              textInputRef.current.innerText = e.target.value;
+              textInputRef.current.innerText = e.target?.value;
             }
           }} id="post-content" className="hide-input"></textarea>
 
           <label style={currentBG} htmlFor="post-content">
             <p ref={textInputRef}>
-             {textAreaInputRef.current.value || 'Bạn đang nghĩ gì thế?'}
+             {textAreaInputRef.current?.value || 'Bạn đang nghĩ gì thế?'}
             </p>
 
           </label>
@@ -92,11 +130,15 @@ const Header = props => {
   resize: 'unset'
 }} ref={textAreaInputRef} className="content" rows={5}  placeholder='Bạn đang nghĩ gì thế?'></textarea>}
           </div>
-          <UploadAttachment onImageChange={onImageChange} maxCount={4}/>
+          {currentBG.background ==='#fff' &&
+          <UploadAttachment onImageChange={onImageChange} maxCount={4}/>}
           <Row justify="space-between">
               
               <Col>
-              <Radio.Group defaultValue={currentBG} onChange={(e)=>{
+              <Radio.Group defaultValue={currentBG}  onChange={(e)=>{
+                form.setFieldsValue({
+                  styles:e.target.value
+                })
                 setCurrentBG(e.target.value);
 
               }} >
@@ -139,18 +181,21 @@ const Header = props => {
               </Col>
 
               <Col className="header__content__func__create-post">
-                  <Button onClick={handleShowModal} size="large" type="primary" >
+                  <Button onClick={handleModal} size="large" type="primary" >
                   <CreateIcon  />
                     Tạo bài viết
                   </Button>
 
               </Col >
               <Col className="header__content__func__profile">
-                  <Avatar size="large" onClick={()=>{
-                    navigate('/profile');
+              <Dropdown overlay={menu} trigger={['hover']}>
+              <Avatar size="large" onClick={(e)=>{
+                e.preventDefault();
                   }} style={{
                     cursor: 'pointer'
-                  }} src="https://instagram.fsgn8-2.fna.fbcdn.net/v/t51.2885-19/259676907_471643571156945_1331133705939004080_n.jpg?stp=dst-jpg_s150x150&_nc_ht=instagram.fsgn8-2.fna.fbcdn.net&_nc_cat=105&_nc_ohc=92EGNjWV2OQAX-FjSGG&edm=ABfd0MgBAAAA&ccb=7-5&oh=00_AT-dKN1l5cj6JCXBUxmtg_leZ4tv7uWBjKOsLBKCrYuWUg&oe=629A7B7B&_nc_sid=7bff83" />
+                  }} src={user?.avatar?.url} />
+  </Dropdown>
+                 
               </Col>
 
             </Row>

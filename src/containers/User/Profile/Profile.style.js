@@ -2,8 +2,7 @@ import styledComponents from "styled-components";
 
 export const ProfileWrapper = styledComponents.div`
 margin: 0 auto;
-width: 100%;
-padding: 0 10rem;
+width: 90%;
 margin-top: 10rem;
 
 .header-profile{
@@ -19,7 +18,7 @@ margin-top: 10rem;
         font-weight: 700;
         letter-spacing: .2rem;
     }
-    .email{
+    .fullname{
         opacity: .6;
         font-weight: 500;
         font-size: 1.6rem;
@@ -36,7 +35,7 @@ margin-top: 10rem;
 
         .q-button{
             padding: 1rem 2rem;
-            width: 150px;
+            min-width: 150px;
         }
     }
 }
@@ -48,6 +47,23 @@ margin-top: 10rem;
             margin: 1rem 0;
             margin-bottom: 2rem;
             text-align: center;
+        }
+    }
+    
+    .ant-space{
+        min-height: 35px;
+        align-items: start;
+        width: 100%;
+        img:not(img[alt="works"]):not(img[alt="phone"]):not(img[alt="mail"]):not(img[alt="dob"]){
+            opacity:.5;
+        }
+        svg{
+            opacity:.5;
+
+        }
+        img,svg{
+            width: 25px;
+            height: 25px;
         }
     }
 }

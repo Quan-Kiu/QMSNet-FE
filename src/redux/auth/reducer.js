@@ -1,9 +1,12 @@
-import { AUTH_FAILED, LOGIN_START, LOGIN_SUCCESS, SET_AUTH_MODAL } from "./action";
+import appActions, { AUTH_FAILED, LOGIN_START, LOGIN_SUCCESS, LOGOUT_SUCCESS, UPDATE_PROFILE, UPDATE_PROFILE_SUCCESS } from "./action";
 
 const initialState = {
     user: null,
     loading: false,
-    authModal: null,
+    isLogin: false,
+    status: {
+        success: false,
+    }
 }
 
 const authReducer = (state= initialState,action)=>{
@@ -19,17 +22,38 @@ const authReducer = (state= initialState,action)=>{
                 user: action.payload.user,
                 token: action.payload.token,
                 loading: false,
+                isLogin: true,
+            }
+        case LOGOUT_SUCCESS:
+            return {
+                ...state,
+                user: null,
+                token: null,
+                loading: false,
+                isLogin: false,
             }
         case AUTH_FAILED:
             return {
                     ...state,
                     loading: false
                 }
-        case SET_AUTH_MODAL:
+        case UPDATE_PROFILE:
             return {
-                ...state,
-                authModal: action.payload
-            }
+                    ...state,
+                    loading: true
+                }
+                
+        case UPDATE_PROFILE_SUCCESS:
+            return {
+                    ...state,
+                    user: action.payload,
+                    status: {
+                        success: true,
+                    },
+                    loading: false
+                }
+                    
+       
         default:
             return state;
     }
