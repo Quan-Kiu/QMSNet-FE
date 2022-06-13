@@ -49,25 +49,6 @@ export const PostWrapper = styledComponents.div`
             margin: .5rem 0;
         }
     }
-    .media-content{
-        position: relative;
-        
-        .slick-track{
-            display: flex !important;
-            align-items:center;
-        }
-        
-        .actions{
-            position: absolute;
-            top:50%;
-            transform: translateY(-50%); 
-            &.next{
-                right: 10px;
-            }
-            &.prev{
-                left: 10px;
-            }
-        }
-    }
+   
   
 `;

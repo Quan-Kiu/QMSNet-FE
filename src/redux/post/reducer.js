@@ -1,4 +1,4 @@
-import { GET_POSTS_START, GET_POSTS_SUCCESS, POST_FAILED, SET_POSTS, TOGGLE_MODAL } from "./action";
+import { GET_POSTS_START, GET_POSTS_SUCCESS, GET_POST_START, GET_POST_SUCCESS, POST_FAILED, SET_POSTS, TOGGLE_MODAL } from "./action";
 
 const initialState = {
     data: null,
@@ -6,7 +6,9 @@ const initialState = {
     status: {
         success: false,
     },
+    postDetailLoading: false,
     loading: false,
+    postDetail: null,
 }
 
 const PostReducer = (state=initialState,action) =>{
@@ -29,6 +31,17 @@ const PostReducer = (state=initialState,action) =>{
                 ...state,
                 loading: false,
                 data: action.payload,
+            }
+        case GET_POST_START:
+            return {
+                ...state,
+                postDetailLoading: true,
+            }
+        case GET_POST_SUCCESS:
+            return {
+                ...state,
+                postDetailLoading: false,
+                postDetail: action.payload,
             }
 
         case POST_FAILED:

@@ -9,12 +9,24 @@ export const POST_ACTION = 'POST_ACTION';
 export const COMMENT = 'COMMENT';
 
 export const SET_POSTS = 'SET_POSTS';
+export const GET_POST_START = 'GET_POST_START';
+export const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
+
+
 
 
 
 
 export const getPosts = (payload)=>({
     type: GET_POSTS_START,
+    payload,
+});
+export const getPost = (payload)=>({
+    type: GET_POST_START,
+    payload,
+});
+export const getPostSuccess = (payload)=>({
+    type: GET_POST_SUCCESS,
     payload,
 });
 export const setPosts = (payload)=>({

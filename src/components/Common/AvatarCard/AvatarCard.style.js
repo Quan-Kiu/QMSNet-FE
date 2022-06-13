@@ -3,6 +3,7 @@ import styledComponents from "styled-components";
 
 export const AvatarCardWrapper = styledComponents(Row)`
 
+
 .ant-avatar{
     border-radius:10px;
     width: 40px;

@@ -2,7 +2,7 @@ import { message } from "antd";
 import { all, call, fork, put, takeEvery,select,takeLatest } from 'redux-saga/effects';
 import { GET, PATCH, POST, postEndpoint } from "../../constants";
 import callAPi from "../../utils/apiRequest";
-import { ADD_POST, COMMENT, getPosts, getPostsSuccess, GET_POSTS_START, postFailed, POST_ACTION, setPosts, toggleModal } from "./action";
+import { ADD_POST, COMMENT, getPosts, getPostsSuccess, getPostSuccess, GET_POSTS_START, GET_POST_START, postFailed, POST_ACTION, setPosts, toggleModal } from "./action";
 import { PostSelector } from "./reducer";
 
 
@@ -12,6 +12,23 @@ function *handleGetPosts(){
             const res = yield call(callAPi,postEndpoint.POSTS,GET);
             if(res && res.success){
                 yield put(getPostsSuccess(res.data));
+              
+            }else{
+                throw new Error(res.message)
+            }
+        } catch (error) {
+            yield put(postFailed());
+            message.error(error.message);
+        }
+    })
+   
+} 
+function *handleGetPost(){
+    yield takeEvery(GET_POST_START, function*({payload}){
+        try {
+            const res = yield call(callAPi,`${postEndpoint.POSTS}${payload}`,GET);
+            if(res && res.success){
+                yield put(getPostSuccess(res.data));
               
             }else{
                 throw new Error(res.message)
@@ -101,7 +118,8 @@ export default function* rootSaga(){
         fork(handleGetPosts),
         fork(handleAddPost),
         fork(handlePostAction),
-        fork(handleComment)
+        fork(handleComment),
+        fork(handleGetPost)
     ])
 }
 

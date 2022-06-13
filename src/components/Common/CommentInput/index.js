@@ -26,7 +26,7 @@ const CommentInput = props => {
   }
 
   return (
-      <CommentInputWrapper>
+      <CommentInputWrapper className="comment-input">
         <Form form={form} initialValues={{
           postId: props.post._id
         }} onFinish={handleOnSubmit}>

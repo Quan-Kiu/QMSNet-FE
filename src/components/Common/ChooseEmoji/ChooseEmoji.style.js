@@ -6,7 +6,7 @@ export const ChooseEmojiWrapper = styledComponents.div`
 
 
 position: relative;
-z-index: 9999999;
+z-index: 99999;
 .icons__list{
     background: white;
     padding: 1rem 2rem;

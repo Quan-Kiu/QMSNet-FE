@@ -1,25 +1,34 @@
-import { LeftCircleFilled, MoreOutlined, RightCircleFilled } from '@ant-design/icons'
-import { Button, Carousel, Col, Row } from 'antd'
-import React, { useRef } from 'react'
+import { MoreOutlined } from '@ant-design/icons'
+import { Col, Modal, Row } from 'antd'
+import PropTypes from 'prop-types'
+import { useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { CommentIcon, DirectIcon, LikeIcon, SaveIcon, UnlikeIcon } from '../../../assets/icon'
-import { comments } from '../../../data/comment'
+import PostModal from '../../../containers/Post/PostModal'
+import { postAction } from '../../../redux/post/action'
+import { timeAgo } from '../../../utils/time_utils'
 import AvatarCard from '../AvatarCard'
 import Box from '../Box'
+import Carousel from '../Carousel'
 import Comment from '../Comment'
 import CommentInput from '../CommentInput'
 import { PostWrapper } from './Post.style'
-import PropTypes from 'prop-types'
-import { timeAgo } from '../../../utils/time_utils'
-import {useDispatch, useSelector} from 'react-redux'
-import { postAction } from '../../../redux/post/action'
 
 
 const Post = ({post}) => {
     const carouselRef = useRef();
+    const navigate = useNavigate();
     const {user} = useSelector((state)=>state.auth);
-    const isLiked = post.likes.includes(user._id);
+    const [isLiked,setIsLiked]= useState(!!post.likes.includes(user._id))
     const dispatch = useDispatch();
-  return (
+    const [isDetailPostShow,setIsDetailPostShow]= useState(null);
+  return (<>
+  <Modal width={'90%'} bodyStyle={{
+    padding: '0 10px'
+  }} centered={true} closable={false} onCancel={()=>{setIsDetailPostShow(null)}} destroyOnClose={true} className='post-modal' visible={isDetailPostShow} footer={null} title={null}>
+       <PostModal id={isDetailPostShow}/>
+  </Modal>
       <PostWrapper>
 
     <Box className={'post__container'}>
@@ -43,31 +52,20 @@ const Post = ({post}) => {
                                     }} className={`text-content ${post?.styles?.background!=="#fff" && 'with-style'}`} >
                                     {post?.content}
                                     </div>
-                                    {post?.media?.length>0 && <div className="media-content">
-                                        <Carousel ref={carouselRef}>
-                                            {post?.media.map((media)=> media?.url.match('/image/')? <img src={media?.url} alt={media?.url} />:<video controls  >
-                                                        <source src={media?.url} type="video/mp4"/>
-                                                    </video>)}
-                                        </Carousel>
-                                        {post.media.length > 1 && <> <Button className="actions next" type="text" onClick={()=>{
-                                        carouselRef.current.next();
-                                        }}><RightCircleFilled /></Button>
-                                        <Button className="actions prev" type="text" onClick={()=>{
-                                        carouselRef.current.prev();
-                                        }}><LeftCircleFilled /></Button></>}
-                                       
-                                    </div>}
+                                    <Carousel media={post?.media}/>
                                     <Row justify="space-between" align="middle"className="actions">
                                         <Col >
                                             <Row gutter={[12,12]}>
                                                 <Col>
 
                                                 {isLiked ? <UnlikeIcon className="jello-horizontal" onClick={()=>{
+                                                    setIsLiked(!isLiked);
                                                     dispatch(postAction({
                                                         type:'unlike',
                                                         id: post._id
                                                     }))
                                                 }}/>: <LikeIcon  onClick={()=>{
+                                                    setIsLiked(!isLiked);
                                                         dispatch(postAction({
                                                             type:'like',
                                                             id: post._id
@@ -76,7 +74,9 @@ const Post = ({post}) => {
                                                     
                                                 </Col>
                                                 <Col>
-                                                    <CommentIcon/>
+                                                    <CommentIcon onClick={()=>{
+                                                        setIsDetailPostShow(post._id)
+                                                    }}/>
                                                 </Col>
                                                 <Col>
                                                     <DirectIcon/>
@@ -112,6 +112,7 @@ const Post = ({post}) => {
                                 </AvatarCard>
                             </Box>
       </PostWrapper>
+</>
   )
 }
 

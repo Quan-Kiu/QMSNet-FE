@@ -1,14 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AvatarCard from '../AvatarCard'
 import { CommentWrapper } from './Comment.style'
 import PropTypes from 'prop-types'
 import { Row,Col } from 'antd'
-import { LikeIcon } from '../../../assets/icon'
+import { LikeIcon, UnlikeIcon } from '../../../assets/icon'
+import { useDispatch, useSelector } from 'react-redux'
+import { comment } from '../../../redux/post/action'
+import { PATCH } from '../../../constants'
+import { timeAgo } from '../../../utils/time_utils'
 
 const Comment = (props) => {
+
+
+
+const {user} = useSelector((state)=>state.auth)
+const dispatch = useDispatch();
+const [isLiked,setIsLiked] = useState(!!props?.comment?.likes?.includes(user._id)) ;
+
+const handleCommentAction = ()=>{
+    setIsLiked(!isLiked);
+    dispatch(comment({
+       link: `${props?.comment._id}/${isLiked?'unlike':'like'}`,method:PATCH
+    }))
+}
   return (
       <CommentWrapper>
-          <AvatarCard avatarHidden={true} src='' content={<Row wrap={false}>
+          <AvatarCard avatarHidden={props.simple} src=''  content={<Row gutter={10} wrap={false}>
               <Col flex={1}>
             <span className="actor">
                 {props?.comment?.user?.username}
@@ -16,9 +33,20 @@ const Comment = (props) => {
             <span className="content">
                 {props?.comment?.content}
             </span>
+            {!props.simple && <Row gutter={10}>
+                <Col className="createdAt">
+                    {timeAgo(props?.comment?.createdAt)}
+                </Col>
+                <Col className="likes">
+                    {props?.comment?.likes.length} lượt thích
+                </Col>
+                <Col className="reply">
+                    Trả lời
+                </Col>
+            </Row>}
               </Col>
               <Col>
-                    <LikeIcon/>
+                   {isLiked ? <UnlikeIcon onClick={handleCommentAction}/> : <LikeIcon onClick={handleCommentAction}/>}
               </Col>
           </Row>}></AvatarCard>
       </CommentWrapper>
@@ -27,6 +55,10 @@ const Comment = (props) => {
 
 Comment.propTypes = {
     comment: PropTypes.object,
+}
+
+Comment.defaultProps = {
+    simple:true
 }
 
 
