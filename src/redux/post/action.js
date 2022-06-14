@@ -9,6 +9,7 @@ export const POST_ACTION = 'POST_ACTION';
 export const COMMENT = 'COMMENT';
 
 export const SET_POSTS = 'SET_POSTS';
+export const SET_POST_DETAIL = 'SET_POST_DETAIL';
 export const GET_POST_START = 'GET_POST_START';
 export const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
 
@@ -31,6 +32,10 @@ export const getPostSuccess = (payload)=>({
 });
 export const setPosts = (payload)=>({
     type: SET_POSTS,
+    payload,
+});
+export const setPostDetail = (payload)=>({
+    type: SET_POST_DETAIL,
     payload,
 });
 

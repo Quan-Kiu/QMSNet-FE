@@ -1,12 +1,11 @@
 import styledComponents from "styled-components";
 
-import theme from "../../../configs/theme"
 
 export const ChooseEmojiWrapper = styledComponents.div`
 
 
 position: relative;
-z-index: 99999;
+z-index: 9;
 .icons__list{
     background: white;
     padding: 1rem 2rem;

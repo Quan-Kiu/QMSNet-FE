@@ -10,9 +10,11 @@ import { timeAgo } from '../../../utils/time_utils'
 import { MoreOutlined } from '@ant-design/icons'
 import CommentInput from '../../../components/Common/CommentInput'
 import Comment from '../../../components/Common/Comment'
+import PostAction from '../../../components/Common/PostAction'
 
 const PostModal = props => {
     const {postDetail,postDetailLoading} = useSelector((state) => state.post)
+    const isSimplePost =postDetail?.styles?.background === '#fff' && postDetail?.media?.length===0;
     const dispatch = useDispatch();
 
 
@@ -27,19 +29,27 @@ const PostModal = props => {
     <PostModalWrapper gutter={[32,32]}>
         {postDetailLoading ? 
         <>
-        <Col span={16}>
+        {!isSimplePost && <Col span={16} className="left">
         <Skeleton.Avatar loading={true} size={"large"} shape={"square"} />
-        </Col>
-        <Col span={18}>
+        </Col>}
+        <Col span={isSimplePost?24:8} className="right">
         <Skeleton avatar paragraph={{ rows: 10 }} />
         </Col>
         </>
-         :<><Col span={16}>
+         :<> {!isSimplePost && <Col span={16} className="left">
+            {postDetail?.styles?.background!=="#fff" ? <div style={postDetail?.styles} className="content-with-style">
+                {postDetail?.content}
+            </div>
+            :
             <Carousel media={postDetail?.media}/>
-        </Col>
-        <Col span={8}>
-        <AvatarCard src={postDetail?.user?.avatar?.url} content={
-                                    <Row align="middle" justify="space-between">
+            }
+        </Col>}
+        <Col span={isSimplePost?24:8} className="right">
+        <AvatarCard className="post-detail-header" src={postDetail?.user?.avatar?.url} content={
+                                    <Row align="middle" justify="space-between" style={{
+                                        
+                                        padding: '1rem 0'
+                                    }}>
                                         <div className="info">
                                             <div className="username">{postDetail?.user?.username}</div>
                                             <div className="createdAt">{timeAgo(postDetail?.createdAt,false)}</div>
@@ -51,16 +61,19 @@ const PostModal = props => {
                                         </div>
                                     </Row>  
                                 }/>
-                                <div style={{
-                                        background: postDetail?.styles?.background,
-                                        color: postDetail?.styles?.color,
-                                    }} className={`text-content ${postDetail?.styles?.background!=="#fff" && 'with-style'}`} >
-                                    {postDetail?.content}
-                                </div>
+                                
                                 <div className="comments">
-                                    {postDetail?.comments?.map((cmt)=> <Comment simple={false} comment={cmt}/>)}
+                                    {postDetail?.content && postDetail.styles.background==='#fff'&&
+                                    <Comment simple={false} comment={{
+                                        user: postDetail?.user,
+                                        createdAt: postDetail?.createdAt,
+                                        content: postDetail?.content
+
+                                    }} onlyTime={true}/>}
+                                    {postDetail?.comments?.map((cmt)=> <Comment simple={false} isPostDetail={true} comment={cmt}/>)}
                                 </div>
-                                <CommentInput post={postDetail}/>
+                                <PostAction isPostDetail={true} post={postDetail} />
+                                <CommentInput post={postDetail} isPostDetail={true}/>
         </Col></>}
         
     </PostModalWrapper>

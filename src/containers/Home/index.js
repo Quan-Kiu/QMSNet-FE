@@ -48,7 +48,7 @@ const HomePage = (props) => {
                         <div className="posts" style={{
                             marginTop: '2rem'
                         }}>
-                            {data?.posts.map((post)=><Post post={post}/>)}
+                            {data?.posts && data?.posts.map((post)=><Post post={post}/>)}
                         </div>
                 </MainContentWrapper>
                 </Col>

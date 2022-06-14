@@ -2,7 +2,7 @@ import { message } from "antd";
 import { all, call, fork, put, takeEvery,select,takeLatest } from 'redux-saga/effects';
 import { GET, PATCH, POST, postEndpoint } from "../../constants";
 import callAPi from "../../utils/apiRequest";
-import { ADD_POST, COMMENT, getPosts, getPostsSuccess, getPostSuccess, GET_POSTS_START, GET_POST_START, postFailed, POST_ACTION, setPosts, toggleModal } from "./action";
+import { ADD_POST, COMMENT, getPosts, getPostsSuccess, getPostSuccess, GET_POSTS_START, GET_POST_START, postFailed, POST_ACTION, setPostDetail, setPosts, toggleModal } from "./action";
 import { PostSelector } from "./reducer";
 
 
@@ -81,6 +81,9 @@ function *handlePostAction(){
         try {
             const res = yield call(callAPi,postEndpoint.POSTS+`${payload.id}/${payload.type}`,PATCH);
             if(res && res.success){
+                if(payload.isPostDetail){
+                    yield put(setPostDetail(res.data))
+                }
                 yield fork(handleUpdatePost,res.data)
               
             }else{
@@ -98,7 +101,10 @@ function *handleComment(){
         try {
             const res = yield call(callAPi,'/comment/'+`${payload.link||''}`,payload.method,payload?.data||{});
             if(res && res.success){
-                console.log(res);
+                if(payload.isPostDetail){
+                    yield put(setPostDetail(res.data))
+                }
+                
                 yield fork(handleUpdatePost,res.data)
               
             }else{

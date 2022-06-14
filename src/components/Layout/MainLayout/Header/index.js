@@ -136,6 +136,7 @@ const Header = props => {
               
               <Col>
               <Radio.Group defaultValue={currentBG}  onChange={(e)=>{
+                form.resetFields();
                 form.setFieldsValue({
                   styles:e.target.value
                 })

@@ -15,6 +15,12 @@ const CarouselWrapper = styled.div`
     .actions{
         position: absolute;
         top:50%;
+        svg{
+            width: 30px;
+            height: 30px;
+            color: white;
+            
+        }
         transform: translateY(-50%); 
         &.next{
             right: 10px;
@@ -26,7 +32,6 @@ const CarouselWrapper = styled.div`
 `;
 
 const Carousel = ({media}) => {
-    console.log(media)
     const carouselRef = useRef();
   return (media?.length>0 && <CarouselWrapper>
                                         <CarouselAntd ref={carouselRef}>

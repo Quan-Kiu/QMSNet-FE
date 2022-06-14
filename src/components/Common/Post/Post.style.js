@@ -9,19 +9,7 @@ export const PostWrapper = styledComponents.div`
 
     padding-bottom: 0;
 }
-    .actions{
-        padding: 1.5rem 0 .5rem 0;
-        svg{
-            width: 28px;
-            height: 28px;
-            cursor: pointer;
-        }
-    }
-
-    .stats{
-        font-weight: 600;
-        font-size:1.6rem;
-    }
+    
 
     .text-content{
         white-space: pre-line;

@@ -13,22 +13,23 @@ const CommentInput = props => {
   const dispatch = useDispatch();
   const [form]= Form.useForm();
   const handleOnSubmit = (values)=>{
+   
     dispatch(comment({
       link: 'create',
       data: values,
-      method: POST
+      method: POST,
+      isPostDetail: props?.isPostDetail
     }))
   }
 
   const setContent = (values)=>{
     inputRef.current.input.defaultValue += values;
-  console.log(inputRef.current)
   }
 
   return (
       <CommentInputWrapper className="comment-input">
         <Form form={form} initialValues={{
-          postId: props.post._id
+          postId: props?.post?._id
         }} onFinish={handleOnSubmit}>
           <Form.Item hidden name="postId" >
             <Input></Input>

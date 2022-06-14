@@ -6,7 +6,7 @@ import { Avatar, Badge, Col } from 'antd'
 const AvatarCard = props => {
   return (
       <>
-    <AvatarCardWrapper wrap={false} align="top" gutter={[12,12]}>
+    <AvatarCardWrapper className={`avatar-card ${props?.className}`} wrap={false} align="top" gutter={[12,12]}>
         {!props.avatarHidden &&  <Col>
                 
                 <       Avatar src={props.src}>
