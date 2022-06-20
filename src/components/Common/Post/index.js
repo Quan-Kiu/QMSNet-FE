@@ -1,12 +1,11 @@
 import { MoreOutlined } from '@ant-design/icons'
-import { Col, Modal, Row } from 'antd'
+import { Modal, Row } from 'antd'
 import PropTypes from 'prop-types'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { CommentIcon, DirectIcon, LikeIcon, SaveIcon, UnlikeIcon } from '../../../assets/icon'
 import PostModal from '../../../containers/Post/PostModal'
-import { postAction, setPostDetail } from '../../../redux/post/action'
+import { setPostDetail } from '../../../redux/post/action'
+import { setUserDetail } from '../../../redux/user/action'
 import { timeAgo } from '../../../utils/time_utils'
 import AvatarCard from '../AvatarCard'
 import Box from '../Box'
@@ -35,7 +34,9 @@ const Post = ({post}) => {
                                 <AvatarCard src={post?.user?.avatar?.url} content={
                                     <Row align="middle" justify="space-between">
                                         <div className="info">
-                                            <div className="username">{post?.user?.username}</div>
+                                            <div onClick={()=>{
+                                                 dispatch(setUserDetail(post?.user));
+                                            }} className="username">{post?.user?.username}</div>
                                             <div className="createdAt">{timeAgo(post?.createdAt,false)}</div>
                                         </div>
                                         <div className="event">
@@ -70,8 +71,8 @@ const Post = ({post}) => {
                             ).map((cmt)=><Comment comment={cmt}/>)}
                                         
                                     </div>
-                                   
                                     <CommentInput post={post}/>
+                                    
                                 </AvatarCard>
                             </Box>
       </PostWrapper>

@@ -1,5 +1,6 @@
 import styledComponents from "styled-components";
 export const SearchWrapper = styledComponents.div`
+
     .search-history{
         padding: 2rem 0;
         color: black;
@@ -15,7 +16,13 @@ export const SearchWrapper = styledComponents.div`
             font-weight: 400;
             color: ${props=>props.theme.blueClr}
         }
-
+        
+    }
+    
+    .search-history-list{
+        
+        
+        
     }
 
    

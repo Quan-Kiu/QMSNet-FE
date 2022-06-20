@@ -1,7 +1,7 @@
-import { GET_POSTS_START, GET_POSTS_SUCCESS, GET_POST_START, GET_POST_SUCCESS, POST_FAILED, SET_POSTS, SET_POST_DETAIL, TOGGLE_MODAL } from "./action";
+import { GET_POSTS_START, GET_POSTS_SUCCESS, GET_POST_START, GET_POST_SUCCESS, POST_FAILED, SET_POSTS, SET_POST_DETAIL, TOGGLE_MODAL, TOGGLE_NOTIFY } from "./action";
 
 const initialState = {
-    data: null,
+    data: [],
     showModal: false,
     status: {
         success: false,
@@ -9,6 +9,9 @@ const initialState = {
     postDetailLoading: false,
     loading: false,
     postDetail: null,
+    notify: false, 
+    page:0,
+    limit: 20,
 }
 
 const PostReducer = (state=initialState,action) =>{
@@ -30,7 +33,9 @@ const PostReducer = (state=initialState,action) =>{
             return {
                 ...state,
                 loading: false,
-                data: action.payload,
+                isOver: action.payload?.pagination?.count === 0,
+                ...action.payload?.pagination,
+                data: [...state?.data,...action.payload.posts],
             }
         case GET_POST_START:
             return {
@@ -58,6 +63,11 @@ const PostReducer = (state=initialState,action) =>{
             return {
                 ...state,
                 showModal: !state.showModal,
+            }
+        case TOGGLE_NOTIFY:
+            return {
+                ...state,
+                notify: !state.notify,
             }
         
         default:

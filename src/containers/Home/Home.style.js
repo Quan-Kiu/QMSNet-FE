@@ -3,12 +3,34 @@ import { lg, md } from '../../constants/breakPoint';
 import useResponsive from '../../hooks/useResponsive';
 
 export const HomeWrapper = styledComponents.div`
+.new-post-notify-popup{
+    position: fixed;
+    z-index:99;
+    left: 50%;
+    transform: translateX(-50%);
+    border: thin solid rgba(0,0,0,0.15);
+    cursor: pointer;
+    width: 150px;
+    border-radius: 30px;
+    -webkit-box-shadow:0px 0px 15px 0px rgba(62,66,66,0.22);
+-moz-box-shadow: 0px 0px 15px 0px rgba(62,66,66,0.22);
+box-shadow: 0px 0px 15px 0px rgba(62,66,66,0.22);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    top: 9rem;
+    color: black;
+    height: 50px;
+    background: white;
+}
     .main__content{
         height: 100rem;
     }
     .container{
 
         .left-bar{
+            left: 2px;
             z-index: 1000;
         }
         

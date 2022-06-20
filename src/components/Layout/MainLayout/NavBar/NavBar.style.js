@@ -1,7 +1,12 @@
 import styledComponents from "styled-components";
 
 export const NavBarWrapper = styledComponents.div`
+    .pseudo{
+        position: fixed;
+        inset: 0;
+        z-index:-1;
 
+    }
     .ant-row{
         padding: 2rem 1rem;
         cursor: pointer;

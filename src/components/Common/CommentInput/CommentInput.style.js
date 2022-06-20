@@ -2,7 +2,7 @@ import styledComponents from "styled-components";
 
 export const CommentInputWrapper = styledComponents.div`
     margin: 1.5rem 0;
-    margin-bottom:0;
+    margin-bottom:0;    
     border-top: 1px solid rgba(0,0,0,0.1);
 
     .ant-input-affix-wrapper{

@@ -12,6 +12,7 @@ export const PostWrapper = styledComponents.div`
     
 
     .text-content{
+        margin: 1rem 0;
         white-space: pre-line;
         font-size: 2rem;
         &.with-style{

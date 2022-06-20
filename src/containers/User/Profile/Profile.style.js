@@ -1,27 +1,30 @@
 import styledComponents from "styled-components";
 
 export const ProfileWrapper = styledComponents.div`
-margin: 0 auto;
-width: 90%;
+width: 100%;
+
 margin-top: 10rem;
+padding-right: 10rem;
 
 .header-profile{
     .ant-avatar{
-        width: 120px;
-        height: 120px;
+        width: 130px;
+        height: 130px;
         border-radius:50%;
+        margin-right: .8rem;
 
     }
     user-select: none;
     .username{
-        font-size: 2.5rem;
+        font-size: 3rem;
+        text-decoration: none;
         font-weight: 700;
         letter-spacing: .2rem;
     }
     .fullname{
         opacity: .6;
         font-weight: 500;
-        font-size: 1.6rem;
+        font-size: 1.8rem;
     }
     svg{
         width: 25px;
@@ -41,6 +44,7 @@ margin-top: 10rem;
 }
 
 .about{
+    position: sticky;
     .story{
         p{
 

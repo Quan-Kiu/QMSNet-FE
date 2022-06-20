@@ -1,23 +1,38 @@
-import { MailOutlined, MoreOutlined,ReadOutlined } from '@ant-design/icons'
-import { Avatar, Button, Col, Form, Image, Modal, Row, Space } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { EditFilled, MailFilled, MailOutlined, MoreOutlined, UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons'
+import { Button, Col, Form, Modal, Row, Space } from 'antd'
+import moment from 'moment'
+import { useEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import AvatarCard from '../../../components/Common/AvatarCard'
 import Box from '../../../components/Common/Box'
 import Post from '../../../components/Common/Post'
-import { posts } from '../../../data/post'
-import { ProfileWrapper } from './Profile.style'
-import {useSelector} from 'react-redux';
-import moment from 'moment'
-import Story from './Form/Story'
-import Information from './Form/Infomation'
-import { maritalStatus } from '../../../constants'
 import UploadWithUpdate from '../../../components/Common/UploadWithUpdate'
+import { maritalStatus } from '../../../constants'
+import { setTabActive } from '../../../redux/app/action'
+import { getPostUserDetail, userFollow } from '../../../redux/user/action'
+import Information from './Form/Infomation'
+import Story from './Form/Story'
+import { ProfileWrapper } from './Profile.style'
 
 const Profile = props => {
 const {user,status} = useSelector((state)=>state.auth);
+const {userDetail,postUserDetail,followLoading} = useSelector((state)=>state.user);
 const [isShowEditModal,setIsShowEditModal] = useState(false);
 const [isShowEditDetailModal,setIsShowEditDetailModal] = useState(false);
 const form = Form.useForm();
+const dispatch = useDispatch();
+const isFollowed = useMemo(()=>!!userDetail?.followers?.includes(user._id),[userDetail]);
+
+useEffect(() => {
+
+    dispatch(setTabActive(""))
+    if(userDetail?._id !== postUserDetail?.user_id){
+        dispatch(getPostUserDetail(userDetail?._id));
+    }
+// eslint-disable-next-line react-hooks/exhaustive-deps
+},[userDetail])
+
+
 
 const handleShowEditModal = ()=>{
     setIsShowEditModal(true);
@@ -40,59 +55,66 @@ useEffect(() => {
 // eslint-disable-next-line react-hooks/exhaustive-deps
 },[status])
 
-const introductionElement = <>{user?.works?.map((work,index)=>(<Space>
+const handleFollow  = ()=>{
+    const type = isFollowed?'unfollow': 'follow';
+    dispatch(userFollow({
+        path: type+'/'+userDetail?._id
+    }))
+}
+
+const introductionElement = <>{userDetail?.works?.map((work,index)=>(<Space>
     <img src="/assets/images/work.png" alt="works" />
     <p>{work?.working ?'Đang làm việc tại ':'Đã làm việc tại '}<b>{work.name}</b></p>    
 </Space>
 ))}
-{user?.schools?.map((school,index)=>(
+{userDetail?.schools?.map((school,index)=>(
 <Space>
     <img src="/assets/images/schools.png" alt="schools" />
     <p>{school?.learning ?'Học tại ':'Đã học tại '}<b>{school.name}</b></p>
     
 </Space>))}
-{user?.address?.province&&<Space>
+{userDetail?.address?.province&&<Space>
     <img src="/assets/images/home.png" alt="home" />
-   <p>Sống tại <b>{user?.address?.district},{user?.address?.province}</b></p> 
+   <p>Sống tại <b>{userDetail?.address?.district},{userDetail?.address?.province}</b></p> 
 </Space>}
 
-{user?.countryside?.province &&<Space>
+{userDetail?.countryside?.province &&<Space>
     <img src="/assets/images/location.png" alt="location" />
-   <p>Đến từ <b>{user?.countryside?.district},{user?.countryside?.province}</b></p> 
+   <p>Đến từ <b>{userDetail?.countryside?.district},{userDetail?.countryside?.province}</b></p> 
 </Space>}
 
-{user?.mobile&&<Space>
+{userDetail?.mobile&&<Space>
 <img src="/assets/images/phone.png" alt="phone" />
-<div className="bod">{user?.mobile}</div>
+<div className="bod">{userDetail?.mobile}</div>
 </Space>}
-{user?.email &&<Space>
+{userDetail?.email &&<Space>
 <img src="/assets/images/mail.png" alt="mail" />
-<div className="bod">{user?.email}</div>
+<div className="bod">{userDetail?.email}</div>
 </Space>}
-{user?.dob && <Space>
+{userDetail?.dob && <Space>
 <img src="/assets/images/dob.png" alt="dob" />
-<div className="bod">Sinh ngày {moment(user?.dob).format('DD/MM/YYYY')}</div>
+<div className="bod">Sinh ngày {moment(userDetail?.dob).format('DD/MM/YYYY')}</div>
 </Space>}
 
 <Space>
 <img src="/assets/images/followers.png" alt="followers" />
-<div className="followers">Có <b>{user.followers.length}</b> người theo dõi</div>
+<div className="followers">Có <b>{userDetail?.followers.length}</b> người theo dõi</div>
 </Space>
 <Space>
 
 <img src="/assets/images/followers.png" alt="followers" />
-<div className="following">Đang theo dõi <b>{user.following.length}</b> người</div>
+<div className="following">Đang theo dõi <b>{userDetail?.following.length}</b> người</div>
 </Space>
-{user?.maritalStatus &&
+{userDetail?.maritalStatus &&
 <Space>
 <img src="/assets/images/maritalStatus.png" alt="maritalStatus" />
 
-<div className="marital_status">{maritalStatus[user?.maritalStatus]}</div>
+<div className="marital_status">{maritalStatus[userDetail?.maritalStatus]}</div>
 </Space>}
 
 <Space>
 <img src="/assets/images/joined.png" alt="joined" />
-<div className="join">Tham gia vào {moment(user.createdAt).format('MM, YYYY')}</div>
+<div className="join">Tham gia vào {moment(userDetail?.createdAt).format('MM, YYYY')}</div>
 </Space></>
 
   return (
@@ -119,7 +141,7 @@ const introductionElement = <>{user?.works?.map((work,index)=>(<Space>
             textAlign: 'center',
             whiteSpace: 'pre-line',
         }}>
-                {user.story}
+                {userDetail?.story}
         </Row>
         <Row justify="space-between">
             <Col className="edit-title">
@@ -143,22 +165,27 @@ const introductionElement = <>{user?.works?.map((work,index)=>(<Space>
 
         <Row className="header-profile" justify="space-between" align="middle">
             <Col >
-                <AvatarCard src={user.avatar.url} className={'avatar'} content={<>
-                    <div className="username">{user.username}</div>
-                    <div className="fullname">{user.fullname}</div>
+                <AvatarCard style={{
+                    alignItems: "center"
+                }} src={userDetail?.avatar.url} className={'avatar'} content={<>
+                    <div className="username">{userDetail?.username}</div>
+                    <div className="fullname">{userDetail?.fullname}</div>
                 </>} />
             </Col>
             <Col className='header-profile__right'>
                 <Row gutter={24} align="stretch">
                     <Col>
-                    {!user && <Button size="large" className="q-button" type="primary">Theo dõi</Button>}
-                    {user && <Button size="large" onClick={handleShowEditModal} className="q-button" type="primary">Chỉnh sửa thông tin cá nhân</Button>}
+                    {user?._id !== userDetail?._id && <Button size="large" loading={followLoading} icon={isFollowed?<UserDeleteOutlined />:<UserAddOutlined />} onClick={handleFollow} className="q-button" type="primary">{isFollowed?'Bỏ theo dõi':'Theo dõi'}</Button>}
+                    {user?._id === userDetail?._id && <Button size="large" className="q-button q-button-outline" icon={<EditFilled />} onClick={handleShowEditModal}>Chỉnh sửa thông tin cá nhân</Button>}
                     </Col>
+                    {isFollowed &&
                     <Col>
-                    <Button>
-                        <MailOutlined/>
+                    <Button className='q-button q-button-outline' >
+                    <MailOutlined />
+                        Nhắn tin
                     </Button>
                     </Col>
+                    }
                     <Col>
                         <Button>
                         <MoreOutlined style={{
@@ -180,7 +207,7 @@ const introductionElement = <>{user?.works?.map((work,index)=>(<Space>
                                 <p style={{
                                     whiteSpace: "pre-line"
                                 }}>
-                                    {user?.story}
+                                    {userDetail?.story}
                                 </p>
                                 
                             </div>
@@ -191,13 +218,17 @@ const introductionElement = <>{user?.works?.map((work,index)=>(<Space>
                         </Box>
                 </Col>
                 <Col xl={16} lg={16} md={24}>
-                        <Box>
-                            {/* <Post post={posts[0]}/>
-                           <Post post={posts[0]}/>
-                           <Post post={posts[0]}/>
-                           <Post post={posts[0]}/>
-                           <Post post={posts[0]}/> */}
-                        </Box>
+
+                            {postUserDetail?.posts?.length > 0 ? postUserDetail?.posts?.map((post)=><Post post={post}/>):<Box style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                fontSize:'1.8rem',
+                                fontWeight:'600',
+                                justifyContent: 'center',
+                                height: '100px'
+                            }}>
+                                Không có bài viết
+                                </Box>}
                 </Col>
             </Row>
     </ProfileWrapper>

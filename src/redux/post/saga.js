@@ -1,15 +1,17 @@
 import { message } from "antd";
-import { all, call, fork, put, takeEvery,select,takeLatest } from 'redux-saga/effects';
+import { all, call, fork, put, takeEvery,select,takeLatest,delay } from 'redux-saga/effects';
 import { GET, PATCH, POST, postEndpoint } from "../../constants";
 import callAPi from "../../utils/apiRequest";
-import { ADD_POST, COMMENT, getPosts, getPostsSuccess, getPostSuccess, GET_POSTS_START, GET_POST_START, postFailed, POST_ACTION, setPostDetail, setPosts, toggleModal } from "./action";
+import { ADD_POST, COMMENT, getPosts, getPostsSuccess, getPostSuccess, GET_POSTS_START, GET_POST_START, postFailed, POST_ACTION, setPostDetail, setPosts, toggleModal, toggleNotify } from "./action";
 import { PostSelector } from "./reducer";
 
 
 function *handleGetPosts(){
-    yield takeEvery(GET_POSTS_START, function*(action){
+    yield takeLatest(GET_POSTS_START, function*({payload}){
+
         try {
-            const res = yield call(callAPi,postEndpoint.POSTS,GET);
+            const {page } = yield select(state=>state.post)
+            const res = yield call(callAPi,postEndpoint.POSTS+`?page=${(Number(page)+1)||1}&limit=20`,GET);
             if(res && res.success){
                 yield put(getPostsSuccess(res.data));
               
@@ -45,10 +47,9 @@ function *handleAddPost(){
         try {
             const res = yield call(callAPi,postEndpoint.POSTS,POST,action.payload);
             if(res && res.success){
-                yield all([
-                    put(toggleModal()),
-                    put(getPosts(''))
-                ])
+                    yield put(toggleModal());
+                    yield put(toggleNotify());
+                    yield call(message.success, res.message)
               
             }else{
                 throw new Error(res.message)
@@ -63,7 +64,6 @@ function *handleAddPost(){
 
 function * handleUpdatePost(payload){
     const {data} = yield select(PostSelector);
-    console.log(data);
     if(data.total>0){
         const postsClone = [...data.posts];
         const index = postsClone.findIndex(post => post._id === payload._id);

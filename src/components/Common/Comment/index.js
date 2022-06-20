@@ -27,7 +27,7 @@ const handleCommentAction = ()=>{
 }
   return (
       <CommentWrapper>
-          <AvatarCard avatarHidden={props.simple} src=''  content={<Row gutter={10} wrap={false}>
+          <AvatarCard avatarHidden={props.simple} src={props?.comment?.user?.avatar?.url}  content={<Row gutter={10} wrap={false}>
               <Col flex={1}>
             <span className="actor">
                 {props?.comment?.user?.username}

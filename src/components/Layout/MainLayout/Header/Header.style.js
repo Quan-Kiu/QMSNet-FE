@@ -2,9 +2,7 @@ import styledComponents from "styled-components";
 
 export const HeaderWrapper = styledComponents.div`
     padding: 2rem 4rem;
-    -webkit-box-shadow:0px 5px 15px 5px rgba(62,66,66,0.1);
-    -moz-box-shadow: 0px 5px 15px 5px rgba(62,66,66,0.1);
-    box-shadow: 0px 5px 15px 5px rgba(62,66,66,0.1);
+    box-shadow: 0.1rem 0.1rem 0.1rem 0.1rem rgb(0 0 0 / 10%);
 position: fixed;
 left: 0;
 right: 0;

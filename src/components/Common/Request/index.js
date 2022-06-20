@@ -21,8 +21,8 @@ const Request = props => {
         }
         >
             <Row className="request-actions" justify="space-between">
-            <Button size="large" className="q-button button-primary" type="primary">Chấp nhận</Button>
-            <Button size="large" className="q-button button-outline" type="ghost">Hủy lời mời</Button>
+            <Button size="large" className="q-button q-button-primary" type="primary">Chấp nhận</Button>
+            <Button size="large" className="q-button q-button-outline" >Hủy lời mời</Button>
             </Row>
         </AvatarCard>
     </RequestWrapper>

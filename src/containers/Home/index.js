@@ -1,40 +1,49 @@
-import { Col, Input, Modal, Row } from 'antd';
-import React from 'react';
+import { Col, Input, Row } from 'antd';
+import { useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import AvatarCard from '../../components/Common/AvatarCard';
 import Box from '../../components/Common/Box';
 import Container from '../../components/Common/Container';
-import NavBar from '../../components/Layout/MainLayout/NavBar';
-import Sidebar from '../../components/Layout/MainLayout/Sidebar';
-import UseWindow from '../../hooks/useWindowResize';
 import Post from '../../components/Common/Post';
+import Sidebar from '../../components/Layout/MainLayout/Sidebar';
+import useScrollInfinity from '../../hooks/useScrollInfinity';
+import UseWindow from '../../hooks/useWindowResize';
+import { authSelector } from '../../redux/auth/reducer';
+import { getPosts, toggleModal } from '../../redux/post/action';
 import Contacts from './Contacts';
 import { HomeWrapper, MainContentWrapper } from './Home.style';
 import Requests from './Requests';
-import { posts } from '../../data/post';
-import { useDispatch, useSelector } from 'react-redux';
-import { PostSelector } from '../../redux/post/reducer';
-import { toggleModal } from '../../redux/post/action';
 
 
 
 const HomePage = (props) => {
     const [windowSize] = UseWindow()
-    const {data} = useSelector(PostSelector); 
+    const {data,notify,page,isOver} = useSelector(state=>state.post); 
+    const {user} = useSelector(authSelector); 
     const dispatch = useDispatch();
+    const homeRef = useRef();
+    useScrollInfinity(page,getPosts,homeRef,isOver,window);
+
+    
 
 
    
     return (
         <HomeWrapper>
+            {notify && <div onClick={()=>{
+                window.location.reload();
+            }} className="new-post-notify-popup">
+                Bài viết mới
+            </div>}
             <Container className="container" >
                 <Col xl={16} lg={16} md={24} sm={24} xs={24} style={{
                     paddingRight: '5rem',
                 }}>
-                <MainContentWrapper>
+                <MainContentWrapper ref={homeRef}>
                         <Box className="new-post box-shadow" >
                             <Row align="middle">
                                 <Col>
-                                    <AvatarCard src="https://imgt.taimienphi.vn/cf/Images/np/2021/11/26/hinh-anh-avatar-dep-2.jpg" />
+                                    <AvatarCard src={user?.avatar?.url} />
                                 </Col >
                                 <Col onClick={()=>{
                                         dispatch(toggleModal())
@@ -48,7 +57,7 @@ const HomePage = (props) => {
                         <div className="posts" style={{
                             marginTop: '2rem'
                         }}>
-                            {data?.posts && data?.posts.map((post)=><Post post={post}/>)}
+                            {data?.map((post)=><Post post={post}/>)}
                         </div>
                 </MainContentWrapper>
                 </Col>

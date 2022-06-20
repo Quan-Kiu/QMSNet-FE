@@ -3,6 +3,7 @@ export const GET_POSTS_SUCCESS = 'GET_POSTS_SUCCESS';
 export const ADD_POST = 'ADD_POST';
 export const POST_FAILED = 'POST_FAILED';
 export const TOGGLE_MODAL = 'TOGGLE_MODAL';
+export const TOGGLE_NOTIFY = 'TOGGLE_NOTIFY';
 
 
 export const POST_ACTION = 'POST_ACTION';
@@ -58,6 +59,9 @@ export const postFailed = ()=>({
 })
 export const toggleModal = ()=>({
     type: TOGGLE_MODAL,
+})
+export const toggleNotify = ()=>({
+    type: TOGGLE_NOTIFY,
 })
 
 export const postAction = (payload)=>({

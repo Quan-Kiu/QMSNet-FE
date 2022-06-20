@@ -1,25 +1,36 @@
 import { Col, Row } from 'antd'
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ContactIcon, HomeIcon, MessageIcon, NotifyIcon, SearchIcon, SettingIcon } from '../../../../assets/icon'
+import { setTabActive } from '../../../../redux/app/action'
 import Conversation from './Conversation'
 import { NavBarWrapper } from './NavBar.style'
 import Notifies from './Notifies'
 import Search from './Search'
-import ConversationPopup from '../../../Common/ConversationPopup';
 
 const NavBarItem = props =>{
+    const dispatch = useDispatch();
     const navigate =  useNavigate();
+    const location = useLocation();
     return (
-        <Row gutter={24} onClick={()=>{
-            console.log(props.label);
-            props.setActiveKey(props.label)
+        <>
+        {props.active && props.popup && <div onClick={()=>{ 
+            if(location.pathname==='/'){
+                dispatch(setTabActive('home'))
+            }else{
+                dispatch(setTabActive(''))
+
+            }
+        }} className="pseudo"></div>}
+        <Row  gutter={24} onClick={()=>{
             if(props?.path){
                 navigate(props.path);
             }
             if(props?.onClick){
                 props.onClick();
             }
+            dispatch(setTabActive(props.navKey))
+           
         }} className={`navbar-item ${props.active?'active':'unActive'} ${props.popup?'popup':'nonpopup'}` }>
             <Col lg={6} md={24}>
                 {props.icon}
@@ -31,6 +42,7 @@ const NavBarItem = props =>{
                 {props?.popup}
             </div>
         </Row>
+                </>
     )
 }
 
@@ -38,7 +50,8 @@ const navbars = [
     {
         label: 'Trang chủ',
         key: 'home',
-        icon: <HomeIcon/>
+        icon: <HomeIcon/>,
+        path: '/'
     },
     {
         label: 'Tìm kiếm',
@@ -72,11 +85,13 @@ const navbars = [
 ]
 
 const NavBar = props => {
-    const [activeKey,setActiveKey] = useState(navbars[0].label);
+    const {tabActive} = useSelector((state)=>state.app);
+    console.log(tabActive);
   return (
           <>
       <NavBarWrapper>
-          {navbars.map((nav)=><NavBarItem popup={nav?.popup} active={activeKey===nav.label} key={props.key} label={nav.label} icon={nav.icon} setActiveKey={setActiveKey} />)}
+            
+          {navbars.map((nav)=><NavBarItem popup={nav?.popup} active={tabActive===nav.key} navKey={nav.key} path={nav?.path} key={props.key} label={nav.label} icon={nav.icon}  />)}
       </NavBarWrapper>
           </>
 

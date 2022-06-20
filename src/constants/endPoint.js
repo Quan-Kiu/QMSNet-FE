@@ -8,9 +8,14 @@ export const authEndPoint = {
     REFRESH_TOKEN: '/refresh_token',
 
 
-    UPDATE_PROFILE: '/user/updateuser'
+    UPDATE_PROFILE: '/users/updateuser'
 }
 
 export const postEndpoint ={
     POSTS: '/posts/',
 }
+
+export const profileEndpoint ={
+    USERS: '/users'
+}
+

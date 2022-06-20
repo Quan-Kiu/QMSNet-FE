@@ -43,6 +43,7 @@ const ChooseEmoji = ({ setContent,id }) => {
                         <p>Chọn cảm xúc</p>
                         <div  onMouseDown={(e)=>{
                             e.preventDefault();
+                            e.stopPropagation();
                         }}  className="reactions">
                             {reactions.map((icon) => (
                                 <span

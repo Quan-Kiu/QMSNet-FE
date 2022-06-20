@@ -8,11 +8,18 @@ export const MessageWrapper = styledComponents.div`
         flex-shrink:0;
     }
 & + &{
-    margin-top: .5rem;
+    margin-bottom: .5rem;
 }    
     justify-content:${props=> props['attr-type']==="me"?'right;':'initial;'}
    
+    &.me{
+        margin-right: 1rem;
+    }
 
+    .like{
+        width: 50px;
+        height: 50px;
+    }
         
 
     
@@ -26,5 +33,12 @@ export const MessageWrapper = styledComponents.div`
         word-break: break-all;
 
 
+    }
+
+    .image{
+        width: 150px;
+        height:150px;
+        object-fit: contain;
+        border: thin solid rgba(0,0,0,0.2);
     }
 `;

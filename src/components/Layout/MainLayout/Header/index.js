@@ -1,13 +1,14 @@
-import { DownOutlined, ProfileOutlined, SearchOutlined } from '@ant-design/icons'
-import { Avatar, Button, Col, Input, Modal, Radio, Row, Select,Image, Form, Dropdown, Space, Menu } from 'antd'
-import React, { useCallback, useRef, useState } from 'react'
+import { SearchOutlined } from '@ant-design/icons'
+import { Avatar, Button, Col, Dropdown, Form, Input, Menu, Modal, Radio, Row, Select } from 'antd'
+import { useCallback, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { CreateIcon, ProfileIcon } from '../../../../assets/icon'
 import { logout } from '../../../../redux/auth/action'
 import { authSelector } from '../../../../redux/auth/reducer'
 import { addPost, toggleModal } from '../../../../redux/post/action'
 import { PostSelector } from '../../../../redux/post/reducer'
+import { setUserDetailSuccess } from '../../../../redux/user/action'
 import AvatarCard from '../../../Common/AvatarCard'
 import ChooseEmoji from '../../../Common/ChooseEmoji'
 import UploadAttachment from '../../../Common/UploadAttachment'
@@ -65,7 +66,9 @@ const Header = props => {
       items={[
         {
           icon: <ProfileIcon/>, 
-          label: <Link to={'/profile'}>Trang cá nhân</Link>,
+          label: <div onClick={()=>{
+              dispatch(setUserDetailSuccess({...user}));
+          }}>Trang cá nhân</div>,
           key: '0',
         },
         {
@@ -86,7 +89,7 @@ const Header = props => {
   return (
     <HeaderWrapper>
     
-      <Modal afterClose={()=>{
+      <Modal maskClosable={false} afterClose={()=>{
         form.resetFields()
       }} destroyOnClose={true} wrapClassName="new-post-modal"  title="Tạo bài viết"  onOk={handleModal} onCancel={handleModal} visible={showModal} width={500} footer={<Button size="large" className="q-button" onClick={handleSubmit} type="primary">Đăng</Button>}>
           <AvatarCard src="" content={<>
@@ -182,7 +185,7 @@ const Header = props => {
               </Col>
 
               <Col className="header__content__func__create-post">
-                  <Button onClick={handleModal} size="large" type="primary" >
+                  <Button className="q-button" onClick={handleModal} size="large" type="primary" >
                   <CreateIcon  />
                     Tạo bài viết
                   </Button>
