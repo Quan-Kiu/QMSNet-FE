@@ -1,7 +1,10 @@
 import styledComponents from "styled-components";
 
 export const CommentWrapper = styledComponents.div`
-    margin-top: 10px;
+    margin-top: 12px;
+    .actor{
+        font-size: 1.5rem;
+    }
     .avatar-card{
         align-items: start!important;
     }
@@ -15,6 +18,7 @@ export const CommentWrapper = styledComponents.div`
         cursor: pointer;
     }
 
+   
 
     
     .actions{
@@ -31,6 +35,20 @@ export const CommentWrapper = styledComponents.div`
                 display: block;
             }
 
+        }
+    }
+    .replys{
+        cursor: pointer;
+        font-size: 1.3rem;
+        font-weight: 600;
+        opacity: .8;
+        align-items: center;
+        margin-top: .5rem;
+        .divider{
+            width: 20px;
+            height: 2px;
+            opacity: .8;
+            background: black;
         }
     }
 `;

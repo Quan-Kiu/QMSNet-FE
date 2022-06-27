@@ -4,6 +4,10 @@ export const SET_USER_DETAIL_SUCCESS =  'SET_USER_DETAIL_SUCCESS';
 export const GET_POST_USER_DETAIL =  'GET_POST_USER_DETAIL';
 export const GET_POST_USER_DETAIL_SUCCESS =  'GET_POST_USER_DETAIL_SUCCESS';
 export const SET_USER_SETTINGS =  'SET_USER_SETTINGS';
+export const GET_USER_SUGGESTIONS = 'GET_USER_SUGGESTIONS';  
+export const GET_USER_SUGGESTIONS_SUCCESS = 'GET_USER_SUGGESTIONS_SUCCESS';
+export const GET_USER_REQUESTS = 'GET_USER_REQUESTS';  
+export const GET_USER_REQUESTS_SUCCESS = 'GET_USER_REQUESTS_SUCCESS';
 export const USER_FAILED =  'USER_FAILED';
 export const USER_FOLLOW =  'USER_FOLLOW';
 
@@ -25,6 +29,22 @@ export const setUserDetailSuccess = (payload) => ({
 })
 export const userFollow = (payload) => ({
     type: USER_FOLLOW,
+    payload,
+})
+export const getUserSuggestions = (payload) => ({
+    type: GET_USER_SUGGESTIONS,
+    payload,
+})
+export const getUserSuggestionsSuccess = (payload) => ({
+    type: GET_USER_SUGGESTIONS_SUCCESS,
+    payload,
+})
+export const getUserRequests = (payload) => ({
+    type: GET_USER_REQUESTS,
+    payload,
+})
+export const getUserRequestsSuccess = (payload) => ({
+    type: GET_USER_REQUESTS_SUCCESS,
     payload,
 })
 

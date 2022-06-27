@@ -2,6 +2,33 @@ import styledComponents from "styled-components";
 
 export const ConversationWrapper = styledComponents.div`
     color: black;
+    .unRead{
+        .conversation__content{
+
+            flex: 1;
+        }
+        
+        .username{
+            font-weight: 600 !important;
+            
+        }
+        .message{
+            color: ${(style) => style.theme['fds_blue60']} ;
+            font-weight: 500;
+            span{
+                
+                font-weight: 400;
+                color: initial;
+            }
+        }
+        .dot{
+            display: block !important;
+            width: 10px;
+            height: 10px;
+            background: ${(style) => style.theme['fds_blue60']} ;
+            border-radius: 50%;
+        }
+    }
     .header{
         display:flex;
         justify-content:space-between;
@@ -33,6 +60,9 @@ export const ConversationWrapper = styledComponents.div`
         display: flex;
         gap: 1rem;
         align-items: center;
+        .dot{
+            display: none;
+        }
         &:hover{
             background: rgba(0,0,0,0.08);
         }

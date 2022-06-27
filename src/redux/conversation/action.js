@@ -1,13 +1,15 @@
 
-export const ADD_CONVERSATION =  'ADD_CONVERSATION';
-export const ADD_MESSAGE =  'ADD_MESSAGE';
-export const UPDATE_CONVERSATION =  'UPDATE_CONVERSATION';
-export const GET_CONVERSATION =  'GET_CONVERSATION';
-export const GET_CONVERSATION_SUCCESS =  'GET_CONVERSATION_SUCCESS';
-export const CONVERSATION_FAILED =  'CONVERSATION_FAILED';
-export const TOGGLE_CONVERSATION =  'TOGGLE_CONVERSATION';
-export const GET_MESSAGE =  'GET_MESSAGE';
-export const GET_MESSAGE_SUCCESS =  'GET_MESSAGE_SUCCESS';
+export const ADD_CONVERSATION = 'ADD_CONVERSATION';
+export const ADD_MESSAGE = 'ADD_MESSAGE';
+export const UPDATE_CONVERSATION = 'UPDATE_CONVERSATION';
+export const GET_CONVERSATION = 'GET_CONVERSATION';
+export const GET_CONVERSATION_SUCCESS = 'GET_CONVERSATION_SUCCESS';
+export const CONVERSATION_FAILED = 'CONVERSATION_FAILED';
+export const TOGGLE_CONVERSATION = 'TOGGLE_CONVERSATION';
+export const OPEN_CONVERSATION = 'OPEN_CONVERSATION';
+export const OPEN_CONVERSATION_SUCCESS = 'OPEN_CONVERSATION_SUCCESS';
+export const GET_MESSAGE = 'GET_MESSAGE';
+export const GET_MESSAGE_SUCCESS = 'GET_MESSAGE_SUCCESS';
 
 
 export const addConversation = (payload) => ({
@@ -22,7 +24,7 @@ export const getConversationSuccess = (payload) => ({
     type: GET_CONVERSATION_SUCCESS,
     payload,
 })
-export const updateConversation = (payload,fakeId='') => ({
+export const updateConversation = (payload, fakeId = '') => ({
     type: UPDATE_CONVERSATION,
     payload,
     fakeId
@@ -41,6 +43,14 @@ export const getMessageSuccess = (payload) => ({
 })
 export const toggleConversation = (payload) => ({
     type: TOGGLE_CONVERSATION,
+    payload,
+})
+export const openConversation = (payload) => ({
+    type: OPEN_CONVERSATION,
+    payload,
+})
+export const openConversationSuccess = (payload) => ({
+    type: OPEN_CONVERSATION_SUCCESS,
     payload,
 })
 export const conversationFailed = (payload) => ({

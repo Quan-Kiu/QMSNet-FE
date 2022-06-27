@@ -1,21 +1,62 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { NotifiesWrapper, NotifyWrapper } from './Notify.style'
 import { Avatar } from 'antd'
 import { timeAgo } from '../../../../../utils/time_utils'
+import { NotifyWrapper } from './Notify.style'
+import { useDispatch } from 'react-redux';
+import { readNotify } from '../../../../../redux/notify/action';
+import { setDetailModal } from '../../../../../redux/post/action';
+import { setUserDetail } from '../../../../../redux/user/action';
 
-const Notify = props => {
+const Notify = ({ notify }) => {
+  const dispatch = useDispatch();
+
+  const handleOnClick = () => {
+    if (!notify?.isRead) {
+      dispatch(readNotify(notify._id));
+    }
+
+    switch (notify?.action) {
+      case 1:
+        return dispatch(setUserDetail(notify?.user))
+      case 2:
+        return dispatch(setDetailModal(notify.postId))
+      case 3:
+        return dispatch(setDetailModal(notify.postId, notify.commentId))
+      case 4:
+        return dispatch(setDetailModal(notify.postId, notify.commentId))
+      case 5:
+        return dispatch(setDetailModal(notify.postId, notify.commentId))
+      default:
+        break;
+    }
+  }
+
   return (
-    <NotifyWrapper>
-        <Avatar size="large" src=""/>
-        <div className="right">
-            <div className="content">
-                <span>{props.notify.user.username}</span> {props.notify.content}
+    <NotifyWrapper onClick={handleOnClick} className={`${notify?.isRead && 'isRead'}`}>
+      <Avatar size="large" src={notify?.user.avatar.url} />
+      <div className="right">
+        <div className="content" style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '5px'
+
+        }}>
+          <div style={{
+            flex: '1',
+          }}>
+            <span>{notify?.user.username}</span> {notify?.text} <div className="preview-content">
+              {notify?.content}
             </div>
+          </div>
+          {notify.media?.length > 0 && <div className="notify-media">
+            {notify?.media[0]?.url.match('/image/') ? <img src={notify.media[0]?.url} alt={notify.media[0]?.url} /> : <video controls={false}  >
+              <source src={notify.media[0]?.url} type="video/mp4" />
+            </video>}
+          </div>}
+        </div>
         <div className="createdAt">
-            {timeAgo(props.notify.createdAt,false)}
+          {timeAgo(notify.updatedAt, false)}
         </div>
-        </div>
+      </div>
     </NotifyWrapper>
   )
 }

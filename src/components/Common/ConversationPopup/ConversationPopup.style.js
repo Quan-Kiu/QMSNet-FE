@@ -4,6 +4,20 @@ export const ConversationPopupWrapper = styledComponents.div`
     position: fixed;
     right: 2rem;
     bottom: 2rem;
+    .conversation-hidden{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        img{
+            width: 50px;
+            height: 50px;
+            border-radius:50%;
+            border: thin solid rgba(0,0,0,0.2);
+        }
+
+    }
     .create-conversation-btn{
         width: 50px;
         height: 50px;

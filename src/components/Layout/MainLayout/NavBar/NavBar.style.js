@@ -8,13 +8,30 @@ export const NavBarWrapper = styledComponents.div`
 
     }
     .ant-row{
+        .icon{
+            position: relative;
+        }
+        .badge{
+            z-index:1 ;
+            position: absolute;
+            background: red;
+            color: white;
+            width:20px;
+            height:20px;
+            border-radius: 50%;
+            display:flex;
+            align-items: center;
+            justify-content: center;
+            top: -10px;
+            right: 5px;
+        }
         padding: 2rem 1rem;
         cursor: pointer;
         margin-left: -2.3rem !important;
         margin-right: -2rem !important;
-        color: ${(style)=>style.theme.headingTextClr};
+        color: ${(style) => style.theme.headingTextClr};
         font-weight: 600;
-        opacity: .6;
+        opacity: .7;
         border-left: 3px solid transparent;
         &+.ant-row{
             border-top: 1px solid rgba(0,0,0,0.1);
@@ -22,14 +39,14 @@ export const NavBarWrapper = styledComponents.div`
         &.active{
             opacity: 1;
             svg{
-                fill: ${(style)=>style.theme.blueClr};
+                fill: ${(style) => style.theme.blueClr};
                 path{
-                    color: ${(style)=>style.theme.blueClr};
+                    color: ${(style) => style.theme.blueClr};
                     
                 }
             }
-            color: ${(style)=>style.theme.blueClr};
-            border-left: 3px solid ${(style)=>style.theme.blueClr};
+            color: ${(style) => style.theme.blueClr};
+            border-left: 4px solid ${(style) => style.theme.blueClr};
             background: rgba(0,0,0,0.02);
             &.popup > .navbar__item__content{
                 display: block;

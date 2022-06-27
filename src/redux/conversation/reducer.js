@@ -1,20 +1,21 @@
-import { ADD_CONVERSATION, CONVERSATION_FAILED, GET_CONVERSATION, GET_CONVERSATION_SUCCESS, GET_MESSAGE_SUCCESS, TOGGLE_CONVERSATION, UPDATE_CONVERSATION } from "./action";
+import { ADD_CONVERSATION, CONVERSATION_FAILED, GET_CONVERSATION, GET_CONVERSATION_SUCCESS, GET_MESSAGE_SUCCESS, OPEN_CONVERSATION, OPEN_CONVERSATION_SUCCESS, TOGGLE_CONVERSATION, UPDATE_CONVERSATION } from "./action";
 
 const initialState = {
     loading: false,
     conversations: [],
     totalActive: 0,
-    
+
 }
 
 
-const conversationReducer = (state= initialState,action)=>{
-    switch (action.type){
+const conversationReducer = (state = initialState, action) => {
+    switch (action.type) {
         case ADD_CONVERSATION:
             const current = [...state.conversations];
             current.unshift(action.payload);
             return {
                 ...state,
+                totalActive: action.payload.isOpen,
                 conversations: current
             }
         case GET_CONVERSATION:
@@ -23,23 +24,23 @@ const conversationReducer = (state= initialState,action)=>{
                 loading: true,
             }
         case TOGGLE_CONVERSATION:
-            const toggle = state.conversations.findIndex((cv)=>cv._id === action.payload);
+            const toggle = state.conversations.findIndex((cv) => (cv._id === action.payload || cv.fakeId === action.payload));
+            console.log(action.payload)
             const cloneCv = [...state.conversations];
-            console.log(cloneCv);
-            let newTotal =state.totalActive;
-            if(toggle !== -1){
-                if(state.conversations[toggle]?.isOpen){
-                    cloneCv[toggle].isOpen = "";
-                }else{
-                    newTotal+=1;
-                    cloneCv[toggle].isOpen = newTotal;
-                }
+            let newTotal = state.totalActive;
+            if (toggle !== -1) {
+                cloneCv[toggle].isOpen = "";
+
             }
-            console.log(cloneCv);
             return {
                 ...state,
                 conversations: cloneCv,
                 totalActive: newTotal
+            }
+        case OPEN_CONVERSATION_SUCCESS:
+            return {
+                ...state,
+                ...action.payload
             }
         case GET_CONVERSATION_SUCCESS:
             return {
@@ -48,10 +49,11 @@ const conversationReducer = (state= initialState,action)=>{
                 loading: false,
             }
         case GET_MESSAGE_SUCCESS:
-            const currentMessages =  state.conversations[action.payload.index]?.messages || [];
-            state.conversations[action.payload.index].messages =  [...currentMessages,...action.payload.messages]
-            state.conversations[action.payload.index].pagination =  action.payload.pagination;
-            state.conversations[action.payload.index].isOver =  action.payload.pagination.count === 0;
+            const currentMessages = state.conversations[action.payload.index]?.pagination?.page === action.payload.pagination.page ? [] : state.conversations[action.payload.index]?.messages || [];
+            state.conversations[action.payload.index].messages = [...currentMessages, ...action.payload.messages]
+            state.conversations[action.payload.index].pagination = action.payload.pagination;
+            state.conversations[action.payload.index].isOver = action.payload.pagination.count < 10;
+            state.conversations[action.payload.index].read = [action.payload.user._id];
             return {
                 ...state,
                 loading: false,
@@ -64,33 +66,51 @@ const conversationReducer = (state= initialState,action)=>{
         case UPDATE_CONVERSATION:
             const clone = [...state.conversations];
             let index = -1;
-            if(action?.fakeId){
-                 index =clone.findIndex((cv)=>cv.fakeId === action?.fakeId)
+            let totalActive = state.totalActive;
+            if (action?.fakeId) {
+                index = clone.findIndex((cv) => cv.fakeId === action?.fakeId)
 
-            }else{
+            } else {
 
-                index =clone.findIndex((cv)=>cv._id === action.payload.conversation._id)
-                
+                index = clone.findIndex((cv) => cv._id === action.payload.conversation._id)
+
             }
+            let cloneMessage = clone[index]?.messages ? clone[index].messages : [];
 
-            if(index!==-1){
-                let cloneMessage = clone[index]?.messages?clone[index].messages: [];
-                delete clone[index]?.fakeId;
-                let newConversation = {...clone[index],...action?.payload?.conversation ,messages: [action?.payload?.message,...cloneMessage]};
+            let newConversation = { ...clone[index], ...action?.payload?.conversation, messages: [action?.payload?.message, ...cloneMessage] };
+            if (!newConversation?.isOpen) {
+                newConversation.isOpen = state.totalActive + 1;
+                totalActive = state.totalActive + 1;
+                if (newConversation?.fakeId) {
+                    newConversation.messages.pop();
+                }
+
+            }
+            delete newConversation?.fakeId;
+            if (index !== -1) {
+                if (action?.fakeId) {
+                    newConversation.messages.pop();
+                    totalActive = state.totalActive + 1;
+
+                }
                 clone.splice(index, 1);
+                clone.unshift(newConversation);
+            } else {
+                newConversation.messages.pop();
                 clone.unshift(newConversation);
             }
             return {
                 ...state,
-                conversations: clone
+                conversations: clone,
+                totalActive
             }
-       
+
         default:
             return state;
     }
 }
 
-export const conversationSelector = (state)=> state.conversation;
+export const conversationSelector = (state) => state.conversation;
 
 export default conversationReducer;
 

@@ -2,6 +2,8 @@ import styledComponents from "styled-components";
 
 export const PostWrapper = styledComponents.div`
 
+
+
 & + &{
     margin-top: 2rem;
 }
@@ -34,7 +36,6 @@ export const PostWrapper = styledComponents.div`
             font-weight: 500;
             opacity: .7;
             cursor: pointer;
-            
             margin: .5rem 0;
         }
     }

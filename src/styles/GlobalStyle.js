@@ -18,6 +18,29 @@ body{
     background: rgba(240,242,245,1);
 }
 
+.color-change {
+	-webkit-animation: color-change 2s linear alternate both;
+	        animation: color-change 2s linear alternate both;
+}
+
+@-webkit-keyframes color-change {
+    0% {
+      background: rgba(0,0,0,0.2);
+    }
+    100% {
+      background: unset;
+    }
+  }
+  @keyframes color-change {
+    0% {
+      background: rgba(0,0,0,0.2);
+    }
+    100% {
+      background: unset;
+    }
+  }
+  
+
 i{
     
     &.close-icon{
@@ -94,8 +117,8 @@ ul,li{
 
 
 .ant-btn-primary{
-    background: ${(style)=>style.theme.blueClr};
-    border-color: ${(style)=>style.theme.blueClr};
+    background: ${(style) => style.theme.blueClr};
+    border-color: ${(style) => style.theme.blueClr};
 }
 
 .ant-btn-primary[disabled]{
@@ -108,7 +131,7 @@ ul,li{
 }
 
 .username{
-    color: ${(style)=>style.theme.headingTextClr};
+    color: ${(style) => style.theme.headingTextClr};
     font-size: 1.6rem;
     font-weight: 600;   
 }
@@ -136,26 +159,26 @@ ul,li{
     font-weight: 600;
     &:focus{
         color: white;
-        background: ${(style)=>style.theme.blueClr};
+        background: ${(style) => style.theme.blueClr};
     }
     &:hover{
-        background: ${(style)=>style.theme['fds_blue60']};
+        background: ${(style) => style.theme['fds_blue60']};
     }
     
     
     &.button-primary{
     }
     &-outline{
-        background: ${(style)=>style.theme['secondary']};
+        background: ${(style) => style.theme['secondary']};
         outline: none;
         border: none;
         &:hover{
-            background: ${(style)=>style.theme['fds_gray20']};
+            background: ${(style) => style.theme['fds_gray20']};
             color: initial;
         }
         &:focus{
             color: initial;
-            background: ${(style)=>style.theme['fds_gray20']};
+            background: ${(style) => style.theme['fds_gray20']};
         }
 
     }
@@ -183,7 +206,7 @@ ul,li{
     }
 
     .ant-modal-body{
-        padding: 1rem;
+        padding:1rem 2rem;
     }
     .scope{
         

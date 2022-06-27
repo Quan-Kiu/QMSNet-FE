@@ -1,5 +1,5 @@
-import { Button, Form, Input } from 'antd'
-import { useState } from 'react'
+import { Button, Form, Input, message } from 'antd'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { POST } from '../../../constants'
 import { comment } from '../../../redux/post/action'
@@ -8,63 +8,93 @@ import { CommentInputWrapper } from './CommentInput.style'
 
 const CommentInput = props => {
   const dispatch = useDispatch();
-  const [form]= Form.useForm();
-  const {user} = useSelector(state=>state.auth);
-  const [isDisableButton,setIsDisableButton] = useState(true);
-  const handleOnSubmit = (values)=>{
-    
-    dispatch(comment({
-      link: 'create',
-      data: values,
-      method: POST,
-      isPostDetail: props?.isPostDetail
-    }))
-    form.setFieldsValue({
-      content: ""
-    })
+  const { user } = useSelector(state => state.auth);
+  const [form] = Form.useForm();
+  const inputRef = useRef();
+  const [isDisableButton, setIsDisableButton] = useState(true);
+
+  const isFollowing = user?._id === props?.post?.user?._id || user?.following?.includes(props?.post?.user?._id);
+
+  const handleOnSubmit = (values) => {
+    if (isFollowing) {
+
+      dispatch(comment({
+        link: 'create',
+        data: {
+          ...values,
+          tag: props?.reply?.user || null,
+          reply: props?.reply?._id || null,
+        },
+        method: POST,
+        isPostDetail: props?.isPostDetail
+      }))
+      if (props.reply) {
+        props.setReply(null);
+      }
+      form.setFieldsValue({
+        content: ""
+      })
+    } else {
+      message.warning('Vui lòng theo dõi người dùng trước khi bình luận bài viết này!')
+    }
   }
 
-  const setContent = (values)=>{
-    if(isDisableButton){
+  const setContent = (values) => {
+    if (isDisableButton) {
       setIsDisableButton(false)
     }
     form.setFieldsValue({
-      content: (form.getFieldValue('content')||"")+values
+      content: (form.getFieldValue('content') || "") + values
     })
-    
+
   }
 
+  useEffect(() => {
+    if (props?.reply) {
+      setIsDisableButton(false);
+      form.setFieldsValue({
+        content: `@${props.reply.user.username} `
+      })
+      inputRef?.current?.focus();
+    } else {
+      form.resetFields();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props?.reply])
+
+
   return (
-      <CommentInputWrapper className="comment-input">
-        <Form form={form}  initialValues={{
-          postId: props?.post?._id
-        }} onFinish={handleOnSubmit}>
-          <Form.Item hidden name="postId" >
-            <Input></Input>
-          </Form.Item>
-          <Form.Item style={{
+    <CommentInputWrapper className="comment-input">
+      <Form form={form} initialValues={{
+        postId: props?.post?._id
+      }} onFinish={handleOnSubmit}>
+        <Form.Item hidden name="postId" >
+          <Input></Input>
+        </Form.Item>
+        <Form.Item style={{
           marginBottom: '0'
         }} name="content" rules={[
-            {
-              validator: (_,values)=>{
-                if(!values.trim()){
-                  if(!isDisableButton){
+          {
+            validator: (_, values) => {
+              if (!values.trim()) {
+                if (!isDisableButton) {
 
-                    setIsDisableButton(true)
-                  }
-                }else{
-                  if(isDisableButton){
-                    setIsDisableButton(false)
-                  }
+                  setIsDisableButton(true)
                 }
-                return Promise.resolve();
+              } else {
+                if (isDisableButton) {
+                  setIsDisableButton(false)
+                }
               }
+              return Promise.resolve();
             }
-          ]}>
-            <Input bordered={false} required  placeholder="Thêm bình luận" prefix={<ChooseEmoji id={`comment-emoji-${props?.post?._id+Math.random()}`} setContent={setContent} />} suffix={<Button htmlType="submit" disabled={isDisableButton} type="link">Đăng</Button>}></Input>
-          </Form.Item>
-        </Form>
-      </CommentInputWrapper>
+          }
+        ]}>
+          <Input readOnly={!isFollowing} ref={inputRef} bordered={false} required placeholder={isFollowing ? "Thêm bình luận" : 'Vui lòng theo dõi để bình luận!'} prefix={<ChooseEmoji id={`comment-emoji-${props?.post?._id + Math.random()}`} setContent={setContent} />} suffix={<Button htmlType="submit" disabled={isDisableButton} type="link">Đăng</Button>}></Input>
+        </Form.Item>
+      </Form>
+    </CommentInputWrapper >
   )
 }
 

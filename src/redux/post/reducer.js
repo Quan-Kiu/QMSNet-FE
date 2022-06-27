@@ -1,4 +1,4 @@
-import { GET_POSTS_START, GET_POSTS_SUCCESS, GET_POST_START, GET_POST_SUCCESS, POST_FAILED, SET_POSTS, SET_POST_DETAIL, TOGGLE_MODAL, TOGGLE_NOTIFY } from "./action";
+import { GET_POSTS_START, GET_POSTS_SUCCESS, GET_POST_START, GET_POST_SUCCESS, POST_FAILED, SET_DETAIL_MODAL, SET_POSTS, SET_POST_DETAIL, TOGGLE_MODAL, TOGGLE_NOTIFY } from "./action";
 
 const initialState = {
     data: [],
@@ -6,23 +6,29 @@ const initialState = {
     status: {
         success: false,
     },
+    detailModal: null,
     postDetailLoading: false,
     loading: false,
     postDetail: null,
-    notify: false, 
-    page:0,
+    notify: false,
+    page: 0,
     limit: 20,
 }
 
-const PostReducer = (state=initialState,action) =>{
+const PostReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_POSTS:
             return {
                 ...state,
-                data: {
-                    ...state.data,
-                    posts: action.payload
-                },
+                data: action.payload
+            }
+        case SET_DETAIL_MODAL:
+            return {
+                ...state,
+                detailModal: {
+                    id: action.payload,
+                    params: action?.params
+                }
             }
         case GET_POSTS_START:
             return {
@@ -35,7 +41,7 @@ const PostReducer = (state=initialState,action) =>{
                 loading: false,
                 isOver: action.payload?.pagination?.count === 0,
                 ...action.payload?.pagination,
-                data: [...state?.data,...action.payload.posts],
+                data: [...state?.data, ...action.payload.posts],
             }
         case GET_POST_START:
             return {
@@ -69,13 +75,13 @@ const PostReducer = (state=initialState,action) =>{
                 ...state,
                 notify: !state.notify,
             }
-        
+
         default:
             return state;
     }
 }
 
-export const PostSelector = (state=>state.post);
+export const PostSelector = (state => state.post);
 
 
 export default PostReducer;

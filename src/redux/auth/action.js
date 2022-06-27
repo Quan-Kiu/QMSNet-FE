@@ -9,11 +9,8 @@ export const REFRESH_TOKEN = DOCUMENT + 'REFRESH_TOKEN';
 export const LOGOUT = DOCUMENT + 'LOGOUT';
 export const LOGOUT_SUCCESS = DOCUMENT + 'LOGOUT_SUCCESS';
 
-
-
-
-
 export const UPDATE_PROFILE = DOCUMENT + 'UPDATE_PROFILE';
+export const CHANGE_PASSWORD = DOCUMENT + 'CHANGE_PASSWORD';
 export const UPDATE_PROFILE_SUCCESS = DOCUMENT + 'UPDATE_PROFILE_SUCCESS';
 
 
@@ -37,19 +34,23 @@ export const refreshToken = () => ({
     type: REFRESH_TOKEN,
 })
 
-export const updateProfile = (payload)=>({
+export const updateProfile = (payload) => ({
     type: UPDATE_PROFILE,
     payload
 })
+export const changePassword = (payload) => ({
+    type: CHANGE_PASSWORD,
+    payload
+})
 
-export const updateProfileSuccess = (payload)=>({
+export const updateProfileSuccess = (payload) => ({
     type: UPDATE_PROFILE_SUCCESS,
     payload
 })
 
-export const logout = (payload)=>({
+export const logout = (payload) => ({
     type: LOGOUT,
 })
-export const logoutSuccess = (payload)=>({
+export const logoutSuccess = (payload) => ({
     type: LOGOUT_SUCCESS,
 })

@@ -1,10 +1,7 @@
 import styledComponents from "styled-components";
 
 export const ProfileWrapper = styledComponents.div`
-width: 100%;
 
-margin-top: 10rem;
-padding-right: 10rem;
 
 .header-profile{
     .ant-avatar{

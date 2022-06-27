@@ -2,31 +2,44 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { RequestWrapper } from './Request.style'
 import AvatarCard from '../AvatarCard'
-import { Button, Row } from 'antd'
+import { Button, Col, Row } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUserDetail, userFollow } from '../../../redux/user/action'
+import { useNavigate } from 'react-router-dom'
 
-const Request = props => {
-  return (
-    <RequestWrapper>
-        <AvatarCard src="https://imgt.taimienphi.vn/cf/Images/np/2021/11/26/hinh-anh-avatar-dep-2.jpg" alt=""
-        content={
-            <>
-                <div className="username">
-                    QuanKiu
-                </div>
-                <span>
-                    muốn kết bạn với bạn
-                </span>
+const Request = ({ data }) => {
+    const dispatch = useDispatch();
+    return (
+        <RequestWrapper>
+            <AvatarCard src={data?.avatar?.url} alt={data?.avatar?.url}
+                content={
+                    <Row justify="space-between" align="middle">
+                        <Col>
+                            <div className="username" onClick={() => {
+                                dispatch(setUserDetail(data))
+                            }}>
+                                {data?.username}
+                            </div>
+                            <span>
+                                đã theo dõi bạn.
+                            </span>
+                        </Col>
+                        <Col>
+                            <Button onClick={() => {
+                                dispatch(userFollow({
+                                    path: 'follow' + '/' + data?._id,
+                                    simple: true
+                                }))
+                            }} className="q-button q-button-outline" >Theo dõi lại</Button>
+                        </Col>
 
-            </>
-        }
-        >
-            <Row className="request-actions" justify="space-between">
-            <Button size="large" className="q-button q-button-primary" type="primary">Chấp nhận</Button>
-            <Button size="large" className="q-button q-button-outline" >Hủy lời mời</Button>
-            </Row>
-        </AvatarCard>
-    </RequestWrapper>
-  )
+                    </Row>
+                }
+            >
+
+            </AvatarCard>
+        </RequestWrapper>
+    )
 }
 
 Request.propTypes = {}
