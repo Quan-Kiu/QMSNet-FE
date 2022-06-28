@@ -17,4 +17,13 @@ export const CommentInputWrapper = styledComponents.div`
         padding-right: 0;
         font-weight: 600;
     }
+
+    .disable-comment{
+        input{
+            &::placeholder{
+                padding: 0 1rem;
+            }
+            background: rgba(0,0,0,0.06);
+        }
+    }
 `;

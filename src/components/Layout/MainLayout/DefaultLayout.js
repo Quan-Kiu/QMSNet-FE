@@ -86,7 +86,7 @@ const DefaultLayout = (props) => {
         <HomeWrapper>
             {user && <Header />}
             <Container className="container">
-                <Col xl={4} lg={5} md={3} sm={4} xs={4}>
+                <Col xl={5} lg={5} md={3} sm={4} xs={4}>
                     {user && <Siderbar className="left-bar">
                         <Box className="box-shadow" style={{
                             paddingTop: '0',
@@ -96,7 +96,7 @@ const DefaultLayout = (props) => {
                         </Box>
                     </Siderbar>}
                 </Col>
-                <Col xl={20} lg={19} md={21} sm={20} xs={20} >
+                <Col xl={19} lg={19} md={21} sm={20} xs={20} >
                     <MainContentWrapper>
                         <LayoutRoutes />
                         {user &&

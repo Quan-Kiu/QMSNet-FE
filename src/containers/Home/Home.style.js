@@ -73,8 +73,6 @@ box-shadow: 0px 0px 15px 0px rgba(62,66,66,0.22);
         padding: 0 .8rem;
         top:10rem;
         width: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
         &::-webkit-scrollbar {
             width: 8px;
           }

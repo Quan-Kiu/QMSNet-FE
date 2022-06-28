@@ -260,7 +260,6 @@ ul,li{
     }
 
     .content{
-        margin: 1rem 0;
         width: 100%;
         font-size: 1.9rem;
         outline: none;
@@ -364,6 +363,57 @@ ul,li{
 }
 
 
+.message-action-more{
+    .ant-popover-inner{
+        border-radius: 10px;
+        background: black;
+        .ant-row{
+            .ant-col{
+                cursor: pointer;
+                color: white;
+
+            }
+        }
+
+    }
+    .ant-popover-arrow-content{
+        &::before{
+
+            background: black;
+        }
+    }
+}
+
+
+
+.postActions{
+    z-index: 1000000;
+    font-size: 16px;
+    img, svg{
+        width: 20px;
+        height: 20px;
+    }
+    .ant-popover-inner-content{
+        padding: 1rem;
+        border-radius:10px;
+        min-width:300px;
+
+    }
+    .ant-row{
+        gap: 1rem;
+        align-items: center;
+        padding:1rem 1rem;
+        cursor: pointer;
+        &:hover{
+            background: rgba(0,0,0,0.08);
+        }
+        .ant-col{
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+    }
+}
 
 
 

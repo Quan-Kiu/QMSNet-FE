@@ -21,7 +21,11 @@ export const AuthWrapper = styledComponents.div`
     }
 
     .main__box__logo{
+        img{
+            width: 100px;
+        }
         margin: 2rem auto;
+        margin-bottom: 1rem;
 
     }
 

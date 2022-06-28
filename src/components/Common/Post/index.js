@@ -1,10 +1,11 @@
-import { MoreOutlined } from '@ant-design/icons'
-import { Modal, Row } from 'antd'
+import { DeleteOutlined, EditOutlined, GlobalOutlined, SaveOutlined } from '@ant-design/icons'
+import { Popover, Row, Col, Modal, Button } from 'antd'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import PostModal from '../../../containers/Post/PostModal'
-import { setDetailModal, setPostDetail } from '../../../redux/post/action'
+import { useDispatch } from 'react-redux'
+import { MoreIcon, SaveIcon } from '../../../assets/icon'
+import { deleteMessage } from '../../../redux/conversation/action'
+import { deletePost, setDetailModal, toggleModal } from '../../../redux/post/action'
 import { setUserDetail } from '../../../redux/user/action'
 import { timeAgo } from '../../../utils/time_utils'
 import AvatarCard from '../AvatarCard'
@@ -13,29 +14,38 @@ import Carousel from '../Carousel'
 import Comment from '../Comment'
 import CommentInput from '../CommentInput'
 import PostAction from '../PostAction'
+import PostHeading from '../PostHeading'
 import { PostWrapper } from './Post.style'
 
 
-const Post = ({ post, isPostDetail }) => {
+const Post = ({ post }) => {
+    const [showConfirmDelete, setShowConfirmDelete] = useState(null);
     const dispatch = useDispatch();
     return (<>
+        <Modal centered bodyStyle={{
+            fontSize: '16px'
+        }} visible={showConfirmDelete} footer={<Row justify="end">
+            <Button size="large" onClick={() => {
+                setShowConfirmDelete(null)
+            }} style={{
+                fontWeight: '600'
+            }} type="link">Hủy</Button>
+            <Button size="large" className="q-button" onClick={() => {
+                dispatch(deletePost(showConfirmDelete))
+                setShowConfirmDelete(null);
+            }} type="primary">Xóa</Button>
+        </Row>} onCancel={() => {
+            setShowConfirmDelete(null)
+        }} destroyOnClose={true} title="Bạn có muốn xóa bài viết này?">
+            Chúng tôi sẽ gỡ bài viết này và bạn sẽ không thể khôi phục nó.
+        </Modal>
         <PostWrapper>
 
             <Box className={'post__container'}>
-                <AvatarCard src={post?.user?.avatar?.url} content={
-                    <Row align="middle" justify="space-between">
-                        <div className="info">
-                            <div onClick={() => {
-                                dispatch(setUserDetail(post?.user));
-                            }} className="username">{post?.user?.username}</div>
-                            <div className="createdAt">{timeAgo(post?.createdAt, false)}</div>
-                        </div>
-                        <div className="event">
-                            <MoreOutlined style={{
-                                transform: 'rotate(90deg)'
-                            }} />
-                        </div>
-                    </Row>
+                <AvatarCard style={{
+                    alignItems: 'center'
+                }} src={post?.user?.avatar?.url} content={
+                    <PostHeading post={post} />
                 }>
 
                     <div style={{
@@ -62,7 +72,7 @@ const Post = ({ post, isPostDetail }) => {
                         ).map((cmt) => <Comment comment={cmt} />)}
 
                     </div>
-                    {!isPostDetail && <CommentInput post={post} />}
+                    <CommentInput isPostUser post={post} />
 
                 </AvatarCard>
             </Box>

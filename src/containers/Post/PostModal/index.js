@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import { PostModalWrapper } from './PostModal.style'
-import { Col, Row, Skeleton } from 'antd'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { Button, Col, Modal, Popover, Row, Skeleton } from 'antd'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getPost } from '../../../redux/post/action'
-import Carousel from '../../../components/Common/Carousel'
+import { MoreIcon, SaveIcon } from '../../../assets/icon'
 import AvatarCard from '../../../components/Common/AvatarCard'
-import { timeAgo } from '../../../utils/time_utils'
-import { MoreOutlined } from '@ant-design/icons'
-import CommentInput from '../../../components/Common/CommentInput'
+import Carousel from '../../../components/Common/Carousel'
 import Comment from '../../../components/Common/Comment'
+import CommentInput from '../../../components/Common/CommentInput'
 import PostAction from '../../../components/Common/PostAction'
+import PostHeading from '../../../components/Common/PostHeading'
+import { deletePost, getPost, toggleModal } from '../../../redux/post/action'
+import { timeAgo } from '../../../utils/time_utils'
+import { PostModalWrapper } from './PostModal.style'
 
 const PostModal = props => {
     const { postDetail, postDetailLoading } = useSelector((state) => state.post)
@@ -41,8 +42,10 @@ const PostModal = props => {
     }
     return (
         <PostModalWrapper gutter={[32, 32]}>
+
             {postDetailLoading ?
                 <>
+
                     {!isSimplePost && <Col span={14} className="left">
                         <Skeleton.Avatar loading={true} size={"large"} shape={"square"} />
                     </Col>}
@@ -60,20 +63,9 @@ const PostModal = props => {
                 </Col>}
                     <Col span={isSimplePost ? 24 : 10} className="right">
                         <AvatarCard className="post-detail-header" src={postDetail?.user?.avatar?.url} content={
-                            <Row align="middle" justify="space-between" style={{
-
+                            <PostHeading style={{
                                 padding: '1rem 0'
-                            }}>
-                                <div className="info">
-                                    <div className="username">{postDetail?.user?.username}</div>
-                                    <div className="createdAt">{timeAgo(postDetail?.createdAt, false)}</div>
-                                </div>
-                                <div className="event">
-                                    <MoreOutlined style={{
-                                        transform: 'rotate(90deg)'
-                                    }} />
-                                </div>
-                            </Row>
+                            }} post={postDetail} />
                         } />
 
                         <div className="comments">

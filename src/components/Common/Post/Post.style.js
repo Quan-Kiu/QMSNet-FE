@@ -39,6 +39,8 @@ export const PostWrapper = styledComponents.div`
             margin: .5rem 0;
         }
     }
+
+   
    
   
 `;

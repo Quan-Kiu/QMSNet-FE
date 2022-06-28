@@ -1,3 +1,4 @@
+import { SET_POSTS_USER } from "../post/action";
 import { GET_POST_USER_DETAIL, GET_POST_USER_DETAIL_SUCCESS, GET_USER_REQUESTS, GET_USER_REQUESTS_SUCCESS, GET_USER_SUGGESTIONS, GET_USER_SUGGESTIONS_SUCCESS, SET_USER_DETAIL, SET_USER_DETAIL_SUCCESS, SET_USER_SETTINGS, USER_FAILED, USER_FOLLOW } from "./action";
 
 const initialState = {
@@ -46,6 +47,12 @@ const userReducer = (state = initialState, action) => {
                 requests: action.payload,
                 suggestionLoading: false
             }
+        case SET_POSTS_USER:
+            return {
+                ...state,
+                postUserDetail: action.payload,
+            }
+
         case USER_FAILED:
             return {
                 ...state,

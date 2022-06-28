@@ -30,7 +30,6 @@ const Privacy = () => {
 
     return (
         <PrivacyWrapper>
-            <div className="title">Cài đặt quyền riêng tư</div>
             <Form onFinish={onFinish} labelCol={{ flex: '300px' }}
                 labelAlign="left"
                 labelWrap

@@ -6,46 +6,47 @@ import SearchHistory from '../SearchHistory';
 import callAPi from '../../../../../utils/apiRequest';
 import { GET } from '../../../../../constants';
 import SearchItem from '../SearchItem';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { setUserDetail, setUserSettings } from '../../../../../redux/user/action';
-import {useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { setTabActive } from '../../../../../redux/app/action';
 
 const Search = () => {
-    const [searchs,setSearchs]= useState([]);
-    const [isLoading,setIsLoading] = useState(false);
+    const [searchs, setSearchs] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const typingTimeoutRef = useRef(null);
     const inputRef = useRef(null);
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
-    const {user } = useSelector(state=>state.auth);
+    const { user } = useSelector(state => state.auth);
     const searchHistoryJSON = user?.userSettings?.SEARCH_HISTORY || null;
     const searchHistory = JSON.parse(searchHistoryJSON) || [];
     const dispatch = useDispatch();
     const [form] = Form.useForm();
 
 
-    const onSearchItemClick = (s)=>{
-        const isExist = searchHistory?.findIndex((h)=>h._id === s._id);
-        if(isExist!==-1){
-          searchHistory?.splice(isExist,1);
+    const onSearchItemClick = (s) => {
+        const isExist = searchHistory?.findIndex((h) => h._id === s._id);
+        if (isExist !== -1) {
+            searchHistory?.splice(isExist, 1);
         }
-            searchHistory.unshift(s);
-          form.setFieldsValue({
+        searchHistory.unshift(s);
+        form.setFieldsValue({
             searchInput: ''
-          })
-          dispatch(setUserDetail(s));
-          dispatch(setUserSettings({
+        })
+        dispatch(setUserDetail(s));
+        dispatch(setUserSettings({
             SEARCH_HISTORY: JSON.stringify(searchHistory)
-          }))
-          setSearchs([]);
-  
-      }
+        }))
+        setSearchs([]);
 
-   
-    
+    }
 
-      const handleFilterChange = (e) => {
+
+
+
+    const handleFilterChange = (e) => {
         setIsLoading(true);
-        
+
         if (typingTimeoutRef.current) {
             clearTimeout(typingTimeoutRef.current);
         }
@@ -56,14 +57,14 @@ const Search = () => {
                 .replace(/ /g, '');
             if (!search) {
                 setSearchs([]);
-            } else 
+            } else
                 try {
                     const res = await callAPi(
                         `search?username=${search}`,
                         GET
                     );
-                    if(res?.success){
-                        
+                    if (res?.success) {
+
                         setSearchs(res.data);
                     }
                 } catch (error) {
@@ -73,33 +74,33 @@ const Search = () => {
         }, 300);
     };
 
-  return (
-    <SearchWrapper>
-        <Form form={form}>
+    return (
+        <SearchWrapper>
+            <Form form={form}>
 
-                    <div className="title">Tìm kiếm</div>
-                    <Form.Item name="searchInput" noStyle>
+                <div className="title">Tìm kiếm</div>
+                <Form.Item name="searchInput" noStyle>
 
-                    <Input   ref={inputRef} onChange={handleFilterChange} size="large" prefix={<SearchOutlined />} placeholder="Tìm kiếm" ></Input>
-                    </Form.Item>
-                    <div className="search-history" >
-                        <div className="search-history-title">
-                            Tìm kiếm gần đây
-                        </div>
-                        <div className="remove-search-history" onClick={()=>{
-                            dispatch(setUserSettings({
-                                SEARCH_HISTORY: JSON.stringify([])
-                            }))
-                        }}>Xoá tất cả</div>
+                    <Input ref={inputRef} onChange={handleFilterChange} size="large" prefix={<SearchOutlined />} placeholder="Tìm kiếm" ></Input>
+                </Form.Item>
+                <div className="search-history" >
+                    <div className="search-history-title">
+                        Tìm kiếm gần đây
                     </div>
-                        <div className="search-history-list">
-                            {searchs.length>0 && !isLoading && searchs.map((s,index)=> <SearchItem  onClick={()=>onSearchItemClick(s)} key={index} user={s}/>)}
-                            {searchs.length===0 && searchHistory?.length>0&&searchHistory.map((user,index)=><SearchHistory position={index}  key={index} user={user} />) }
-                            {isLoading && <Spin className="search-loading" indicator={antIcon} />}
-                        </div>
-        </Form>
-                </SearchWrapper>
-  )
+                    <div className="remove-search-history" onClick={() => {
+                        dispatch(setUserSettings({
+                            SEARCH_HISTORY: JSON.stringify([])
+                        }))
+                    }}>Xoá tất cả</div>
+                </div>
+                <div className="search-history-list">
+                    {searchs.length > 0 && !isLoading && searchs.map((s, index) => <SearchItem onClick={() => onSearchItemClick(s)} key={index} user={s} />)}
+                    {searchs.length === 0 && searchHistory?.length > 0 && searchHistory.map((user, index) => <SearchHistory position={index} key={index} user={user} />)}
+                    {isLoading && <Spin className="search-loading" indicator={antIcon} />}
+                </div>
+            </Form>
+        </SearchWrapper>
+    )
 }
 
 export default Search

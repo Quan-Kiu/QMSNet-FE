@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProfileSuccess } from './redux/auth/action';
-import { updateConversation } from './redux/conversation/action';
+import { deleteMessage, updateConversation } from './redux/conversation/action';
 import { getNotify } from './redux/notify/action';
 import { setOnline } from './redux/online/action';
 import { setPostDetail, updatePost } from './redux/post/action';
@@ -51,6 +51,13 @@ const SocketClient = () => {
     }, [socket?.data, dispatch])
 
     useEffect(() => {
+        socket?.data?.on('deleteMessageToClient', (data => {
+            dispatch(deleteMessage(data, true))
+        }))
+        return () => socket?.data?.off('messageToClient');
+    }, [socket?.data, dispatch])
+
+    useEffect(() => {
         socket?.data?.on('notifyToClient', (() => {
             dispatch(getNotify())
         }))
@@ -67,9 +74,8 @@ const SocketClient = () => {
     }, [socket.data, conversation, auth?.user?._id]);
 
     useEffect(() => {
-        socket?.data?.on('checkUserOnlineToMe', ((data) => {
-            console.log(data)
-            const select = conversation?.conversations?.reduce((prev, cv) => {
+        socket?.data?.on('checkUserOnlineToMe', (async (data) => {
+            const select = await conversation?.conversations?.reduce((prev, cv) => {
                 const isExist = cv.participants?.some((p) => data.includes(p._id));
                 if (isExist) {
                     return [...prev, cv];
@@ -78,27 +84,28 @@ const SocketClient = () => {
                 return prev;
             }
                 , []);
-            console.log(select);
             dispatch(setOnline(select))
         }))
         return () => socket?.data?.off('checkUserOnlineToMe');
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [socket?.data, dispatch])
+    }, [socket?.data, conversation, dispatch])
     useEffect(() => {
         socket?.data?.on('checkUserOnlineToClient', ((data) => {
-
             const newConversation = conversation?.conversations?.find((cv) => cv?.participants?.some((p) => p._id === data));
             if (newConversation) {
                 const isExist = online?.data?.find((cv) => cv._id === newConversation._id);
                 if (!isExist) {
-                    dispatch(setOnline([...online?.data, newConversation]))
+                    console.log(isExist);
+                    const current = online?.data || [];
+                    dispatch(setOnline([...current, newConversation]))
                 }
             }
 
 
         }))
         return () => socket?.data?.off('checkUserOnlineToClient');
-    }, [socket?.data, dispatch])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [socket?.data, conversation, dispatch])
 
 
     return <></>;

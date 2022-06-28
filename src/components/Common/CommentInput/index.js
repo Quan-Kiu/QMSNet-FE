@@ -16,7 +16,7 @@ const CommentInput = props => {
   const isFollowing = user?._id === props?.post?.user?._id || user?.following?.includes(props?.post?.user?._id);
 
   const handleOnSubmit = (values) => {
-    if (isFollowing) {
+    if (!props?.post?.disableComment && isFollowing) {
 
       dispatch(comment({
         link: 'create',
@@ -35,17 +35,21 @@ const CommentInput = props => {
         content: ""
       })
     } else {
-      message.warning('Vui lòng theo dõi người dùng trước khi bình luận bài viết này!')
+
+      message.warning('Bạn chưa theo dõi người dùng này, hoặc bài đăng này đã tắt bình luận.')
     }
   }
 
   const setContent = (values) => {
-    if (isDisableButton) {
-      setIsDisableButton(false)
+    if (!props?.post?.disableComment && isFollowing) {
+
+      if (isDisableButton) {
+        setIsDisableButton(false)
+      }
+      form.setFieldsValue({
+        content: (form.getFieldValue('content') || "") + values
+      })
     }
-    form.setFieldsValue({
-      content: (form.getFieldValue('content') || "") + values
-    })
 
   }
 
@@ -91,7 +95,7 @@ const CommentInput = props => {
             }
           }
         ]}>
-          <Input readOnly={!isFollowing} ref={inputRef} bordered={false} required placeholder={isFollowing ? "Thêm bình luận" : 'Vui lòng theo dõi để bình luận!'} prefix={<ChooseEmoji id={`comment-emoji-${props?.post?._id + Math.random()}`} setContent={setContent} />} suffix={<Button htmlType="submit" disabled={isDisableButton} type="link">Đăng</Button>}></Input>
+          <Input className={(props?.post?.disableComment || !isFollowing) && 'disable-comment'} readOnly={props?.post?.disableComment || !isFollowing} ref={inputRef} bordered={false} required placeholder={props?.post?.disableComment ? 'Bài viết đã tắt bình luận' : isFollowing ? "Thêm bình luận" : 'Vui lòng theo dõi để bình luận!'} prefix={<ChooseEmoji id={`comment-emoji-${props?.post?._id + Math.random()}`} setContent={setContent} />} suffix={<Button htmlType="submit" disabled={isDisableButton} type="link">Đăng</Button>}></Input>
         </Form.Item>
       </Form>
     </CommentInputWrapper >

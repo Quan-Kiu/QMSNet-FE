@@ -1,4 +1,5 @@
 import { Col, Row } from 'antd'
+import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ContactIcon, HomeIcon, MessageIcon, NotifyIcon, SearchIcon, SettingIcon } from '../../../../assets/icon'
@@ -95,7 +96,8 @@ const NavBar = props => {
     const { conversations } = useSelector((state) => state.conversation);
 
     const unReadNotify = data?.filter((n) => !n.isRead)?.length || 0;
-    const unReadConversation = conversations?.filter((n) => n?.read?._id && !(n?.read?.some((u) => u === user._id)))?.length || 0;
+    const unReadConversation = conversations?.filter((n) => n?.read && !(n?.read?.some((u) => u === user._id)))?.length || 0
+    console.log(conversations, unReadConversation);
     const navProps = {
         notifyBadge: unReadNotify > 0 ? unReadNotify : null,
         conversationBadge: unReadConversation > 0 ? unReadConversation : null

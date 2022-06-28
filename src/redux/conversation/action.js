@@ -9,7 +9,11 @@ export const TOGGLE_CONVERSATION = 'TOGGLE_CONVERSATION';
 export const OPEN_CONVERSATION = 'OPEN_CONVERSATION';
 export const OPEN_CONVERSATION_SUCCESS = 'OPEN_CONVERSATION_SUCCESS';
 export const GET_MESSAGE = 'GET_MESSAGE';
+export const DELETE_MESSAGE = 'DELETE_MESSAGE';
 export const GET_MESSAGE_SUCCESS = 'GET_MESSAGE_SUCCESS';
+export const CHANGE_MESSAGE = 'CHANGE_MESSAGE';
+export const CHANGE_CONVERSATION = 'CHANGE_CONVERSATION';
+export const READ_MESSAGE = 'READ_MESSAGE';
 
 
 export const addConversation = (payload) => ({
@@ -31,6 +35,23 @@ export const updateConversation = (payload, fakeId = '') => ({
 })
 export const addMessage = (payload) => ({
     type: ADD_MESSAGE,
+    payload,
+})
+export const deleteMessage = (payload, isRealTime) => ({
+    type: DELETE_MESSAGE,
+    payload,
+    isRealTime
+})
+export const readMessage = (payload) => ({
+    type: READ_MESSAGE,
+    payload,
+})
+export const changeMessage = (payload) => ({
+    type: CHANGE_MESSAGE,
+    payload,
+})
+export const changeConversation = (payload) => ({
+    type: CHANGE_CONVERSATION,
     payload,
 })
 export const getMessage = (payload) => ({

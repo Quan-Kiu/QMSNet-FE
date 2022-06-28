@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Row, Col } from 'antd'
-import { CommentIcon, DirectIcon, LikeIcon, SaveIcon, UnlikeIcon } from '../../../assets/icon';
+import { CommentIcon, DirectIcon, LikeIcon, SaveIcon, UnlikeIcon, UnsaveIcon } from '../../../assets/icon';
 import { postAction, setDetailModal } from '../../../redux/post/action';
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components';
@@ -24,7 +24,16 @@ border-top: 1px solid rgba(0,0,0,0.2);
 
 const PostAction = ({ post, isPostDetail, setReply }) => {
     const { user } = useSelector((state) => state.auth);
-    const [isLiked, setIsLiked] = useState(!!post?.likes?.includes(user._id))
+    const [isLiked, setIsLiked] = useState(!!post?.likes?.includes(user?._id))
+    const [isSaved, setIsSaves] = useState(() => {
+        return user?.saved?.some((s) => s?._id === post?._id);
+
+    })
+
+    useEffect(() => {
+        setIsSaves(user?.saved?.some((s) => s?._id === post?._id));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user.saved])
 
     const dispatch = useDispatch();
     return (<PostActionWrapper>
@@ -38,14 +47,12 @@ const PostAction = ({ post, isPostDetail, setReply }) => {
                             dispatch(postAction({
                                 type: 'unlike',
                                 id: post?._id,
-                                isPostDetail
                             }))
                         }} /> : <LikeIcon onClick={() => {
                             setIsLiked(!isLiked);
                             dispatch(postAction({
                                 type: 'like',
                                 id: post?._id,
-                                isPostDetail
                             }))
                         }} />}
 
@@ -68,7 +75,23 @@ const PostAction = ({ post, isPostDetail, setReply }) => {
 
             </Col>
             <Col >
-                <SaveIcon />
+                {isSaved ? <UnsaveIcon onClick={() => {
+                    setIsSaves(!isSaved);
+
+                    dispatch(postAction({
+                        type: 'unsave',
+                        id: post?._id,
+                        isPostDetail,
+                    }))
+                }} /> :
+                    <SaveIcon onClick={() => {
+                        setIsSaves(!isSaved);
+                        dispatch(postAction({
+                            type: 'save',
+                            id: post?._id,
+                            isPostDetail,
+                        }))
+                    }} />}
             </Col>
         </Row>
         <Row className="stats">

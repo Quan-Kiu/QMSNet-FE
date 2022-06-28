@@ -1,4 +1,4 @@
-import { ADD_CONVERSATION, CONVERSATION_FAILED, GET_CONVERSATION, GET_CONVERSATION_SUCCESS, GET_MESSAGE_SUCCESS, OPEN_CONVERSATION, OPEN_CONVERSATION_SUCCESS, TOGGLE_CONVERSATION, UPDATE_CONVERSATION } from "./action";
+import { ADD_CONVERSATION, CHANGE_CONVERSATION, CHANGE_MESSAGE, CONVERSATION_FAILED, GET_CONVERSATION, GET_CONVERSATION_SUCCESS, GET_MESSAGE_SUCCESS, OPEN_CONVERSATION, OPEN_CONVERSATION_SUCCESS, TOGGLE_CONVERSATION, UPDATE_CONVERSATION } from "./action";
 
 const initialState = {
     loading: false,
@@ -23,9 +23,14 @@ const conversationReducer = (state = initialState, action) => {
                 ...state,
                 loading: true,
             }
+        case CHANGE_MESSAGE:
+            return {
+                ...state,
+                conversations: action.payload
+            }
+
         case TOGGLE_CONVERSATION:
             const toggle = state.conversations.findIndex((cv) => (cv._id === action.payload || cv.fakeId === action.payload));
-            console.log(action.payload)
             const cloneCv = [...state.conversations];
             let newTotal = state.totalActive;
             if (toggle !== -1) {
@@ -53,7 +58,6 @@ const conversationReducer = (state = initialState, action) => {
             state.conversations[action.payload.index].messages = [...currentMessages, ...action.payload.messages]
             state.conversations[action.payload.index].pagination = action.payload.pagination;
             state.conversations[action.payload.index].isOver = action.payload.pagination.count < 10;
-            state.conversations[action.payload.index].read = [action.payload.user._id];
             return {
                 ...state,
                 loading: false,
@@ -76,23 +80,24 @@ const conversationReducer = (state = initialState, action) => {
 
             }
             let cloneMessage = clone[index]?.messages ? clone[index].messages : [];
-
+            delete clone[index]?.read;
             let newConversation = { ...clone[index], ...action?.payload?.conversation, messages: [action?.payload?.message, ...cloneMessage] };
+            console.log(action?.payload?.conversation);
             if (!newConversation?.isOpen) {
                 newConversation.isOpen = state.totalActive + 1;
                 totalActive = state.totalActive + 1;
-                if (newConversation?.fakeId) {
-                    newConversation.messages.pop();
-                }
+                newConversation.messages.pop();
 
-            }
-            delete newConversation?.fakeId;
-            if (index !== -1) {
+            } else {
                 if (action?.fakeId) {
                     newConversation.messages.pop();
                     totalActive = state.totalActive + 1;
 
                 }
+            }
+            delete newConversation?.fakeId;
+            if (index !== -1) {
+
                 clone.splice(index, 1);
                 clone.unshift(newConversation);
             } else {

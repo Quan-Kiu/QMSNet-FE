@@ -26,6 +26,7 @@ export const NavBarWrapper = styledComponents.div`
             right: 5px;
         }
         padding: 2rem 1rem;
+        padding-right: 3rem;
         cursor: pointer;
         margin-left: -2.3rem !important;
         margin-right: -2rem !important;

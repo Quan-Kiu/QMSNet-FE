@@ -1,5 +1,5 @@
-import { EditFilled, MailFilled, MailOutlined, MoreOutlined, UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons'
-import { Button, Col, Form, Modal, Row, Space } from 'antd'
+import { DeleteOutlined, EditFilled, MailFilled, MailOutlined, MoreOutlined, StopOutlined, UserAddOutlined, UserDeleteOutlined, WarningOutlined } from '@ant-design/icons'
+import { Button, Col, Form, Modal, Popover, Row, Space } from 'antd'
 import moment from 'moment'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,10 +15,13 @@ import Information from './Form/Infomation'
 import Story from './Form/Story'
 import { ProfileWrapper } from './Profile.style'
 import { useNavigate } from 'react-router-dom'
+import { MoreIcon } from '../../../assets/icon'
+import { addConversation, openConversation } from '../../../redux/conversation/action'
 
 const Profile = props => {
     const { user, status } = useSelector((state) => state.auth);
     const { userDetail, postUserDetail, followLoading } = useSelector((state) => state.user);
+    const { conversations, totalActive } = useSelector((state) => state.conversation);
     const [isShowEditModal, setIsShowEditModal] = useState(false);
     const [isShowEditDetailModal, setIsShowEditDetailModal] = useState(false);
     const form = Form.useForm();
@@ -186,18 +189,58 @@ const Profile = props => {
                                     </Col>
                                     {isFollowed &&
                                         <Col>
-                                            <Button className='q-button q-button-outline' >
+                                            <Button onClick={() => {
+                                                const isExist = conversations.find((cv) => cv.participants[0]._id === userDetail._id || cv.participants[1]._id === userDetail._id);
+                                                if (isExist) {
+                                                    dispatch(openConversation(isExist._id));
+                                                } else {
+                                                    dispatch(addConversation({
+                                                        participants: [user, userDetail],
+                                                        fakeId: userDetail._id,
+                                                        messages: [],
+                                                        isOpen: totalActive + 1,
+                                                    }))
+                                                }
+                                            }} className='q-button q-button-outline' >
                                                 <MailOutlined />
                                                 Nhắn tin
                                             </Button>
                                         </Col>
                                     }
-                                    {user?._id !== userDetail?._id && <Col>
-                                        <Button>
-                                            <MoreOutlined style={{
-                                                transform: 'rotate(90deg)'
+                                    {user?._id !== userDetail?._id && <Col style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}>
+                                        <Popover overlayClassName='postActions' placement="leftTop" content={<>
+                                            <div className="postActions" >
+
+
+                                                <Row onClick={() => {
+                                                }}>
+                                                    <Col>
+                                                        <StopOutlined />
+                                                    </Col>
+                                                    <Col>
+                                                        Chặn người dùng
+                                                    </Col>
+                                                </Row>
+                                                <Row onClick={() => {
+                                                }}>
+                                                    <Col>
+                                                        <WarningOutlined />
+                                                    </Col>
+                                                    <Col>
+                                                        Báo cáo người dùng
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        </>} trigger="click">
+                                            <MoreIcon style={{
+                                                cursor: 'pointer'
                                             }} />
-                                        </Button>
+                                        </Popover>
+
+
                                     </Col>}
                                 </Row>
                             </Col>

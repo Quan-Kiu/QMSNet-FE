@@ -7,14 +7,14 @@ position: fixed;
 left: 0;
 right: 0;
 z-index: 999;
-background: ${(themes)=>themes.theme.bg};
+background: ${(themes) => themes.theme.bg};
 top: 0;
 
 
     .header__content{
         &__logo{
             img{
-                width: 10rem;
+                width: 15rem;
                 object-fit: cover;
             }
         }

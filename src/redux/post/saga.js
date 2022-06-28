@@ -1,9 +1,10 @@
 import { message } from "antd";
 import { all, call, fork, put, takeEvery, select, takeLatest, delay } from 'redux-saga/effects';
-import { GET, PATCH, POST, postEndpoint } from "../../constants";
+import { DELETE, GET, PATCH, POST, postEndpoint } from "../../constants";
 import callAPi from "../../utils/apiRequest";
+import { updateProfileSuccess } from "../auth/action";
 import { handleRealtime } from "../root-saga";
-import { ADD_POST, COMMENT, getPosts, getPostsSuccess, getPostSuccess, GET_POSTS_START, GET_POST_START, HANDLE_UPDATE_POST, postFailed, POST_ACTION, setPostDetail, setPosts, toggleModal, toggleNotify, updatePost } from "./action";
+import { ADD_POST, COMMENT, DELETE_POST, EDIT_POST, getPosts, getPostsSuccess, getPostSuccess, GET_POSTS_START, GET_POST_START, HANDLE_UPDATE_POST, HANDLE_UPDATE_POST_USER, postFailed, POST_ACTION, setDetailModal, setPostDetail, setPosts, setPostsUser, toggleModal, toggleNotify, updatePost, updatePostUser } from "./action";
 import { PostSelector } from "./reducer";
 
 
@@ -16,8 +17,6 @@ function* handleGetPosts() {
             if (res && res.success) {
                 yield put(getPostsSuccess(res.data));
 
-            } else {
-                throw new Error(res.message)
             }
         } catch (error) {
             yield put(postFailed());
@@ -33,8 +32,6 @@ function* handleGetPost() {
             if (res && res.success) {
                 yield put(getPostSuccess(res.data));
 
-            } else {
-                throw new Error(res.message)
             }
         } catch (error) {
             yield put(postFailed());
@@ -52,8 +49,46 @@ function* handleAddPost() {
                 yield put(toggleNotify());
                 yield call(message.success, res.message)
 
-            } else {
-                throw new Error(res.message)
+            }
+        } catch (error) {
+            yield put(postFailed());
+            message.error(error.message);
+        }
+    })
+
+}
+function* handleEditPost() {
+    yield takeEvery(EDIT_POST, function* ({ payload }) {
+        try {
+            const { postDetail } = yield select(state => state.post)
+            const res = yield callAPi(postEndpoint.POSTS + payload._id, PATCH, payload);
+            if (res && res.success) {
+                yield put(toggleModal());
+                if (postDetail?._id === res.data._id) {
+                    yield put(setPostDetail(res.data))
+                }
+                yield put(updatePost(res.data));
+                yield put(updatePostUser(res.data))
+                yield call(message.success, res.message)
+
+            }
+        } catch (error) {
+            yield put(postFailed());
+            message.error(error.message);
+        }
+    })
+
+}
+function* handleDeletePost() {
+    yield takeEvery(DELETE_POST, function* ({ payload }) {
+        try {
+            const res = yield callAPi(postEndpoint.POSTS + payload._id, DELETE);
+            if (res && res.success) {
+                yield put(setDetailModal(null))
+                yield put(updatePostUser(res.data, true))
+                yield put(updatePost(res.data, true));
+                yield call(message.success, res.message)
+
             }
         } catch (error) {
             yield put(postFailed());
@@ -64,14 +99,45 @@ function* handleAddPost() {
 }
 
 export function* handleUpdatePost() {
-    yield takeEvery(HANDLE_UPDATE_POST, function* ({ payload }) {
+    yield takeEvery(HANDLE_UPDATE_POST, function* ({ payload, isDelete }) {
         const { data } = yield select(PostSelector);
         if (data.length > 0) {
             const postsClone = [...data];
             const index = postsClone.findIndex(post => post._id === payload._id);
             if (index !== -1) {
-                postsClone.splice(index, 1, payload);
+                if (isDelete) {
+                    postsClone.splice(index, 1);
+
+                } else {
+
+                    postsClone.splice(index, 1, payload);
+                }
                 yield put(setPosts(postsClone));
+            }
+        }
+    })
+}
+export function* handleUpdatePostUser() {
+    yield takeEvery(HANDLE_UPDATE_POST_USER, function* ({ payload, isDelete }) {
+        const { postUserDetail } = yield select((state) => state.user);
+        if (postUserDetail?.posts?.length > 0) {
+            const postsClone = [...postUserDetail?.posts];
+            const index = postsClone.findIndex(post => post._id === payload._id);
+            let total = postUserDetail?.total;
+            if (index !== -1) {
+                if (isDelete) {
+                    postsClone.splice(index, 1);
+                    total -= 1;
+
+                } else {
+
+                    postsClone.splice(index, 1, payload);
+                }
+                yield put(setPostsUser({
+                    ...postUserDetail,
+                    posts: postsClone,
+                    total
+                }));
             }
         }
     })
@@ -84,17 +150,22 @@ function* handlePostAction() {
             const res = yield callAPi(postEndpoint.POSTS + `${payload.id}/${payload.type}`, PATCH);
             const postDetail = yield select(state => state.post)
             if (res && res.success) {
-                if (postDetail?._id === payload.id || payload.isPostDetail) {
-                    yield put(setPostDetail(res.data))
-                }
-                if (payload.type === 'like') {
+                if (payload.type.match('save')) {
+                    yield put(updateProfileSuccess(res.data))
+                } else {
+                    if (postDetail?._id === payload.id || payload.isPostDetail) {
+                        yield put(setPostDetail(res.data))
+                    }
+                    if (payload.type === 'like') {
 
-                    yield fork(handleRealtime, 'emit', 'likePost', res.data);
-                }
-                yield put(updatePost(res.data))
+                        yield fork(handleRealtime, 'emit', 'likePost', res.data);
+                    }
 
-            } else {
-                throw new Error(res.message)
+
+                    yield put(updatePostUser(res.data))
+                    yield put(updatePost(res.data))
+                }
+
             }
         } catch (error) {
             yield put(postFailed());
@@ -108,7 +179,6 @@ function* handleComment() {
         try {
             const res = yield callAPi('/comment/' + `${payload.link || ''}`, payload.method, payload?.data || {});
             if (res && res.success) {
-                console.log(res);
                 if (payload.isPostDetail) {
                     yield put(setPostDetail(res.data.post))
                 }
@@ -118,11 +188,10 @@ function* handleComment() {
                 if (res.data.comment?.reply) {
                     yield fork(handleRealtime, 'emit', 'replyCommentPost', res.data.comment);
                 }
+                yield put(updatePostUser(res.data.post))
                 yield fork(handleRealtime, 'emit', 'commentPost', res.data.post);
                 yield put(updatePost(res.data.post))
 
-            } else {
-                throw new Error(res.message)
             }
         } catch (error) {
             yield put(postFailed());
@@ -133,6 +202,7 @@ function* handleComment() {
 }
 
 
+
 export default function* rootSaga() {
     yield all([
         fork(handleGetPosts),
@@ -140,7 +210,10 @@ export default function* rootSaga() {
         fork(handlePostAction),
         fork(handleComment),
         fork(handleGetPost),
-        fork(handleUpdatePost)
+        fork(handleUpdatePost),
+        fork(handleEditPost),
+        fork(handleDeletePost),
+        fork(handleUpdatePostUser)
     ])
 }
 

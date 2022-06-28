@@ -1,11 +1,12 @@
-import { CloseOutlined, LoadingOutlined, MinusOutlined, SendOutlined } from '@ant-design/icons'
-import { Avatar, Form, Input, message } from 'antd'
+import { CloseOutlined, LoadingOutlined, MinusOutlined, MoreOutlined, SendOutlined, StopOutlined, UserOutlined, WarningOutlined } from '@ant-design/icons'
+import { Avatar, Badge, Col, Form, Input, message, Popover, Row } from 'antd'
 import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ImageIcon, LikeIcon } from '../../../assets/icon'
 import { authSelector } from '../../../redux/auth/reducer'
 import { addMessage, getMessage, toggleConversation } from '../../../redux/conversation/action'
+import { setUserDetail } from '../../../redux/user/action'
 import ChooseEmoji from '../ChooseEmoji'
 import Message from '../Message'
 import { ConversationItemWrapper } from './ConversationItem.style'
@@ -14,11 +15,15 @@ const ConversationItem = props => {
     const inputRef = useRef();
     const fileRef = useRef();
     const { user } = useSelector(authSelector);
+    const [isPopoverShow, setIsPopoverShow] = useState(false)
+    const { data } = useSelector(state => state.online);
     const [sendIconShow, setSendIconShow] = useState(false);
     const recipient = props?.data?.participants?.find((p) => p._id !== user._id);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
+    const popoverRef = useRef();
     const [mediaLoading, setMediaLoading] = useState(false);
+    const isOnline = data?.find((cv) => cv._id === props?.data?._id);
     useEffect(() => {
         if (props?.data?._id && !props?.data?.pagination) {
 
@@ -119,17 +124,53 @@ const ConversationItem = props => {
                     <div className="header">
                         <div className="header-left">
                             <div className="avatar">
-                                <Avatar src={recipient?.avatar?.url} />
+                                <Badge offset={[-8, 28]} status="success" dot={isOnline}>
+                                    <Avatar src={recipient?.avatar?.url} />
+                                </Badge>
                             </div>
                             <div className="information">
                                 <div className="username">{recipient.username}</div>
-                                <div className="activity-status">
+                                {isOnline && <div className="activity-status">
                                     Đang hoạt động
-                                </div>
+                                </div>}
+
                             </div>
                         </div>
                         <div className="header-right">
-                            <MinusOutlined />
+                            <Popover onBlur={() => {
+                                setIsPopoverShow(false)
+
+                            }} visible={isPopoverShow} overlayClassName='postActions' placement="bottom" content={<>
+                                <div className="postActions" >
+                                    <Row onMouseDown={(e) => {
+                                        dispatch(setUserDetail(recipient))
+                                        setIsPopoverShow(false)
+                                    }}>
+                                        <Col>
+                                            <UserOutlined />
+                                        </Col>
+                                        <Col>
+                                            Xem trang cá nhân
+                                        </Col>
+                                    </Row>
+
+
+                                    <Row onClick={() => {
+                                    }}>
+                                        <Col>
+                                            <StopOutlined />
+                                        </Col>
+                                        <Col>
+                                            Chặn người dùng
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </>} trigger="click">
+                                <MoreOutlined onClick={() => setIsPopoverShow(true)} style={{
+                                    transform: 'rotate(90deg)',
+                                }} />
+                            </Popover>
+
                             <CloseOutlined onClick={() => {
                                 dispatch(toggleConversation(props?.data?._id || props?.data?.fakeId))
                             }} />
@@ -139,7 +180,7 @@ const ConversationItem = props => {
                     <div className="body" onScroll={handleOnScrollTop} >
                         {props?.data?.messages?.map((m, index) => <Message key={index} data={m} nextMess={props?.data?.messages[index - 1] || null} prevMess={props?.data?.messages[index + 1] || null} recipient={recipient} type={m?.sender === user._id ? 'me' : 'friend'} />)}
                     </div>
-                    <div className="footer">
+                    {user.following.includes(recipient?._id || props?.data?.fakeId) ? <div className="footer">
                         <ImageIcon onClick={() => fileRef.current.click()} />
                         <Form.Item name="text" noStyle>
                             <Input ref={inputRef} onKeyDown={(e) => {
@@ -168,9 +209,14 @@ const ConversationItem = props => {
                             })
                         }} />}
 
-                    </div>
+                    </div> : <div className="footer" style={{
+                        textAlign: "center",
+                        justifyContent: "center"
+                    }}>
+                        Bạn không thể trả lời cuộc trò chuyện này
+                    </div>}
                 </ConversationItemWrapper>
-            </Form>
+            </Form >
         </>
     )
 }

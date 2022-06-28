@@ -54,6 +54,10 @@ export const ConversationWrapper = styledComponents.div`
         
 
         .conversation{
+            sup{
+                width: 10px;
+                height: 10px;
+            }
         padding: 1rem;
         margin 0 -1rem;
         cursor: pointer;

@@ -1,4 +1,4 @@
-import { GET_POSTS_START, GET_POSTS_SUCCESS, GET_POST_START, GET_POST_SUCCESS, POST_FAILED, SET_DETAIL_MODAL, SET_POSTS, SET_POST_DETAIL, TOGGLE_MODAL, TOGGLE_NOTIFY } from "./action";
+import { GET_POSTS_START, GET_POSTS_SUCCESS, GET_POST_START, GET_POST_SUCCESS, POST_FAILED, SET_DETAIL_MODAL, SET_POSTS, SET_POSTS_USER, SET_POST_DETAIL, TOGGLE_MODAL, TOGGLE_NOTIFY } from "./action";
 
 const initialState = {
     data: [],
@@ -64,11 +64,13 @@ const PostReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
+                postDetail: null,
+                detailModal: null
             }
         case TOGGLE_MODAL:
             return {
                 ...state,
-                showModal: !state.showModal,
+                showModal: action?.payload || !state.showModal,
             }
         case TOGGLE_NOTIFY:
             return {
