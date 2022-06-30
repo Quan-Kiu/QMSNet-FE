@@ -1,9 +1,7 @@
-import { Col, Input, Row, Modal } from 'antd';
-import React, { useEffect } from 'react';
+import { Col, Modal } from 'antd';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import SignIn from '../../../containers/Auth/SignIn';
-import SignUp from '../../../containers/Auth/SignUp';
 import Friend from '../../../containers/Friend';
 import HomePage from '../../../containers/Home';
 import { HomeWrapper, MainContentWrapper } from '../../../containers/Home/Home.style';
@@ -12,9 +10,8 @@ import Settings from '../../../containers/Settings';
 import Profile from '../../../containers/User/Profile';
 import { setTabActive } from '../../../redux/app/action';
 import { authSelector } from '../../../redux/auth/reducer';
-import { getPosts, setDetailModal, setPostDetail, toggleModal } from '../../../redux/post/action';
+import { getPosts, setDetailModal, setPostDetail } from '../../../redux/post/action';
 import { getUserRequests, getUserSuggestions } from '../../../redux/user/action';
-import AvatarCard from '../../Common/AvatarCard';
 import Box from '../../Common/Box';
 import Container from '../../Common/Container';
 import ConversationPopup from '../../Common/ConversationPopup';
@@ -27,9 +24,13 @@ import Siderbar from './Sidebar';
 const LayoutRoutes = () => {
     const location = useLocation();
     const { tabActive } = useSelector((state) => state.app);
+    const { isLogin } = useSelector(authSelector);
     const { userDetail } = useSelector((state) => state.user);
-    const dispatch = useDispatch();
     const navigate = useNavigate();
+
+
+    const dispatch = useDispatch();
+
     useEffect(() => {
         if (tabActive !== 'home' && location.pathname === "/") {
             dispatch(setTabActive('home'))
@@ -37,10 +38,14 @@ const LayoutRoutes = () => {
         if (location.pathname === "/friend") {
             dispatch(setTabActive('people'))
         }
+        if (location.pathname === "/settings") {
+            dispatch(setTabActive('setting'))
+        }
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname])
+
     useEffect(() => {
         if (userDetail) {
             navigate(`/${userDetail.username}`)
@@ -49,22 +54,6 @@ const LayoutRoutes = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userDetail])
 
-    return (
-        <Routes>
-
-            <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
-            <Route path="/friend" element={<PrivateRoute><Friend /></PrivateRoute>} />
-            <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
-            <Route path="/:slug" element={<PrivateRoute><Profile /></PrivateRoute>} />
-
-        </Routes>
-    )
-}
-
-const DefaultLayout = (props) => {
-    const { user, isLogin } = useSelector(authSelector);
-    const { postDetail, detailModal } = useSelector(state => state.post);
-    const dispatch = useDispatch();
     useEffect(() => {
         if (isLogin) {
             dispatch(getPosts(''));
@@ -75,7 +64,41 @@ const DefaultLayout = (props) => {
     }, [isLogin])
 
 
+
+
+    return (
+        <Routes>
+            <Route path="/" element={
+                <PrivateRoute>
+                    <HomePage />
+                </PrivateRoute>
+            } />
+            <Route path="/friend" element={
+                <PrivateRoute>
+                    <Friend />
+                </PrivateRoute>
+            } />
+            <Route path="/settings" element={
+                <PrivateRoute>
+                    <Settings />
+                </PrivateRoute>
+            } />
+            <Route path="/:slug" element={
+                <PrivateRoute>
+                    <Profile />
+                </PrivateRoute>
+            } />
+        </Routes>
+    )
+}
+
+const DefaultLayout = (props) => {
+    const { user } = useSelector(authSelector);
+    const { postDetail, detailModal } = useSelector(state => state.post);
+    const dispatch = useDispatch();
+
     return <LayoutWrapper>
+
         <Modal afterClose={() => {
             dispatch(setPostDetail(null));
         }} width={`${postDetail?.styles?.background === '#fff' && postDetail?.media?.length === 0 ? '50%' : '90%'}`} bodyStyle={{
@@ -93,11 +116,13 @@ const DefaultLayout = (props) => {
                             paddingBottom: '0',
                         }}>
                             <NavBar />
+
                         </Box>
                     </Siderbar>}
                 </Col>
                 <Col xl={19} lg={19} md={21} sm={20} xs={20} >
                     <MainContentWrapper>
+
                         <LayoutRoutes />
                         {user &&
                             <ConversationPopup />}

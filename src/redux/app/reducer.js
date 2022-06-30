@@ -3,7 +3,8 @@ import { APP_ACTION } from './action';
 const initialState = {
     WIDTH: window.innerWidth,
     appLoading: null,
-    tabActive: 'home'
+    tabActive: 'home',
+    notify: null
 };
 
 const app = (state = initialState, action) => {
@@ -22,6 +23,11 @@ const app = (state = initialState, action) => {
             return {
                 ...state,
                 tabActive: action.payload,
+            };
+        case APP_ACTION.setNotifyModal:
+            return {
+                ...state,
+                notify: action.payload,
             };
         default:
             return state;

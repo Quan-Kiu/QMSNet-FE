@@ -2,6 +2,7 @@ import { message } from "antd";
 import { all, call, fork, put, takeEvery, select, takeLatest, delay } from 'redux-saga/effects';
 import { DELETE, GET, PATCH, POST, postEndpoint } from "../../constants";
 import callAPi from "../../utils/apiRequest";
+import { setNotifyModal } from "../app/action";
 import { updateProfileSuccess } from "../auth/action";
 import { handleRealtime } from "../root-saga";
 import { ADD_POST, COMMENT, DELETE_POST, EDIT_POST, getPosts, getPostsSuccess, getPostSuccess, GET_POSTS_START, GET_POST_START, HANDLE_UPDATE_POST, HANDLE_UPDATE_POST_USER, postFailed, POST_ACTION, setDetailModal, setPostDetail, setPosts, setPostsUser, toggleModal, toggleNotify, updatePost, updatePostUser } from "./action";
@@ -47,12 +48,12 @@ function* handleAddPost() {
             if (res && res.success) {
                 yield put(toggleModal());
                 yield put(toggleNotify());
-                yield call(message.success, res.message)
+                yield put(setNotifyModal(res))
 
             }
         } catch (error) {
             yield put(postFailed());
-            message.error(error.message);
+            yield put(setNotifyModal(error))
         }
     })
 
@@ -69,12 +70,12 @@ function* handleEditPost() {
                 }
                 yield put(updatePost(res.data));
                 yield put(updatePostUser(res.data))
-                yield call(message.success, res.message)
+                yield put(setNotifyModal(res))
 
             }
         } catch (error) {
             yield put(postFailed());
-            message.error(error.message);
+            yield put(setNotifyModal(error))
         }
     })
 
@@ -87,12 +88,11 @@ function* handleDeletePost() {
                 yield put(setDetailModal(null))
                 yield put(updatePostUser(res.data, true))
                 yield put(updatePost(res.data, true));
-                yield call(message.success, res.message)
-
+                yield put(setNotifyModal(res))
             }
         } catch (error) {
             yield put(postFailed());
-            message.error(error.message);
+            yield put(setNotifyModal(error))
         }
     })
 

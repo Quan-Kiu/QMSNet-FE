@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { CreateMessageIcon } from '../../../assets/icon'
 import { GET } from '../../../constants'
-import { addConversation, openConversation, toggleConversation } from '../../../redux/conversation/action'
+import { addConversation, openConversation, toggleConversation, toggleNewConversation } from '../../../redux/conversation/action'
 import callAPi from '../../../utils/apiRequest'
 import SearchItem from '../../Layout/MainLayout/NavBar/SearchItem'
 import ConversationItem from '../ConversationItem'
@@ -12,10 +12,9 @@ import { ConversationItemWrapper } from '../ConversationItem/ConversationItem.st
 import { ConversationPopupWrapper } from './ConversationPopup.style'
 
 const ConversationPopup = props => {
-  const [isShowNewConversationPopup, setIsShowNewConversationPopup] = useState(false);
   const [searchs, setSearchs] = useState([]);
   const { user } = useSelector(state => state.auth);
-  const { conversations, totalActive } = useSelector(state => state.conversation);
+  const { conversations, totalActive, newConversationShow } = useSelector(state => state.conversation);
   const [isLoading, setIsLoading] = useState(false);
   const typingTimeoutRef = useRef(null);
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
@@ -57,7 +56,7 @@ const ConversationPopup = props => {
 
     setSearchs([]);
     const isExist = conversations.find((cv) => cv.participants[0]._id === s._id || cv.participants[1]._id === s._id);
-    setIsShowNewConversationPopup(false)
+    dispatch(toggleNewConversation())
     if (isExist) {
       dispatch(openConversation(isExist._id || isExist.fakeId));
     } else {
@@ -81,17 +80,17 @@ const ConversationPopup = props => {
           conversationOpen.length - 3 >= 0 ? conversationOpen.length - 3 : 0
         ).map((cv) => <img onClick={() => dispatch(openConversation(cv._id || cv.fakeId))} alt={cv.participants.find((p) => p._id !== user._id).avatar.url} src={cv.participants.find((p) => p._id !== user._id).avatar.url} />)}
       </div>
-      <div className="create-conversation-btn" onClick={() => setIsShowNewConversationPopup(!isShowNewConversationPopup)}>
+      <div className="create-conversation-btn" onClick={() => dispatch(toggleNewConversation())}>
 
         <CreateMessageIcon />
       </div>
       <div className="conversation-list">
 
         {conversationOpen.sort((a, b) => a?.isOpen - b?.isOpen).slice(
-          conversationOpen.length - 3 >= 0 ? isShowNewConversationPopup ? (conversationOpen.length - 2) : (conversationOpen.length - 3) : 0,
+          conversationOpen.length - 3 >= 0 ? newConversationShow ? (conversationOpen.length - 2) : (conversationOpen.length - 3) : 0,
           conversationOpen.length
         ).map((cv) => <ConversationItem data={cv} />)}
-        {isShowNewConversationPopup && <ConversationItemWrapper>
+        {newConversationShow && <ConversationItemWrapper>
           <div className="header-new">
             <Row justify="space-between">
 
@@ -102,7 +101,7 @@ const ConversationPopup = props => {
                 Tin nhắn mới
               </div>
               <div className="header-right">
-                <CloseOutlined onClick={() => setIsShowNewConversationPopup(false)} />
+                <CloseOutlined onClick={() => dispatch(toggleNewConversation())} />
               </div>
             </Row>
 

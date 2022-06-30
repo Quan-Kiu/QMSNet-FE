@@ -14,10 +14,15 @@ export const GET_MESSAGE_SUCCESS = 'GET_MESSAGE_SUCCESS';
 export const CHANGE_MESSAGE = 'CHANGE_MESSAGE';
 export const CHANGE_CONVERSATION = 'CHANGE_CONVERSATION';
 export const READ_MESSAGE = 'READ_MESSAGE';
+export const TOGGLE_NEW_CONVERSATION = 'TOGGLE_NEW_CONVERSATION';
 
 
 export const addConversation = (payload) => ({
     type: ADD_CONVERSATION,
+    payload,
+})
+export const toggleNewConversation = (payload) => ({
+    type: TOGGLE_NEW_CONVERSATION,
     payload,
 })
 export const getConversation = (payload) => ({

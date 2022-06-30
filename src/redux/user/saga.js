@@ -5,7 +5,7 @@ import callAPi from "../../utils/apiRequest";
 import { updateProfileSuccess } from "../auth/action";
 import { getPosts } from "../post/action";
 import { handleRealtime } from "../root-saga";
-import { getPostUserDetailSuccess, getUserRequests, getUserRequestsSuccess, getUserSuggestions, getUserSuggestionsSuccess, GET_POST_USER_DETAIL, GET_USER_SUGGESTIONS, setUserDetailSuccess, SET_USER_DETAIL, SET_USER_SETTINGS, userFailed, USER_FOLLOW } from "./action";
+import { getPostUserDetailSuccess, getUserRequests, getUserRequestsSuccess, getUserSuggestions, getUserSuggestionsSuccess, GET_POST_USER_DETAIL, GET_USER_SUGGESTIONS, setUserDetailSuccess, SET_USER_DETAIL, SET_USER_SETTINGS, userFailed, USER_BLOCK, USER_FOLLOW } from "./action";
 
 
 function* handlegetUserDetail() {
@@ -82,6 +82,21 @@ function* handleUserFollow() {
     })
 
 }
+function* handleUserBlock() {
+    yield takeEvery(USER_BLOCK, function* ({ payload }) {
+        try {
+            const res = yield call(callAPi, profileEndpoint.USERS + `/${payload.path}`, payload?.method || PATCH);
+            if (res && res.success) {
+                yield put(updateProfileSuccess(res?.data))
+
+            }
+        } catch (error) {
+            yield put(userFailed());
+            message.error(error.message);
+        }
+    })
+
+}
 function* handleGetPostUserDetail() {
     yield takeEvery(GET_POST_USER_DETAIL, function* ({ payload }) {
         try {
@@ -128,7 +143,8 @@ function* rootSaga() {
         fork(handleGetPostUserDetail),
         fork(handleUserFollow),
         fork(handleGetUserSuggestions),
-        fork(handleGetUserRequest)
+        fork(handleGetUserRequest),
+        fork(handleUserBlock)
     ]);
 }
 

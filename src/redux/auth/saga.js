@@ -1,9 +1,10 @@
 import { message } from "antd";
-import { call, fork, put, takeEvery, all } from "redux-saga/effects";
+import { all, call, fork, put, takeEvery } from "redux-saga/effects";
 import { authEndPoint, GET, PATCH, POST } from "../../constants";
 import callAPi from "../../utils/apiRequest";
-import { setItem, getItem, removeItem } from "../../utils/localStorage";
-import { authFailed, CHANGE_PASSWORD, loginSuccess, LOGIN_START, LOGOUT, logoutSuccess, REFRESH_TOKEN, REGISTER, updateProfileSuccess, UPDATE_PROFILE } from "./action";
+import { removeItem, setItem } from "../../utils/localStorage";
+import { setNotifyModal } from "../app/action";
+import { authFailed, CHANGE_PASSWORD, FORGOT_PASSWORD, loginSuccess, LOGIN_START, LOGOUT, logoutSuccess, REFRESH_TOKEN, REGISTER, SEND_MAIL, updateProfileSuccess, UPDATE_PROFILE } from "./action";
 
 
 function* handleLogin() {
@@ -14,12 +15,43 @@ function* handleLogin() {
                 yield fork(setItem, 'token', res.data.accessToken);
                 yield put(loginSuccess(res.data));
 
-            } else {
-                throw new Error(res.message)
             }
         } catch (error) {
             yield put(authFailed());
-            message.error(error.message);
+            yield put(setNotifyModal(error))
+
+        }
+    })
+
+}
+function* handleSendMail() {
+    yield takeEvery(SEND_MAIL, function* (action) {
+        try {
+            const res = yield call(callAPi, authEndPoint.NEW_VERIFY, POST, action.payload);
+            if (res && res.success) {
+                yield put(setNotifyModal(res))
+                yield put(authFailed());
+
+            }
+        } catch (error) {
+            yield put(authFailed());
+            yield put(setNotifyModal(error))
+        }
+    })
+
+}
+function* handleForgotPassword() {
+    yield takeEvery(FORGOT_PASSWORD, function* (action) {
+        try {
+            const res = yield call(callAPi, authEndPoint.FORGOT_PASSWORD, POST, action.payload);
+            if (res && res.success) {
+                yield put(setNotifyModal(res))
+                yield put(authFailed());
+
+            }
+        } catch (error) {
+            yield put(authFailed());
+            yield put(setNotifyModal(error))
         }
     })
 
@@ -29,13 +61,14 @@ function* handleRegister() {
         try {
             const res = yield call(callAPi, authEndPoint.REGISTER, POST, action.payload);
             if (res && res.success) {
-                message.success(res.message);
+                yield put(setNotifyModal(res))
+                yield put(authFailed());
             } else {
                 throw new Error(res.message)
             }
         } catch (error) {
             yield put(authFailed());
-            message.error(error.message);
+            yield put(setNotifyModal(error))
         }
     })
 
@@ -50,7 +83,6 @@ function* handleRefreshToken() {
                 yield put(loginSuccess(res.data));
             }
         } catch (error) {
-            message.error(error.message);
         }
     })
 }
@@ -110,6 +142,8 @@ function* rootSaga() {
         fork(handleLogout),
         fork(handleRegister),
         fork(handleChangePassword),
+        fork(handleSendMail),
+        fork(handleForgotPassword)
     ]);
 }
 

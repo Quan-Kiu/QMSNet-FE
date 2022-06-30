@@ -18,7 +18,6 @@ const Comment = (props) => {
     const [isLiked, setIsLiked] = useState(!!props?.comment?.likes?.includes(user._id));
     const [isReplyShow, setIsReplyShow] = useState(() => {
         const replys = postDetail?.comments?.filter((cmt) => cmt?.reply && cmt?.reply === props?.comment?._id);
-        console.log(replys, props?.params)
         const isShow = replys?.some((cmt) => cmt._id === props?.params);
 
         return {
@@ -41,7 +40,6 @@ const Comment = (props) => {
         if (postDetail) {
 
             const replys = postDetail?.comments?.filter((cmt) => cmt?.reply && cmt?.reply === props?.comment?._id);
-            console.log(replys);
             if (replys?.length !== isReplyShow?.replys?.length) {
                 setIsReplyShow({
                     replys: replys,
@@ -85,6 +83,14 @@ const Comment = (props) => {
                     <Col flex={1}>
                         <span className="actor">
                             {props?.comment?.user?.username}
+                            <i style={{
+                                backgroundImage: "url('/assets/images/blue-check.png')",
+                                backgroundSize: '15px',
+                                marginLeft: '5px',
+                                width: '15px',
+                                height: '15px',
+                                display: props?.comment?.user?.isAdmin ? "inline-block" : "none"
+                            }}></i>
                         </span>
                         <span className="content">
                             {props?.comment?.content}
@@ -167,6 +173,14 @@ const Comment = (props) => {
                                     <Col flex={1}>
                                         <span className="actor">
                                             {cmt?.user?.username}
+                                            <i style={{
+                                                backgroundImage: "url('/assets/images/blue-check.png')",
+                                                backgroundSize: '15px',
+                                                marginLeft: '5px',
+                                                width: '15px',
+                                                height: '15px',
+                                                display: cmt?.user?.isAdmin ? "inline-block" : "none"
+                                            }}></i>
                                         </span>
                                         <span className="content">
                                             {cmt?.content}

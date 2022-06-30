@@ -95,7 +95,6 @@ const SocketClient = () => {
             if (newConversation) {
                 const isExist = online?.data?.find((cv) => cv._id === newConversation._id);
                 if (!isExist) {
-                    console.log(isExist);
                     const current = online?.data || [];
                     dispatch(setOnline([...current, newConversation]))
                 }

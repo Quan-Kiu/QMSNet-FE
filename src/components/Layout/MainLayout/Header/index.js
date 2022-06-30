@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { CreateIcon, ProfileIcon } from '../../../../assets/icon'
+import { setTabActive } from '../../../../redux/app/action'
 import { logout } from '../../../../redux/auth/action'
 import { authSelector } from '../../../../redux/auth/reducer'
 import { addPost, editPost, toggleModal } from '../../../../redux/post/action'
@@ -71,11 +72,12 @@ const Header = props => {
 
   const handleSubmit = () => {
     const formData = form.getFieldsValue();
+    formData.media = form.getFieldValue('media');
     formData.content = textAreaInputRef.current.value || showModal?.content;
     formData.status = formData?.status || 1;
     formData.styles = currentBG;
-    if (formData?.style?.background !== "#fff" && formData?.media) {
-      delete form?.media
+    if (formData?.styles?.background !== "#fff" && formData?.media) {
+      delete formData?.media
     }
     if (!showModal?._id) {
       dispatch(addPost(formData))
@@ -214,7 +216,7 @@ const Header = props => {
           <Col className="header__content__func">
             <Row gutter={10}>
               <Col className="header__content__func__search">
-                <Input size="large" prefix={<SearchOutlined />} placeholder="Tìm kiếm" ></Input>
+                <Input onClick={() => dispatch(setTabActive('search'))} size="large" prefix={<SearchOutlined />} placeholder="Tìm kiếm" ></Input>
               </Col>
 
               <Col className="header__content__func__create-post">

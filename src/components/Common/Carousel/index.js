@@ -1,11 +1,12 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
-import { Button,Carousel as CarouselAntd } from 'antd';
+import { Button, Carousel as CarouselAntd } from 'antd';
 import { LeftCircleFilled, RightCircleFilled } from '@ant-design/icons';
 import styled from 'styled-components';
 
 const CarouselWrapper = styled.div`
     position: relative;
+    border-top: 1px solid rgba(0,0,0,0.2);
     
     .slick-track{
         display: flex !important;
@@ -31,22 +32,22 @@ const CarouselWrapper = styled.div`
     }
 `;
 
-const Carousel = ({media}) => {
+const Carousel = ({ media }) => {
     const carouselRef = useRef();
-  return (media?.length>0 && <CarouselWrapper>
-                                        <CarouselAntd ref={carouselRef}>
-                                            {media.map((media)=> media?.url.match('/image/')? <img src={media?.url} alt={media?.url} />:<video controls  >
-                                                        <source src={media?.url} type="video/mp4"/>
-                                                    </video>)}
-                                        </CarouselAntd>
-                                        {media.length > 1 && <> <Button className="actions next" type="text" onClick={()=>{
-                                        carouselRef.current.next();
-                                        }}><RightCircleFilled /></Button>
-                                        <Button className="actions prev" type="text" onClick={()=>{
-                                        carouselRef.current.prev();
-                                        }}><LeftCircleFilled /></Button></>}
-                                       
-                                    </CarouselWrapper>)
+    return (media?.length > 0 && <CarouselWrapper>
+        <CarouselAntd ref={carouselRef}>
+            {media.map((media) => media?.url.match('/image/') ? <img src={media?.url} alt={media?.url} /> : <video controls  >
+                <source src={media?.url} type="video/mp4" />
+            </video>)}
+        </CarouselAntd>
+        {media.length > 1 && <> <Button className="actions next" type="text" onClick={() => {
+            carouselRef.current.next();
+        }}><RightCircleFilled /></Button>
+            <Button className="actions prev" type="text" onClick={() => {
+                carouselRef.current.prev();
+            }}><LeftCircleFilled /></Button></>}
+
+    </CarouselWrapper>)
 }
 
 Carousel.propTypes = {}

@@ -18,10 +18,18 @@ const Search = () => {
     const inputRef = useRef(null);
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
     const { user } = useSelector(state => state.auth);
+    const { tabActive } = useSelector(state => state.app);
     const searchHistoryJSON = user?.userSettings?.SEARCH_HISTORY || null;
     const searchHistory = JSON.parse(searchHistoryJSON) || [];
     const dispatch = useDispatch();
     const [form] = Form.useForm();
+
+    useEffect(() => {
+        if (tabActive === 'search') {
+
+            inputRef.current.focus();
+        }
+    }, [tabActive])
 
 
     const onSearchItemClick = (s) => {

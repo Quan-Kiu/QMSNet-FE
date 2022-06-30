@@ -1,20 +1,18 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import axiosClient from '../../../api/axiosClient'
-import { openErrorNotifyModal, openSuccessNotifyModal } from '../../../utils/notifyModal'
-import { Modal } from 'antd'
 import { setNotifyModal } from '../../../redux/app/action'
 
-const Verify = props => {
+const ForgotPassword = props => {
     const params = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const FetchVerify = async () => {
+        const FetchForgotPassword = async () => {
             try {
-                const res = await axiosClient.get(`/verify/${params?.id}`);
+                const res = await axiosClient.get(`/generatePassword/${params?.id}`);
                 if (res.success) {
                     navigate('/');
                     dispatch(setNotifyModal(res))
@@ -24,7 +22,7 @@ const Verify = props => {
                 dispatch(setNotifyModal(error))
             }
         }
-        FetchVerify();
+        FetchForgotPassword();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -36,6 +34,6 @@ const Verify = props => {
     )
 }
 
-Verify.propTypes = {}
+ForgotPassword.propTypes = {}
 
-export default Verify
+export default ForgotPassword

@@ -7,7 +7,11 @@ import styled from 'styled-components';
 import { updateProfile } from '../../../redux/auth/action';
 
 const Wrapper = styled.div`
-
+  img{
+    border-radius: 50%;
+    object-fit:contain;
+    border: thin solid rgba(0,0,0,0.2);
+  }
   .ant-upload.ant-upload-select{
     width: auto;
     height: auto;
@@ -20,7 +24,7 @@ const Wrapper = styled.div`
 `;
 
 const UploadWithUpdate = () => {
-  const {user} = useSelector((state)=>state.auth);
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const uploadRef = useRef();
 
@@ -32,10 +36,11 @@ const UploadWithUpdate = () => {
           public_id: newFileList[0]?.response?.public_id,
         }
       }))
-    };}
+    };
+  }
 
   const uploadImage = async options => {
-    const {action, onSuccess, onError, file, onProgress } = options;
+    const { action, onSuccess, onError, file, onProgress } = options;
     const fmData = new FormData();
     const config = {
       onUploadProgress: event => {
@@ -45,7 +50,7 @@ const UploadWithUpdate = () => {
     fmData.append('upload_preset', 'ijubicjh');
     fmData.append('cloud_name', 'quankiu');
     fmData.append('file', file);
-    
+
     try {
       const res = await axios.post(
         action,
@@ -62,36 +67,36 @@ const UploadWithUpdate = () => {
 
 
   return (<Wrapper>
-  <Row justify="space-between">
-            <Col className="edit-title">
-                Ảnh đại diện
-            </Col>
-            <Col>
-            <ImgCrop rotate>
-      <Upload
-      maxCount={1}
-        ref={uploadRef}
-        action="https://api.cloudinary.com/v1_1/quankiu/upload"
-        listType="picture-card"
-        customRequest={uploadImage}
-        // onPreview={onPreview}
-        onChange={onChange}
-        howUploadList={false}
-      >
-        <Button type="link">
-        Tải lên
-        </Button>
-      </Upload>
-    </ImgCrop>
-            </Col>
-        </Row>
+    <Row justify="space-between">
+      <Col className="edit-title">
+        Ảnh đại diện
+      </Col>
+      <Col>
+        <ImgCrop rotate>
+          <Upload
+            maxCount={1}
+            ref={uploadRef}
+            action="https://api.cloudinary.com/v1_1/quankiu/upload"
+            listType="picture-card"
+            customRequest={uploadImage}
+            // onPreview={onPreview}
+            onChange={onChange}
+            howUploadList={false}
+          >
+            <Button type="link">
+              Tải lên
+            </Button>
+          </Upload>
+        </ImgCrop>
+      </Col>
+    </Row>
     <Row style={{
       flexDirection: "column",
     }} className='edit-preview' align="middle">
-                <Image  loading={true} width={200} src={user?.avatar?.url}></Image>
-               
-      </Row>
-   
+      <Image loading={true} width={200} src={user?.avatar?.url}></Image>
+
+    </Row>
+
   </Wrapper>
   );
 };

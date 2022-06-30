@@ -9,9 +9,11 @@ const Requests = props => {
   const { suggestions, requests } = useSelector(state => state.user)
   return (
     <RequestsWrapper>
-      <Row align="middle" justify="space-between" className="heading">
-        <div className="section-title">
-          Đang theo dõi bạn
+      <Row style={{
+        marginTop: '4rem'
+      }} align="middle" justify="space-between" className="heading">
+        <div className="section-title" >
+          Gợi ý cho bạn
         </div>
         <Link to="/friend">Xem tất cả</Link>
 
@@ -19,6 +21,8 @@ const Requests = props => {
       <div className="requests">
         {requests?.users?.slice(requests?.users?.length - 2,
           requests?.users?.length).map((rq) => <Request data={rq} />)}
+        {suggestions?.users?.slice(suggestions?.users?.length - 2,
+          suggestions?.users?.length).map((rq) => <Request data={rq} suggestion />)}
       </div>
     </RequestsWrapper>
   )

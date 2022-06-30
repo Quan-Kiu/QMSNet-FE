@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getItem } from '../utils/localStorage';
 
 const axiosClient = axios.create({
-    baseURL: 'http://192.168.1.2:5000/api',
+    baseURL: 'http://192.168.1.5:5000/api',
     headers: {
         'content-type': 'application/json',
     },

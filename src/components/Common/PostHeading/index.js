@@ -26,8 +26,8 @@ const PostHeadingWrapper = styled.div`
 
 const PostHeading = ({ post, style }) => {
     const [showConfirmDelete, setShowConfirmDelete] = useState(null);
-    const [isPopoverShow, setIsPopoverShow] = useState(false);
-    const pseudoRef = useRef(null);
+    const [isShowPopover, setIsShowPopover] = useState(false);
+    const popoverRef = useRef(null);
     const { user } = useSelector(state => state.auth);
     const isSaved = user?.saved?.some((s) => s?._id === post?._id);
     const dispatch = useDispatch();
@@ -61,70 +61,87 @@ const PostHeading = ({ post, style }) => {
                 <div className="info">
                     <div onClick={() => {
                         dispatch(setUserDetail(post?.user));
-                    }} className="username">{post?.user?.username}</div>
-                    <div className="createdAt">{timeAgo(post?.createdAt)} - {post?.status === 1 ? <GlobalOutlined /> : <img src="/assets/images/key.png" />} </div>
+                    }} className="username">{post?.user?.username} <i style={{
+                        backgroundImage: "url('/assets/images/blue-check.png')",
+                        backgroundSize: '15px',
+                        width: '15px',
+                        height: '15px',
+                        display: post?.user?.isAdmin ? "inline-block" : "none"
+                    }}></i></div>
+                    <div className="createdAt">{timeAgo(post?.createdAt)} - {post?.status === 1 ? <GlobalOutlined /> : <img src="/assets/images/key.png" alt="key" />} </div>
                 </div>
                 <div className="event">
-                    <Popover overlayClassName='postActions' placement="leftTop" content={<>
-                        <div className="postActions" >
-                            <Row onClick={handleSavePost}>
-                                <Col>
-                                    {isSaved ? <UnsaveIcon /> : <SaveIcon />}
-                                </Col>
-                                <Col>
-                                    {isSaved ? 'Bỏ lưu bài viết' : "Lưu bài viết"}
-                                </Col>
-                            </Row>
-                            {user?._id === post?.user?._id && <Row onClick={() => {
-                                dispatch(toggleModal(post))
-                            }}>
-                                <Col>
-                                    <EditOutlined />
-                                </Col>
-                                <Col>
-                                    Chỉnh sửa bài viết
-                                </Col>
-                            </Row>}
-                            {user?._id === post?.user?._id && <Row onClick={() => {
-                                dispatch(postAction({
-                                    type: 'disableComment',
-                                    id: post?._id,
-                                }))
-                            }}>
-                                <Col>
-                                    {post?.disableComment ? <UnlockOutlined /> : <CommentOutlined />}
-                                </Col>
-                                <Col>
-                                    {post?.disableComment ? 'Mở bình luận' : 'Tắt bình luận'}
+                    <input style={{
+                        width: '0',
+                        height: '0',
+                        border: 'unset'
+                    }} ref={popoverRef} onBlur={() => {
+                        setIsShowPopover(false)
+                    }} type="text" id="more-actions" />
+                    <label htmlFor="more-actions" >
+                        <Popover visible={isShowPopover} overlayClassName='postActions' placement="leftTop" content={<>
+                            <div className="postActions" >
+                                <Row onMouseDown={handleSavePost}>
+                                    <Col>
+                                        {isSaved ? <UnsaveIcon /> : <SaveIcon />}
+                                    </Col>
+                                    <Col>
+                                        {isSaved ? 'Bỏ lưu bài viết' : "Lưu bài viết"}
+                                    </Col>
+                                </Row>
+                                {user?._id === post?.user?._id && <Row onMouseDown={() => {
+                                    dispatch(toggleModal(post))
+                                }}>
+                                    <Col>
+                                        <EditOutlined />
+                                    </Col>
+                                    <Col>
+                                        Chỉnh sửa bài viết
+                                    </Col>
+                                </Row>}
+                                {user?._id === post?.user?._id && <Row onMouseDown={() => {
+                                    dispatch(postAction({
+                                        type: 'disableComment',
+                                        id: post?._id,
+                                    }))
+                                }}>
+                                    <Col>
+                                        {post?.disableComment ? <UnlockOutlined /> : <CommentOutlined />}
+                                    </Col>
+                                    <Col>
+                                        {post?.disableComment ? 'Mở bình luận' : 'Tắt bình luận'}
 
-                                </Col>
-                            </Row>}
-                            {user?._id === post?.user?._id && <Row onClick={() => {
-                                setShowConfirmDelete(post)
-                            }}>
-                                <Col>
-                                    <DeleteOutlined />
-                                </Col>
-                                <Col>
-                                    Xóa bài viết
-                                </Col>
-                            </Row>}
-                            {user?._id !== post?.user?._id && <Row onClick={() => {
-                                setShowConfirmDelete(post)
-                            }}>
-                                <Col>
-                                    <WarningOutlined />
-                                </Col>
-                                <Col>
-                                    Báo cáo bài viết
-                                </Col>
-                            </Row>}
-                        </div>
-                    </>} trigger="click">
-                        <MoreIcon style={{
-                            cursor: 'pointer'
-                        }} />
-                    </Popover>
+                                    </Col>
+                                </Row>}
+                                {user?._id === post?.user?._id && <Row onMouseDown={() => {
+                                    setShowConfirmDelete(post)
+                                }}>
+                                    <Col>
+                                        <DeleteOutlined />
+                                    </Col>
+                                    <Col>
+                                        Xóa bài viết
+                                    </Col>
+                                </Row>}
+                                {user?._id !== post?.user?._id && <Row onMouseDown={() => {
+                                }}>
+                                    <Col>
+                                        <WarningOutlined />
+                                    </Col>
+                                    <Col>
+                                        Báo cáo bài viết
+                                    </Col>
+                                </Row>}
+                            </div>
+                        </>} trigger="click">
+                            <MoreIcon onClick={() => {
+                                popoverRef.current.focus();
+                                setIsShowPopover(true)
+                            }} style={{
+                                cursor: 'pointer'
+                            }} />
+                        </Popover>
+                    </label>
 
                 </div>
             </Row>

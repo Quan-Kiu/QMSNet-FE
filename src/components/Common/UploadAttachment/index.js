@@ -8,7 +8,6 @@ import { UploadWrapper } from './UploadAttachment.style';
 import { toMediaArr } from '../../../utils/image_utils';
 
 const UploadAttachment = ({ onImageChange, maxCount, data }) => {
-  console.log(data);
   const [preview, setPreview] = useState(false);
   const [videoPreview, setVideoPreview] = useState(false);
   const defaultFileList = data || [];
@@ -26,7 +25,6 @@ const UploadAttachment = ({ onImageChange, maxCount, data }) => {
     };
   }
 
-  console.log(defaultFileList)
 
   const [fileList, setFileList] = useState(defaultFileList);
   const onChange = ({ fileList: newFileList, file }) => {

@@ -1,9 +1,10 @@
-import { ADD_CONVERSATION, CHANGE_CONVERSATION, CHANGE_MESSAGE, CONVERSATION_FAILED, GET_CONVERSATION, GET_CONVERSATION_SUCCESS, GET_MESSAGE_SUCCESS, OPEN_CONVERSATION, OPEN_CONVERSATION_SUCCESS, TOGGLE_CONVERSATION, UPDATE_CONVERSATION } from "./action";
+import { ADD_CONVERSATION, CHANGE_MESSAGE, CONVERSATION_FAILED, GET_CONVERSATION, GET_CONVERSATION_SUCCESS, GET_MESSAGE_SUCCESS, OPEN_CONVERSATION_SUCCESS, TOGGLE_CONVERSATION, TOGGLE_NEW_CONVERSATION, UPDATE_CONVERSATION } from "./action";
 
 const initialState = {
     loading: false,
     conversations: [],
     totalActive: 0,
+    newConversationShow: false
 
 }
 
@@ -17,6 +18,11 @@ const conversationReducer = (state = initialState, action) => {
                 ...state,
                 totalActive: action.payload.isOpen,
                 conversations: current
+            }
+        case TOGGLE_NEW_CONVERSATION:
+            return {
+                ...state,
+                newConversationShow: !state.newConversationShow
             }
         case GET_CONVERSATION:
             return {
@@ -82,11 +88,13 @@ const conversationReducer = (state = initialState, action) => {
             let cloneMessage = clone[index]?.messages ? clone[index].messages : [];
             delete clone[index]?.read;
             let newConversation = { ...clone[index], ...action?.payload?.conversation, messages: [action?.payload?.message, ...cloneMessage] };
-            console.log(action?.payload?.conversation);
             if (!newConversation?.isOpen) {
                 newConversation.isOpen = state.totalActive + 1;
                 totalActive = state.totalActive + 1;
-                newConversation.messages.pop();
+                if (!clone[index]?.pagination) {
+
+                    newConversation.messages.pop();
+                }
 
             } else {
                 if (action?.fakeId) {

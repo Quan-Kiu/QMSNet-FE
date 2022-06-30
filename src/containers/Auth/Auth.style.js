@@ -8,6 +8,7 @@ export const AuthWrapper = styledComponents.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    font-size: 1.6rem;
     align-items: center;
     transform: translateX(-50%);
     .pseudo{

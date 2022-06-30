@@ -9,6 +9,9 @@ import SignIn from './Auth/SignIn';
 import SignUp from './Auth/SignUp';
 import io from 'socket.io-client';
 import { getSocket } from '../redux/socket/action';
+import NotifyModal from '../components/Common/NotifyModal';
+import Verify from './Auth/Verify';
+import ForgotPassword from './Auth/ForgotPassword';
 
 
 const AppRoutes = () => {
@@ -17,8 +20,7 @@ const AppRoutes = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(refreshToken())
-        const socket = io('192.168.1.2:5000');
-        console.log(socket)
+        const socket = io('192.168.1.5:5000');
         dispatch(getSocket(socket));
         return () => {
             socket.close();
@@ -35,11 +37,15 @@ const AppRoutes = () => {
 
     return (
         <>
+            <NotifyModal />
+
             <Routes>
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signup" element={<SignUp />} />
+                <Route path="/verify/:id" element={<Verify />} />
+                <Route path="/forgotPassword/:id" element={<ForgotPassword />} />
                 <Route path="*" element={<DefaultLayout />} />
-                <Route path="*" element={<AdminLayout />} />
+                {/* <Route path="*" element={<AdminLayout />} /> */}
             </Routes>
         </>
     );

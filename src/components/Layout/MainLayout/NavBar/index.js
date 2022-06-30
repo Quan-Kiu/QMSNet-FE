@@ -97,7 +97,6 @@ const NavBar = props => {
 
     const unReadNotify = data?.filter((n) => !n.isRead)?.length || 0;
     const unReadConversation = conversations?.filter((n) => n?.read && !(n?.read?.some((u) => u === user._id)))?.length || 0
-    console.log(conversations, unReadConversation);
     const navProps = {
         notifyBadge: unReadNotify > 0 ? unReadNotify : null,
         conversationBadge: unReadConversation > 0 ? unReadConversation : null

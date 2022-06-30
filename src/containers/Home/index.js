@@ -18,19 +18,19 @@ import Requests from './Requests';
 
 const HomePage = (props) => {
     const [windowSize] = UseWindow()
-    const {data,notify,page,isOver} = useSelector(state=>state.post); 
-    const {user} = useSelector(authSelector); 
+    const { data, notify, page, isOver } = useSelector(state => state.post);
+    const { user } = useSelector(authSelector);
     const dispatch = useDispatch();
     const homeRef = useRef();
-    useScrollInfinity(page,getPosts,homeRef,isOver,window);
-
-    
+    useScrollInfinity(page, getPosts, homeRef, isOver, window);
 
 
-   
+
+
+
     return (
         <HomeWrapper>
-            {notify && <div onClick={()=>{
+            {notify && <div onClick={() => {
                 window.location.reload();
             }} className="new-post-notify-popup">
                 Bài viết mới
@@ -39,16 +39,16 @@ const HomePage = (props) => {
                 <Col xl={16} lg={16} md={24} sm={24} xs={24} style={{
                     paddingRight: '5rem',
                 }}>
-                <MainContentWrapper ref={homeRef}>
+                    <MainContentWrapper ref={homeRef}>
                         <Box className="new-post box-shadow" >
                             <Row align="middle">
                                 <Col>
                                     <AvatarCard src={user?.avatar?.url} />
                                 </Col >
-                                <Col onClick={()=>{
-                                        dispatch(toggleModal())
-                                    }} className="new-post__content" flex={1}>
-                                    <Input  size="large" placeholder="Bạn đang nghĩ gì?"></Input>
+                                <Col onClick={() => {
+                                    dispatch(toggleModal())
+                                }} className="new-post__content" flex={1}>
+                                    <Input size="large" placeholder="Bạn đang nghĩ gì?"></Input>
                                 </Col>
                             </Row>
                         </Box>
@@ -57,22 +57,32 @@ const HomePage = (props) => {
                         <div className="posts" style={{
                             marginTop: '2rem'
                         }}>
-                            {data?.map((post)=><Post post={post}/>)}
+                            {data?.length <= 0 && <Box style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                fontSize: '1.8rem',
+                                fontWeight: '600',
+                                justifyContent: 'center',
+                                height: '100px'
+                            }}>
+                                Không có bài viết
+                            </Box>}
+                            {data?.map((post) => <Post post={post} />)}
                         </div>
-                </MainContentWrapper>
+                    </MainContentWrapper>
                 </Col>
                 <Col xl={8} lg={8} md={0}>
-                <Sidebar style={
-                    {
-                        height: windowSize.height-100
-                    }
-                } className="right-bar">
-                    <Requests/>
-                    <Contacts/>
-                </Sidebar>
+                    <Sidebar style={
+                        {
+                            height: windowSize.height - 100
+                        }
+                    } className="right-bar">
+                        <Requests />
+                        <Contacts />
+                    </Sidebar>
                 </Col>
             </Container>
-           
+
         </HomeWrapper>
     );
 };

@@ -1,22 +1,22 @@
-import { DeleteOutlined, EditFilled, MailFilled, MailOutlined, MoreOutlined, StopOutlined, UserAddOutlined, UserDeleteOutlined, WarningOutlined } from '@ant-design/icons'
+import { EditFilled, MailOutlined, UserAddOutlined, UserDeleteOutlined, WarningOutlined } from '@ant-design/icons'
 import { Button, Col, Form, Modal, Popover, Row, Space } from 'antd'
 import moment from 'moment'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { MoreIcon } from '../../../assets/icon'
 import AvatarCard from '../../../components/Common/AvatarCard'
+import BlockBtn from '../../../components/Common/BlockBtn'
 import Box from '../../../components/Common/Box'
 import Layout from '../../../components/Common/Layout'
 import Post from '../../../components/Common/Post'
 import UploadWithUpdate from '../../../components/Common/UploadWithUpdate'
 import { maritalStatus } from '../../../constants'
 import { setTabActive } from '../../../redux/app/action'
-import { getPostUserDetail, userFollow } from '../../../redux/user/action'
-import Information from './Form/Infomation'
+import { addConversation, openConversation } from '../../../redux/conversation/action'
+import { getPostUserDetail, userBlock, userFollow } from '../../../redux/user/action'
 import Story from './Form/Story'
 import { ProfileWrapper } from './Profile.style'
-import { useNavigate } from 'react-router-dom'
-import { MoreIcon } from '../../../assets/icon'
-import { addConversation, openConversation } from '../../../redux/conversation/action'
 
 const Profile = props => {
     const { user, status } = useSelector((state) => state.auth);
@@ -26,10 +26,12 @@ const Profile = props => {
     const [isShowEditDetailModal, setIsShowEditDetailModal] = useState(false);
     const form = Form.useForm();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [isShowModal, setIsShowModal] = useState(false);
     const isFollowed = useMemo(() => !!userDetail?.followers?.includes(user._id), [userDetail]);
+    const popoverRef = useRef();
 
     useEffect(() => {
-
         dispatch(setTabActive(""))
         if (userDetail?._id !== postUserDetail?.user_id) {
             dispatch(getPostUserDetail(userDetail?._id));
@@ -48,9 +50,7 @@ const Profile = props => {
     const handleShowEditDetailModal = (component) => {
         setIsShowEditDetailModal(component);
     }
-    const handleCloseEditDetailModal = () => {
-        setIsShowEditDetailModal(false);
-    }
+
 
     useEffect(() => {
         if (status.success && isShowEditDetailModal) {
@@ -67,7 +67,7 @@ const Profile = props => {
         }))
     }
 
-    const introductionElement = <>{userDetail?.works?.map((work, index) => (<Space>
+    const introductionElement = useMemo(() => <>{userDetail?.works?.map((work, index) => (<Space>
         <img src="/assets/images/work.png" alt="works" />
         <p>{work?.working ? 'Đang làm việc tại ' : 'Đã làm việc tại '}<b>{work.name}</b></p>
     </Space>
@@ -120,17 +120,17 @@ const Profile = props => {
         <Space>
             <img src="/assets/images/joined.png" alt="joined" />
             <div className="join">Tham gia vào {moment(userDetail?.createdAt).format('MM, YYYY')}</div>
-        </Space></>
-    const navigate = useNavigate()
+        </Space></>, [userDetail])
 
 
     return (
         <>
             <Modal width={800} maskStyle={{
                 color: 'black'
-            }} destroyOnClose={true} footer={null} title={'Chỉnh sửa'} className="edit-detail-profile-modal" visible={!!isShowEditDetailModal} onCancel={handleCloseEditDetailModal}>
+            }} destroyOnClose={true} footer={null} title={'Chỉnh sửa'} className="edit-detail-profile-modal" visible={!!isShowEditDetailModal} onCancel={() => setIsShowEditDetailModal(false)}>
                 {isShowEditDetailModal}
             </Modal>
+
             <Modal destroyOnClose={true} footer={null} width={700} visible={isShowEditModal} onCancel={handleCloseEditModal} className="edit-profile-modal" title="Chỉnh sửa thông tin cá nhân">
 
                 <UploadWithUpdate />
@@ -177,7 +177,14 @@ const Profile = props => {
                                 <AvatarCard style={{
                                     alignItems: "center"
                                 }} src={userDetail?.avatar.url} className={'avatar'} content={<>
-                                    <div className="username">{userDetail?.username}</div>
+                                    <div className="username">{userDetail?.username}<i style={{
+                                        backgroundImage: "url('/assets/images/blue-check.png')",
+                                        backgroundSize: '20px',
+                                        marginLeft: '5px',
+                                        width: '20px',
+                                        height: '20px',
+                                        display: userDetail?.isAdmin ? "inline-block" : "none"
+                                    }}></i></div>
                                     <div className="fullname">{userDetail?.fullname}</div>
                                 </>} />
                             </Col>
@@ -211,36 +218,45 @@ const Profile = props => {
                                         display: 'flex',
                                         alignItems: 'center',
                                     }}>
-                                        <Popover overlayClassName='postActions' placement="leftTop" content={<>
-                                            <div className="postActions" >
+                                        <input style={{
+                                            width: '0',
+                                            height: '0',
+                                            border: 'unset'
+                                        }} ref={popoverRef} onBlur={() => {
+                                            setIsShowModal(false)
+                                        }} type="text" id="more-actions" />
+                                        <label htmlFor="more-actions" >
+
+                                            <Popover visible={isShowModal} overlayClassName='postActions' placement="bottom" content={<>
+                                                <div className="postActions" >
+                                                    <BlockBtn user={userDetail} onMouseDown={() => {
 
 
-                                                <Row onClick={() => {
-                                                }}>
-                                                    <Col>
-                                                        <StopOutlined />
-                                                    </Col>
-                                                    <Col>
-                                                        Chặn người dùng
-                                                    </Col>
-                                                </Row>
-                                                <Row onClick={() => {
-                                                }}>
-                                                    <Col>
-                                                        <WarningOutlined />
-                                                    </Col>
-                                                    <Col>
-                                                        Báo cáo người dùng
-                                                    </Col>
-                                                </Row>
-                                            </div>
-                                        </>} trigger="click">
-                                            <MoreIcon style={{
-                                                cursor: 'pointer'
-                                            }} />
-                                        </Popover>
+                                                        dispatch(userBlock({ path: `block/${userDetail?._id}` }))
+
+                                                        setTimeout(() => navigate('/settings', { state: 'block' }), 1)
 
 
+                                                    }} />
+                                                    <Row onMouseDown={(e) => {
+                                                    }}>
+                                                        <Col>
+                                                            <WarningOutlined />
+                                                        </Col>
+                                                        <Col>
+                                                            Báo cáo người dùng
+                                                        </Col>
+                                                    </Row>
+                                                </div>
+                                            </>} trigger="click">
+                                                <MoreIcon onClick={() => {
+                                                    popoverRef.current.focus();
+                                                    setIsShowModal(true)
+                                                }} style={{
+                                                    cursor: 'pointer'
+                                                }} />
+                                            </Popover>
+                                        </label>
                                     </Col>}
                                 </Row>
                             </Col>
