@@ -6,8 +6,21 @@ const initialState = {
     loading: false,
     postLoading: false,
     suggestionLoading: false,
-    suggestionLoading: false,
-    suggestions: null,
+    suggestions: {
+        users: [],
+        userIgnore: [],
+        total: 8,
+
+    },
+    requestLoading: false,
+    requests: {
+        users: [],
+        pagination: {
+            page: 0,
+            limit: 8,
+            count: 8
+        },
+    },
     status: {
         success: false,
     }
@@ -33,19 +46,26 @@ const userReducer = (state = initialState, action) => {
         case GET_USER_SUGGESTIONS_SUCCESS:
             return {
                 ...state,
-                suggestions: action.payload,
+                suggestions: {
+                    ...action.payload,
+                    userIgnore: [...state?.suggestions?.userIgnore, ...action.payload.userIgnore],
+                    users: [...state?.suggestions?.users, ...action.payload.users]
+                },
                 suggestionLoading: false
             }
         case GET_USER_REQUESTS:
             return {
                 ...state,
-                suggestionLoading: true
+                requestLoading: true
             }
         case GET_USER_REQUESTS_SUCCESS:
             return {
                 ...state,
-                requests: action.payload,
-                suggestionLoading: false
+                requests: {
+                    ...action.payload,
+                    users: [...state?.requests?.users, ...action.payload.users]
+                },
+                requestLoading: false
             }
         case SET_POSTS_USER:
             return {
@@ -58,6 +78,8 @@ const userReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 postLoading: false,
+                followLoading: false,
+                requestLoading: false,
                 suggestionLoading: false,
             }
         case SET_USER_DETAIL_SUCCESS:

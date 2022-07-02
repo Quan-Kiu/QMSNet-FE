@@ -26,12 +26,12 @@ const PostAction = ({ post, isPostDetail, setReply }) => {
     const { user } = useSelector((state) => state.auth);
     const [isLiked, setIsLiked] = useState(!!post?.likes?.includes(user?._id))
     const [isSaved, setIsSaves] = useState(() => {
-        return user?.saved?.some((s) => s?._id === post?._id);
+        return user?.saved?.includes(post?._id);
 
     })
 
     useEffect(() => {
-        setIsSaves(user?.saved?.some((s) => s?._id === post?._id));
+        setIsSaves(user?.saved?.includes(post?._id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user.saved])
 

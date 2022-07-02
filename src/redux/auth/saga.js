@@ -1,9 +1,10 @@
 import { message } from "antd";
-import { all, call, fork, put, takeEvery } from "redux-saga/effects";
+import { all, call, fork, put, takeEvery, select } from "redux-saga/effects";
 import { authEndPoint, GET, PATCH, POST } from "../../constants";
 import callAPi from "../../utils/apiRequest";
 import { removeItem, setItem } from "../../utils/localStorage";
 import { setNotifyModal } from "../app/action";
+import { setUserDetailSuccess } from "../user/action";
 import { authFailed, CHANGE_PASSWORD, FORGOT_PASSWORD, loginSuccess, LOGIN_START, LOGOUT, logoutSuccess, REFRESH_TOKEN, REGISTER, SEND_MAIL, updateProfileSuccess, UPDATE_PROFILE } from "./action";
 
 
@@ -96,9 +97,14 @@ function* handleLogout() {
 
 function* handleUpdateProfile() {
     yield takeEvery(UPDATE_PROFILE, function* ({ payload }) {
+        const { userDetail } = yield select(state => state.user);
         try {
+
             const res = yield call(callAPi, authEndPoint.UPDATE_PROFILE, PATCH, payload);
             if (res && res.success) {
+                if (userDetail?._id === res.data._id) {
+                    yield put(setUserDetailSuccess(res.data))
+                }
                 yield put(updateProfileSuccess(res.data));
                 message.success(res.message);
 

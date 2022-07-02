@@ -1,4 +1,6 @@
 import styledComponents from "styled-components";
+import { sm } from "../../../../constants";
+import useResponsive from "../../../../hooks/useResponsive";
 
 export const HeaderWrapper = styledComponents.div`
     padding: 2rem 4rem;
@@ -44,6 +46,12 @@ top: 0;
                     gap: .5rem;
                     border-radius: 8px;
                     font-weight: 500;
+                    span{
+                            ${useResponsive`${sm};
+                            display: none;
+                            `}
+                        }
+
                 }
                 svg{
                     width: 2rem;

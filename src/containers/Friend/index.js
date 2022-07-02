@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react'
-import PropTypes from 'prop-types'
-import { FriendWrapper } from './Friend.style'
-import { Row, Col, Button } from 'antd'
-import { useSelector, useDispatch } from 'react-redux'
-import RequestCard from '../../components/Common/RequestCard'
+import { Button, Col, Row } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
 import Layout from '../../components/Common/Layout'
+import Loader from '../../components/Common/Loader'
+import RequestCard from '../../components/Common/RequestCard'
 import { getUserRequests, getUserSuggestions } from '../../redux/user/action'
+import { FriendWrapper } from './Friend.style'
 
 
 const Friend = props => {
-    const { suggestions, requests } = useSelector(state => state.user)
+    const { suggestions, requests, suggestionLoading, requestLoading } = useSelector(state => state.user)
+    const dispatch = useDispatch()
 
 
     return (
@@ -29,9 +29,15 @@ const Friend = props => {
                         <RequestCard data={user} />
                     </Col>)}
                 </Row>
+                <Loader loading={requestLoading} />
+
                 <Row>
-                    <Button size="large" className="q-button q-button-outline">Xem thêm</Button>
+                    {requests.pagination.count === 8 &&
+                        <Button size="large" className="q-button q-button-outline" onClick={() => {
+                            dispatch(getUserRequests())
+                        }}>Xem thêm</Button>}
                 </Row>
+
                 <Row justify="space-between" align="middle">
                     <Col>
                         <div className="section-title">
@@ -45,8 +51,11 @@ const Friend = props => {
                         <RequestCard suggestions data={user} />
                     </Col>)}
                 </Row>
-                {<Row>
-                    <Button size="large" className="q-button q-button-outline">Xem thêm</Button>
+                <Loader loading={suggestionLoading} />
+                {suggestions.total === 8 && <Row>
+                    <Button size="large" onClick={() => {
+                        dispatch(getUserSuggestions())
+                    }} className="q-button q-button-outline">Xem thêm</Button>
                 </Row>}
 
             </FriendWrapper>

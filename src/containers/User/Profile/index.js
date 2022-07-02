@@ -8,6 +8,7 @@ import { MoreIcon } from '../../../assets/icon'
 import AvatarCard from '../../../components/Common/AvatarCard'
 import BlockBtn from '../../../components/Common/BlockBtn'
 import Box from '../../../components/Common/Box'
+import FollowModal from '../../../components/Common/FollowModal'
 import Layout from '../../../components/Common/Layout'
 import Post from '../../../components/Common/Post'
 import UploadWithUpdate from '../../../components/Common/UploadWithUpdate'
@@ -30,10 +31,20 @@ const Profile = props => {
     const [isShowModal, setIsShowModal] = useState(false);
     const isFollowed = useMemo(() => !!userDetail?.followers?.includes(user._id), [userDetail]);
     const popoverRef = useRef();
+    const [followModal, setFollowModal] = useState({
+        visible: false,
+        userIds: null,
+        title: ''
+    });
 
     useEffect(() => {
         dispatch(setTabActive(""))
         if (userDetail?._id !== postUserDetail?.user_id) {
+            setFollowModal({
+                visible: false,
+                userIds: null,
+                title: ''
+            })
             dispatch(getPostUserDetail(userDetail?._id));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,15 +112,31 @@ const Profile = props => {
             <div className="bod">Sinh ngày {moment(userDetail?.dob).format('DD/MM/YYYY')}</div>
         </Space>}
 
-        <Space>
+        {(!userDetail?.userSettings?.PRIVACY?.followers || userDetail?.userSettings?.PRIVACY?.followers === 1) && <Space>
             <img src="/assets/images/followers.png" alt="followers" />
-            <div className="followers">Có <b>{userDetail?.followers.length}</b> người theo dõi</div>
-        </Space>
-        <Space>
+            <div className="followers">Có <b style={{
+                cursor: 'pointer'
+            }} onClick={() => {
+                setFollowModal({
+                    userIds: userDetail?.followers,
+                    title: 'Người theo dõi',
+                    visible: true,
+                })
+            }}>{userDetail?.followers.length}</b> người theo dõi</div>
+        </Space>}
+        {(!userDetail?.userSettings?.PRIVACY?.following || userDetail?.userSettings?.PRIVACY?.following === 1) && <Space>
 
             <img src="/assets/images/followers.png" alt="followers" />
-            <div className="following">Đang theo dõi <b>{userDetail?.following.length}</b> người</div>
-        </Space>
+            <div className="following">Đang theo dõi <b style={{
+                cursor: 'pointer'
+            }} onClick={() => {
+                setFollowModal({
+                    userIds: userDetail?.following,
+                    title: 'Đang theo dõi',
+                    visible: true,
+                })
+            }}>{userDetail?.following.length}</b> người</div>
+        </Space>}
         {userDetail?.maritalStatus &&
             <Space>
                 <img src="/assets/images/maritalStatus.png" alt="maritalStatus" />
@@ -125,6 +152,7 @@ const Profile = props => {
 
     return (
         <>
+            {<FollowModal visible={followModal.visible} setVisible={setFollowModal} title={followModal.title} userIds={followModal.userIds} />}
             <Modal width={800} maskStyle={{
                 color: 'black'
             }} destroyOnClose={true} footer={null} title={'Chỉnh sửa'} className="edit-detail-profile-modal" visible={!!isShowEditDetailModal} onCancel={() => setIsShowEditDetailModal(false)}>

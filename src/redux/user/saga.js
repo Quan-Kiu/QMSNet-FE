@@ -1,11 +1,11 @@
 import { message } from "antd";
-import { all, call, fork, put, takeEvery } from "redux-saga/effects";
+import { all, call, fork, put, takeEvery, select } from "redux-saga/effects";
 import { GET, PATCH, POST, postEndpoint, profileEndpoint } from "../../constants";
 import callAPi from "../../utils/apiRequest";
 import { updateProfileSuccess } from "../auth/action";
 import { getPosts } from "../post/action";
 import { handleRealtime } from "../root-saga";
-import { getPostUserDetailSuccess, getUserRequests, getUserRequestsSuccess, getUserSuggestions, getUserSuggestionsSuccess, GET_POST_USER_DETAIL, GET_USER_SUGGESTIONS, setUserDetailSuccess, SET_USER_DETAIL, SET_USER_SETTINGS, userFailed, USER_BLOCK, USER_FOLLOW } from "./action";
+import { getPostUserDetailSuccess, getUserRequests, getUserRequestsSuccess, getUserSuggestions, getUserSuggestionsSuccess, GET_POST_USER_DETAIL, GET_USER_REQUESTS, GET_USER_SUGGESTIONS, setUserDetailSuccess, SET_USER_DETAIL, SET_USER_SETTINGS, userFailed, USER_BLOCK, USER_FOLLOW } from "./action";
 
 
 function* handlegetUserDetail() {
@@ -28,7 +28,11 @@ function* handlegetUserDetail() {
 function* handleGetUserSuggestions() {
     yield takeEvery(GET_USER_SUGGESTIONS, function* ({ payload }) {
         try {
-            const res = yield call(callAPi, profileEndpoint.USERS + `/suggestions`, GET);
+            const { suggestions } = yield select(state => state.user)
+            console.log(suggestions)
+            const res = yield call(callAPi, profileEndpoint.USERS + `/suggestions`, POST, {
+                userIgnore: suggestions?.userIgnore || []
+            });
             if (res && res.success) {
                 yield put(getUserSuggestionsSuccess(res.data));
 
@@ -43,9 +47,10 @@ function* handleGetUserSuggestions() {
 
 }
 function* handleGetUserRequest() {
-    yield takeEvery(GET_USER_SUGGESTIONS, function* ({ payload }) {
+    yield takeEvery(GET_USER_REQUESTS, function* ({ payload }) {
+        const { requests } = yield select(state => state.user);
         try {
-            const res = yield call(callAPi, profileEndpoint.USERS + `/requests`, GET);
+            const res = yield call(callAPi, profileEndpoint.USERS + `/requests?page=${Number(requests.pagination.page) + 1}&limit=${requests.pagination.limit}`, POST);
             if (res && res.success) {
                 yield put(getUserRequestsSuccess(res.data));
 
@@ -65,13 +70,19 @@ function* handleUserFollow() {
         try {
             const res = yield call(callAPi, profileEndpoint.USERS + `/${payload.path}`, PATCH);
             if (res && res.success) {
-                yield put(getUserRequests())
-                yield put(getUserSuggestions())
+
+                const { userDetail } = yield select(state => state.user)
+
                 yield fork(handleRealtime, "emit", "follow", res?.data?.follower);
                 yield put(updateProfileSuccess(res?.data?.following))
                 if (!payload?.simple) {
                     yield put(setUserDetailSuccess(res?.data?.follower))
                 }
+                if (userDetail._id === res.data.following._id) {
+                    yield put(setUserDetailSuccess(res?.data?.following))
+
+                }
+                yield put(userFailed());
             } else {
                 throw new Error(res.message)
             }
@@ -120,6 +131,7 @@ function* handleSetUserSettings() {
             const res = yield call(callAPi, profileEndpoint.USERS + '/userSettings', POST, payload);
             if (res && res.success) {
                 yield put(updateProfileSuccess(res.data));
+                yield put(userFailed());
                 if (payload?.PRIVACY) {
                     message.success(res.message);
                 }

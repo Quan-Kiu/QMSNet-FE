@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import AvatarCard from '../../components/Common/AvatarCard';
 import Box from '../../components/Common/Box';
 import Container from '../../components/Common/Container';
+import Loader from '../../components/Common/Loader';
 import Post from '../../components/Common/Post';
 import Sidebar from '../../components/Layout/MainLayout/Sidebar';
 import useScrollInfinity from '../../hooks/useScrollInfinity';
@@ -18,7 +19,7 @@ import Requests from './Requests';
 
 const HomePage = (props) => {
     const [windowSize] = UseWindow()
-    const { data, notify, page, isOver } = useSelector(state => state.post);
+    const { data, notify, page, isOver, loading } = useSelector(state => state.post);
     const { user } = useSelector(authSelector);
     const dispatch = useDispatch();
     const homeRef = useRef();
@@ -39,6 +40,7 @@ const HomePage = (props) => {
                 <Col xl={16} lg={16} md={24} sm={24} xs={24} style={{
                     paddingRight: '5rem',
                 }}>
+
                     <MainContentWrapper ref={homeRef}>
                         <Box className="new-post box-shadow" >
                             <Row align="middle">
@@ -57,7 +59,7 @@ const HomePage = (props) => {
                         <div className="posts" style={{
                             marginTop: '2rem'
                         }}>
-                            {data?.length <= 0 && <Box style={{
+                            {data?.length <= 0 && !loading && <Box style={{
                                 display: 'flex',
                                 alignItems: 'center',
                                 fontSize: '1.8rem',
@@ -69,9 +71,10 @@ const HomePage = (props) => {
                             </Box>}
                             {data?.map((post) => <Post post={post} />)}
                         </div>
+                        <Loader loading={loading} />
                     </MainContentWrapper>
                 </Col>
-                <Col xl={8} lg={8} md={0}>
+                <Col xl={8} lg={8} md={0} sm={0} xs={0}>
                     <Sidebar style={
                         {
                             height: windowSize.height - 100

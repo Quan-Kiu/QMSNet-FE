@@ -6,6 +6,7 @@ import Friend from '../../../containers/Friend';
 import HomePage from '../../../containers/Home';
 import { HomeWrapper, MainContentWrapper } from '../../../containers/Home/Home.style';
 import PostModal from '../../../containers/Post/PostModal';
+import Saved from '../../../containers/Post/Saved';
 import Settings from '../../../containers/Settings';
 import Profile from '../../../containers/User/Profile';
 import { setTabActive } from '../../../redux/app/action';
@@ -26,6 +27,7 @@ const LayoutRoutes = () => {
     const { tabActive } = useSelector((state) => state.app);
     const { isLogin } = useSelector(authSelector);
     const { userDetail } = useSelector((state) => state.user);
+    const { user } = useSelector((state) => state.auth);
     const navigate = useNavigate();
 
 
@@ -40,6 +42,10 @@ const LayoutRoutes = () => {
         }
         if (location.pathname === "/settings") {
             dispatch(setTabActive('setting'))
+        }
+        if (location.pathname === '/saved') {
+
+            dispatch(setTabActive(''))
         }
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0;
@@ -56,7 +62,9 @@ const LayoutRoutes = () => {
 
     useEffect(() => {
         if (isLogin) {
-            dispatch(getPosts(''));
+            dispatch(getPosts({
+                postIds: [...user.following, '62bd4800bfda3cce913e51e8']
+            }));
             dispatch(getUserSuggestions())
             dispatch(getUserRequests())
         }
@@ -81,6 +89,11 @@ const LayoutRoutes = () => {
             <Route path="/settings" element={
                 <PrivateRoute>
                     <Settings />
+                </PrivateRoute>
+            } />
+            <Route path="/saved" element={
+                <PrivateRoute>
+                    <Saved />
                 </PrivateRoute>
             } />
             <Route path="/:slug" element={

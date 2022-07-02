@@ -101,6 +101,7 @@ margin-top: 5rem;
 }
 
 .posts{
+    margin-bottom: 3rem;
     &__content{
         padding: 2rem;
     }

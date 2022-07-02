@@ -11,10 +11,9 @@ import { PostSelector } from "./reducer";
 
 function* handleGetPosts() {
     yield takeLatest(GET_POSTS_START, function* ({ payload }) {
-
         try {
             const { page } = yield select(state => state.post)
-            const res = yield callAPi(postEndpoint.POSTS + `?page=${(Number(page) + 1) || 1}&limit=20`, GET);
+            const res = yield callAPi(postEndpoint.POSTS + `getAll?page=${(Number(page) + 1) || 1}&limit=20&sort=-createdAt`, POST, payload);
             if (res && res.success) {
                 yield put(getPostsSuccess(res.data));
 

@@ -40,6 +40,18 @@ const Privacy = () => {
                         <Select.Option value={2}>Riêng tư</Select.Option>
                     </Select>
                 </Form.Item>
+                <Form.Item initialValue={user?.userSettings?.PRIVACY?.followers || 1} name="followers" label="Ai có thể thấy người theo dõi bạn?">
+                    <Select size="large" >
+                        <Select.Option value={1}>Công khai</Select.Option>
+                        <Select.Option value={2}>Riêng tư</Select.Option>
+                    </Select>
+                </Form.Item>
+                <Form.Item initialValue={user?.userSettings?.PRIVACY?.following || 1} name="following" label="Ai có thể thấy người bạn theo dõi?">
+                    <Select size="large" >
+                        <Select.Option value={1}>Công khai</Select.Option>
+                        <Select.Option value={2}>Riêng tư</Select.Option>
+                    </Select>
+                </Form.Item>
                 <Form.Item initialValue={user?.userSettings?.PRIVACY?.post || 1} name="post" label="Ai là người sẽ thấy các bài viết của bạn trong tương lai?">
                     <Select size="large" >
                         <Select.Option value={1}>Công khai</Select.Option>

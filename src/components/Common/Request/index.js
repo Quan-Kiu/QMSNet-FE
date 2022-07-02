@@ -1,11 +1,23 @@
 import { Button, Col, Row } from 'antd'
-import { useDispatch } from 'react-redux'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { setUserDetail, userFollow } from '../../../redux/user/action'
 import AvatarCard from '../AvatarCard'
 import { RequestWrapper } from './Request.style'
 
-const Request = ({ data, suggestion }) => {
+const Request = ({ data, suggestion, showFullName }) => {
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
+    const { user } = useSelector(state => state.auth)
+    const { followLoading } = useSelector(state => state.user)
+    const isFollowed = user.following.includes(data._id);
+
+    useEffect(() => {
+        if (loading) {
+            setLoading(false)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [followLoading])
     return (
         <RequestWrapper>
             <AvatarCard style={{
@@ -20,7 +32,7 @@ const Request = ({ data, suggestion }) => {
                                 {data?.username}
                             </div>
                             <span>
-                                {suggestion ? 'Gợi ý cho bạn.' : 'đã theo dõi bạn.'}
+                                {showFullName ? data.fullname : suggestion ? 'Gợi ý cho bạn.' : 'đã theo dõi bạn.'}
                             </span>
                         </Col>
                         <Col style={{
@@ -28,12 +40,21 @@ const Request = ({ data, suggestion }) => {
                             alignItems: 'center',
                             justifyContent: 'flex-end'
                         }}>
-                            {!suggestion ? <Button onClick={() => {
+                            {isFollowed ? <Button onClick={() => {
+                                setLoading(true)
+                                dispatch(userFollow({
+                                    path: 'unfollow' + '/' + data?._id,
+                                    simple: true
+                                }))
+
+                            }} className="q-button" type="primary" >Bỏ theo dõi</Button> : !suggestion ? <Button onClick={() => {
+                                setLoading(true)
                                 dispatch(userFollow({
                                     path: 'follow' + '/' + data?._id,
                                     simple: true
                                 }))
                             }} className="q-button q-button-outline" >Theo dõi lại</Button> : <Button onClick={() => {
+                                setLoading(true)
                                 dispatch(userFollow({
                                     path: 'follow' + '/' + data?._id,
                                     simple: true

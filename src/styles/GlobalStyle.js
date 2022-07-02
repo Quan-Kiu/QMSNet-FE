@@ -209,6 +209,13 @@ ul,li{
     }
     text-align: center;
 }
+
+.post-modal{
+    .ant-modal-content{
+
+        border-radius: 20px;
+    }
+}
 .new-post-modal{
     
     
@@ -429,6 +436,19 @@ ul,li{
     }
 }
 
+.follow-modal{
+    .ant-modal-body{
+        padding: 1rem 2.4rem;
+    }
+    .ant-modal-content,.ant-modal-header{
+        border-radius: 20px;
+    }
+    .follows{
+        height: 500px;
+        overflow: auto;
+    }
+}
+
 
 
 // Message
@@ -443,7 +463,7 @@ ul,li{
     background: rgba(0,0,0,0.7);
     color: white;
     user-select: none;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     padding: 1rem;
     width: 100%;
     svg{
@@ -452,6 +472,19 @@ ul,li{
 }
 
 
+
+.header-dropdown{
+    .ant-dropdown-menu-item{
+        padding: .5rem 2rem;
+    }
+    .ant-dropdown-menu-title-content{
+        font-size: 1.6rem;
+    }
+svg{
+    width: 2rem;
+    height: 2rem;
+}
+}
 
 
 

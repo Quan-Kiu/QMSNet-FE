@@ -6,13 +6,14 @@ const LayoutWrapper = styled.div`
 width: 100%;
 
 margin-top: 10rem;
+margin-bottom: 3rem;
 padding-right: 10rem;
 `;
 
 const Layout = props => {
   return (
     <LayoutWrapper>
-        {props.children}
+      {props.children}
     </LayoutWrapper>
   )
 }

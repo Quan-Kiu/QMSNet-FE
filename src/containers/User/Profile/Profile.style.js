@@ -44,7 +44,7 @@ export const ProfileWrapper = styledComponents.div`
     position: sticky;
     .story{
         p{
-
+            font-size: 1.6rem;
             margin: 1rem 0;
             margin-bottom: 2rem;
             text-align: center;

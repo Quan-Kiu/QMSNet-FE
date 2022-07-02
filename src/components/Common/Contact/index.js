@@ -1,12 +1,10 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { ContactWrapper } from './Contact.style'
-import AvatarCard from '../AvatarCard'
 import { Badge, Col, Row } from 'antd'
-import { MoreOutlined } from '@ant-design/icons';
+import moment from 'moment'
 import { useDispatch, useSelector } from 'react-redux'
-import { setUserDetail } from '../../../redux/user/action'
 import { openConversation } from '../../../redux/conversation/action'
+import { setUserDetail } from '../../../redux/user/action'
+import AvatarCard from '../AvatarCard'
+import { ContactWrapper } from './Contact.style'
 
 const Contact = props => {
     const { user } = useSelector(state => state.auth);
@@ -27,20 +25,31 @@ const Contact = props => {
                             dispatch(setUserDetail(contact))
                         }}>{contact?.username}</span>  <span className="fullname">
                             ({contact?.fullname})
+                            <i style={{
+                                backgroundImage: "url('/assets/images/blue-check.png')",
+                                backgroundSize: '15px',
+                                width: '15px',
+                                height: '15px',
+                                display: contact?.isAdmin ? "inline-block" : "none"
+                            }}></i>
                         </span>
                     </div>
 
-                    {contact?.userSettings?.PRIVACY?.email && <div className="email">
+                    {(contact?.userSettings?.PRIVACY?.email === 1 || !contact?.userSettings?.PRIVACY?.email) && <div className="email">
                         <img src="/assets/images/mail.png" alt="mail" />
                         {contact?.email}
                     </div>}
-                    <div className="stats">
+                    {(!contact?.userSettings?.PRIVACY?.followers || contact?.userSettings?.PRIVACY?.followers === 1) && <div className="stats">
                         <img src="/assets/images/followers.png" alt="followers" />
                         Có <span>{contact?.followers?.length}</span> đang theo dõi.
-                    </div>
-                    <div className="stats">
+                    </div>}
+                    {(!contact?.userSettings?.PRIVACY?.following || contact?.userSettings?.PRIVACY?.following === 1) && <div className="stats">
                         <img src="/assets/images/followers.png" alt="followers" />
                         Đang theo dõi <span>{contact?.following?.length}</span> người.
+                    </div>}
+                    <div className="stats">
+                        <img src="/assets/images/joined.png" alt="joined" />
+                        Tham gia vào {moment(contact?.createdAt).format('MM, YYYY')}
                     </div>
 
                 </Col>

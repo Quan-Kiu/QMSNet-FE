@@ -3,7 +3,7 @@ import { all, call, fork, put, takeEvery, select, takeLatest } from "redux-saga/
 import { DELETE, GET, POST } from "../../constants";
 import callAPi from "../../utils/apiRequest";
 import { handleRealtime } from "../root-saga";
-import { ADD_MESSAGE, changeMessage, conversationFailed, DELETE_MESSAGE, getConversationSuccess, getMessageSuccess, GET_CONVERSATION, GET_MESSAGE, openConversationSuccess, OPEN_CONVERSATION, READ_MESSAGE, updateConversation } from "./action";
+import { ADD_MESSAGE, changeMessage, conversationFailed, DELETE_CONVERSATION, DELETE_MESSAGE, getConversationSuccess, getMessageSuccess, GET_CONVERSATION, GET_MESSAGE, openConversationSuccess, OPEN_CONVERSATION, READ_MESSAGE, updateConversation } from "./action";
 
 
 function* handleAddMessage() {
@@ -60,6 +60,36 @@ function* handleGetConversation() {
             } else {
                 throw new Error(res.message)
             }
+        } catch (error) {
+            yield put(conversationFailed());
+            message.error(error.message);
+        }
+    })
+
+}
+function* handleDeleteConversation() {
+    yield takeEvery(DELETE_CONVERSATION, function* ({ payload }) {
+        try {
+            const { conversations } = yield select(state => state.conversation)
+
+            const index = conversations.findIndex(conversation => conversation._id === payload || conversation._fakeId === payload)
+
+            if (index !== -1) {
+                if (conversations[index]?._id) {
+                    const res = yield call(callAPi, `conversations/${payload}/delete`, DELETE);
+                    if (res && res.success) {
+
+                    } else {
+                        throw new Error(res.message)
+                    }
+
+                }
+
+                const newConversation = [...conversations];
+                newConversation.splice(index, 1);
+                yield put(changeMessage(newConversation))
+            }
+
         } catch (error) {
             yield put(conversationFailed());
             message.error(error.message);
@@ -160,7 +190,8 @@ function* rootSaga() {
         fork(handleGetConversation),
         fork(openConversation),
         fork(handleDeleteMessage),
-        fork(handleReadMessage)
+        fork(handleReadMessage),
+        fork(handleDeleteConversation)
     ]);
 }
 

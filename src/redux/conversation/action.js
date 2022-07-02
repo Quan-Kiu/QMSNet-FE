@@ -6,6 +6,7 @@ export const GET_CONVERSATION = 'GET_CONVERSATION';
 export const GET_CONVERSATION_SUCCESS = 'GET_CONVERSATION_SUCCESS';
 export const CONVERSATION_FAILED = 'CONVERSATION_FAILED';
 export const TOGGLE_CONVERSATION = 'TOGGLE_CONVERSATION';
+export const DELETE_CONVERSATION = 'DELETE_CONVERSATION';
 export const OPEN_CONVERSATION = 'OPEN_CONVERSATION';
 export const OPEN_CONVERSATION_SUCCESS = 'OPEN_CONVERSATION_SUCCESS';
 export const GET_MESSAGE = 'GET_MESSAGE';
@@ -46,6 +47,10 @@ export const deleteMessage = (payload, isRealTime) => ({
     type: DELETE_MESSAGE,
     payload,
     isRealTime
+})
+export const deleteConversation = (payload) => ({
+    type: DELETE_CONVERSATION,
+    payload,
 })
 export const readMessage = (payload) => ({
     type: READ_MESSAGE,

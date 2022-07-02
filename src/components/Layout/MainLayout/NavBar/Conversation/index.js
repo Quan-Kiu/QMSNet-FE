@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { ConversationWrapper } from './Conversation.style'
 import { CreateMessageIcon } from '../../../../../assets/icon'
@@ -14,11 +14,28 @@ import { getConversation, toggleNewConversation } from '../../../../../redux/con
 const Conversation = props => {
     const { conversations } = useSelector(state => state.conversation);
     const dispatch = useDispatch();
+    const inputRef = useRef();
+    const [searchs, setSearchs] = useState([]);
 
     useEffect(() => {
         dispatch(getConversation());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+    const handleFilterChange = (e) => {
+        if (conversations.length > 0) {
+
+            console.log(inputRef.current)
+            const search = inputRef?.current?.input?.value
+                .toLowerCase()
+                .replace(/ /g, '');
+            if (!search) {
+                setSearchs([]);
+            } else {
+                const res = conversations.filter((cv) => cv.participants.some((user) => user.username.includes(search)));
+                setSearchs(res);
+            }
+        }
+    };
     return (
         <ConversationWrapper>
             <div className="header">
@@ -27,9 +44,10 @@ const Conversation = props => {
                 </div>
                 <CreateMessageIcon className="create-icon" onClick={() => dispatch(toggleNewConversation())} />
             </div>
-            <Input size="large" prefix={<SearchOutlined />} placeholder="Tìm kiếm" ></Input>
+            <Input ref={inputRef} onChangeCapture={handleFilterChange} size="large" prefix={<SearchOutlined />} placeholder="Tìm kiếm" ></Input>
             <div className="body">
-                {conversations.map((cv) => cv._id && <ConversationItem data={cv} />)}
+                {!inputRef?.current?.input?.value && conversations.map((cv) => cv._id && <ConversationItem data={cv} />)}
+                {searchs.length > 0 && inputRef?.current?.input?.value && searchs.map((cv) => cv._id && <ConversationItem data={cv} />)}
 
             </div>
 

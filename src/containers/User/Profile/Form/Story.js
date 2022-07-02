@@ -35,7 +35,7 @@ const Story = props => {
                         message: 'Vui lòng nhập nhỏ hơn 100 ký tự'
                     }
                 ]}>
-                    <Input.TextArea defaultValue={user?.story} ref={textRef} showCount maxLength={100} autoSize={{
+                    <Input.TextArea size="large" defaultValue={user?.story} ref={textRef} showCount maxLength={100} autoSize={{
                         minRows: 6,
                         maxRows: 6
                     }} style={{

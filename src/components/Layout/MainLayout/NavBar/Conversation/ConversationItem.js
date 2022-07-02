@@ -48,7 +48,14 @@ const ConversationItem = ({ data }) => {
             </div>
             <div className="conversation__content">
                 <div className="username">
-                    {recipient?.username}
+                    {recipient?.username}<i style={{
+                        backgroundImage: "url('/assets/images/blue-check.png')",
+                        backgroundSize: '15px',
+                        width: '15px',
+                        height: '15px',
+                        marginLeft: '5px',
+                        display: recipient?.isAdmin ? "inline-block" : "none"
+                    }}></i>
                 </div>
                 <div className="message">
                     {data?.text || (data?.media && 'Tin nhắn hình ảnh') || (data?.icon && '❤️')}

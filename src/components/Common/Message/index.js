@@ -2,9 +2,12 @@ import { MoreOutlined } from '@ant-design/icons';
 import { Avatar, Button, Col, Image, Modal, Popover, Row } from 'antd'
 import React, { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { MoreIcon, UnlikeIcon } from '../../../assets/icon';
 import { deleteMessage } from '../../../redux/conversation/action';
+import { download } from '../../../utils/image_utils';
 import { dateTime } from '../../../utils/time_utils';
+import { copyToClipboard } from '../../../utils/word_utils';
 import { MessageWrapper } from './Message.style'
 
 const Message = props => {
@@ -70,7 +73,12 @@ const Message = props => {
               setShowConfirmDelete(props?.data);
 
             }}>Xóa</Col>}
-            <Col>Sao chép</Col>
+            {props?.data?.media && <a style={{
+              color: 'white',
+            }} href={`${props?.data?.media?.url}`} target="_blank">            Tải xuống
+            </a>} {props?.data?.text && <Col onClick={() => {
+              copyToClipboard(props?.data?.text)
+            }}>Sao chép</Col>}
           </Row>} >
             <MoreOutlined style={{
               transform: 'rotate(-90deg)',

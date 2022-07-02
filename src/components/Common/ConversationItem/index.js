@@ -1,4 +1,4 @@
-import { CloseOutlined, LoadingOutlined, MoreOutlined, SendOutlined, StopOutlined, UserOutlined } from '@ant-design/icons'
+import { CloseOutlined, DeleteOutlined, LoadingOutlined, MoreOutlined, SendOutlined, StopOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Badge, Col, Form, Input, message, Popover, Row } from 'antd'
 import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
@@ -6,10 +6,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { ImageIcon, LikeIcon } from '../../../assets/icon'
 import { authSelector } from '../../../redux/auth/reducer'
-import { addMessage, getMessage, toggleConversation } from '../../../redux/conversation/action'
+import { addMessage, deleteConversation, getMessage, toggleConversation } from '../../../redux/conversation/action'
 import { setUserDetail, userBlock } from '../../../redux/user/action'
 import BlockBtn from '../BlockBtn'
 import ChooseEmoji from '../ChooseEmoji'
+import ConfirmModal from '../ConfirmModal'
 import Message from '../Message'
 import { ConversationItemWrapper } from './ConversationItem.style'
 
@@ -25,6 +26,7 @@ const ConversationItem = props => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const [mediaLoading, setMediaLoading] = useState(false);
+    const [deleteConversationConfirm, setDeleteConversationConfirm] = useState(false);
     const isOnline = data?.find((cv) => cv._id === props?.data?._id);
     useEffect(() => {
         if (props?.data?._id && !props?.data?.pagination) {
@@ -111,6 +113,10 @@ const ConversationItem = props => {
 
     return (
         <>
+            <ConfirmModal visible={deleteConversationConfirm} setVisible={setDeleteConversationConfirm} title="Xóa cuộc trò chuyện" subTitle="Bạn không thể hoàn tác sau khi xóa bản sao của cuộc trò chuyện này." okText="Xóa" onMouseDown={() => {
+                dispatch(deleteConversation(props.data._id))
+                setIsPopoverShow(false)
+            }} />
             <Form form={form} onFinish={handleSendMessage}>
                 <Form.Item name="sender" hidden initialValue={user._id}>
                     <Input></Input>
@@ -127,7 +133,13 @@ const ConversationItem = props => {
                                 </Badge>
                             </div>
                             <div className="information">
-                                <div className="username">{recipient.username}</div>
+                                <div className="username">{recipient.username} <i style={{
+                                    backgroundImage: "url('/assets/images/blue-check.png')",
+                                    backgroundSize: '15px',
+                                    width: '15px',
+                                    height: '15px',
+                                    display: recipient?.isAdmin ? "inline-block" : "none"
+                                }}></i></div>
                                 {isOnline && <div className="activity-status">
                                     Đang hoạt động
                                 </div>}
@@ -149,6 +161,17 @@ const ConversationItem = props => {
                                         </Col>
                                         <Col>
                                             Xem trang cá nhân
+                                        </Col>
+                                    </Row>
+
+                                    <Row onMouseDown={(e) => {
+                                        setDeleteConversationConfirm(true)
+                                    }}>
+                                        <Col>
+                                            <DeleteOutlined />
+                                        </Col>
+                                        <Col>
+                                            Xóa cuộc trò chuyện
                                         </Col>
                                     </Row>
 

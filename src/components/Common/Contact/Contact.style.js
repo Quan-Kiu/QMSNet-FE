@@ -73,7 +73,7 @@ cursor: pointer;
     }
    
     img{
-
+        border: thin solid rgba(0,0,0,0.15);
         width: 100%;
         border-radius: 50%;
     }

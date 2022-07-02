@@ -1,9 +1,9 @@
-import { SearchOutlined } from '@ant-design/icons'
+import { LoginOutlined, SearchOutlined } from '@ant-design/icons'
 import { Avatar, Button, Col, Dropdown, Form, Input, Menu, Modal, Radio, Row, Select } from 'antd'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { CreateIcon, ProfileIcon } from '../../../../assets/icon'
+import { CreateIcon, ProfileIcon, SaveIcon } from '../../../../assets/icon'
 import { setTabActive } from '../../../../redux/app/action'
 import { logout } from '../../../../redux/auth/action'
 import { authSelector } from '../../../../redux/auth/reducer'
@@ -93,19 +93,29 @@ const Header = props => {
       items={[
         {
           icon: <ProfileIcon />,
-          label: <div onClick={() => {
+          label: <Link to="" onClick={(e) => {
+            e.preventDefault()
             dispatch(setUserDetailSuccess({ ...user }));
-          }}>Trang cá nhân</div>,
+          }}>Trang cá nhân</Link>,
           key: '0',
+        },
+        {
+          icon: <SaveIcon />,
+          label: <Link to="/saved">Đã lưu</Link>,
+          key: '1',
         },
         {
           type: 'divider',
         },
         {
-          icon: <i className='close-icon'></i>,
-          label: <Button onClick={() => {
+          icon: <LoginOutlined width={'20px'} height={'20px'} style={{
+            width: '2rem',
+            height: '2rem',
+          }} />,
+          label: <Link to="" onClick={(e) => {
+            e.preventDefault()
             dispatch(logout())
-          }} type="text">Đăng xuất</Button>,
+          }} type="text">Đăng xuất</Link>,
           key: '3',
         },
       ]}
@@ -206,7 +216,7 @@ const Header = props => {
             </AvatarCard>
           </Form>
         </Modal>
-        <Row gutter={36} justify="space-between" align="middle" className="header__content" >
+        <Row gutter={36} wrap={false} justify="space-between" align="middle" className="header__content" >
           <Col className="header__content__logo">
             <Link to="/">
               <img src="/assets/images/logo.png" alt="" />
@@ -214,8 +224,8 @@ const Header = props => {
 
           </Col>
           <Col className="header__content__func">
-            <Row gutter={10}>
-              <Col className="header__content__func__search">
+            <Row gutter={10} wrap={false}>
+              <Col md={14} sm={0} xs={0} className="header__content__func__search">
                 <Input onClick={() => dispatch(setTabActive('search'))} size="large" prefix={<SearchOutlined />} placeholder="Tìm kiếm" ></Input>
               </Col>
 
@@ -227,7 +237,7 @@ const Header = props => {
 
               </Col >
               <Col className="header__content__func__profile">
-                <Dropdown overlay={menu} trigger={['hover']}>
+                <Dropdown overlayClassName='header-dropdown' overlay={menu} trigger={['click']}>
                   <Avatar size="large" onClick={(e) => {
                     e.preventDefault();
                   }} style={{
