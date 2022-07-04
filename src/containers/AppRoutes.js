@@ -20,7 +20,7 @@ const AppRoutes = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(refreshToken())
-        const socket = io('192.168.1.5:5000');
+        const socket = io('localhost:5000');
         dispatch(getSocket(socket));
         return () => {
             socket.close();

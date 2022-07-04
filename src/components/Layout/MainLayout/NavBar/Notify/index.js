@@ -32,7 +32,7 @@ const Notify = ({ notify }) => {
 
   return (
     <NotifyWrapper onClick={handleOnClick} className={`${notify?.isRead && 'isRead'}`}>
-      <Avatar size="large" src={notify?.user.avatar.url} />
+      <Avatar size="large" src={notify?.user?.avatar?.url} />
       <div className="right">
         <div className="content" style={{
           display: 'flex',
@@ -43,18 +43,18 @@ const Notify = ({ notify }) => {
           <div style={{
             flex: '1',
           }}>
-            <span>{notify?.user.username}</span> {notify?.text} <div className="preview-content">
+            <span>{notify?.user?.username}</span> {notify?.text} <div className="preview-content">
               {notify?.content}
             </div>
           </div>
-          {notify.media?.length > 0 && <div className="notify-media">
-            {notify?.media[0]?.url.match('/image/') ? <img src={notify.media[0]?.url} alt={notify.media[0]?.url} /> : <video controls={false}  >
+          {notify?.media?.length > 0 && <div className="notify-media">
+            {notify?.media[0]?.url.match('/image/') ? <img src={notify?.media[0]?.url} alt={notify?.media[0]?.url} /> : <video controls={false}  >
               <source src={notify.media[0]?.url} type="video/mp4" />
             </video>}
           </div>}
         </div>
         <div className="createdAt">
-          {timeAgo(notify.updatedAt, false)}
+          {timeAgo(notify?.updatedAt, false)}
         </div>
       </div>
     </NotifyWrapper>
