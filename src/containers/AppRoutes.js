@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import AdminLayout from '../components/Layout/AdminLayout/AdminLayout';
 import DefaultLayout from '../components/Layout/MainLayout/DefaultLayout';
 import { refreshToken } from '../redux/auth/action';
@@ -18,6 +18,7 @@ const AppRoutes = () => {
     const { isLogin } = useSelector(authSelector);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const location = useLocation();
     useEffect(() => {
         dispatch(refreshToken())
         const socket = io(`${process.env.REACT_APP_BACKEND_SERVER}`);
@@ -29,8 +30,12 @@ const AppRoutes = () => {
     }, [])
 
     useEffect(() => {
-        if (isLogin) {
+        if (isLogin && location.pathname === '/signin') {
             navigate('/');
+        } else {
+            if (location.pathname === '/') {
+                navigate('/signin');
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLogin])

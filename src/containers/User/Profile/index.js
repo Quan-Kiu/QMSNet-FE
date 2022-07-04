@@ -3,7 +3,7 @@ import { Button, Col, Form, message, Modal, Popover, Row, Space } from 'antd'
 import moment from 'moment'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { MoreIcon } from '../../../assets/icon'
 import AvatarCard from '../../../components/Common/AvatarCard'
 import BlockBtn from '../../../components/Common/BlockBtn'
@@ -16,7 +16,7 @@ import { maritalStatus } from '../../../constants'
 import useScrollInfinity from '../../../hooks/useScrollInfinity'
 import { setTabActive } from '../../../redux/app/action'
 import { addConversation, openConversation } from '../../../redux/conversation/action'
-import { getPostUserDetail, userBlock, userFollow } from '../../../redux/user/action'
+import { getPostUserDetail, setUserDetail, userBlock, userFollow } from '../../../redux/user/action'
 import Story from './Form/Story'
 import { ProfileWrapper } from './Profile.style'
 
@@ -30,7 +30,7 @@ const Profile = props => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isShowModal, setIsShowModal] = useState(false);
-    const isFollowed = useMemo(() => !!userDetail?.followers?.includes(user._id), [userDetail]);
+    const isFollowed = useMemo(() => !!userDetail?.followers?.includes(user?._id), [userDetail]);
     const popoverRef = useRef();
     const currentRef = useRef();
     const [followModal, setFollowModal] = useState({
@@ -39,6 +39,7 @@ const Profile = props => {
         title: ''
     });
     const postsRef = useRef(false);
+    const params = useParams();
 
 
     useEffect(() => {
@@ -74,15 +75,22 @@ const Profile = props => {
     }, [handleScroll]);
 
 
+
+
+
     useEffect(() => {
         dispatch(setTabActive(""))
-        if (userDetail?._id !== postUserDetail?.user_id) {
+        if (userDetail && userDetail?._id !== postUserDetail?.user_id) {
             setFollowModal({
                 visible: false,
                 userIds: null,
                 title: ''
             })
             dispatch(getPostUserDetail(userDetail?._id, true));
+        }
+
+        if (!userDetail) {
+            dispatch(setUserDetail({ _id: params?.slug }))
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userDetail])

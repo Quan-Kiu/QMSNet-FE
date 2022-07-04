@@ -31,7 +31,8 @@ const PostHeading = ({ post, style }) => {
     const [isShowReportModal, setIsShowReportModal] = useState(false);
     const popoverRef = useRef(null);
     const { user } = useSelector(state => state.auth);
-    const isSaved = user?.saved?.some((s) => s?._id === post?._id);
+    const isSaved = user?.saved?.includes(post?._id);
+    console.log(isSaved)
     const dispatch = useDispatch();
     const handleSavePost = () => {
 
@@ -42,7 +43,7 @@ const PostHeading = ({ post, style }) => {
     }
     return (
         <>
-            <ReportModal visible={isShowReportModal} setVisible={setIsShowReportModal} type="C" />
+            <ReportModal report={'post'} visible={isShowReportModal} setVisible={setIsShowReportModal} type="C" />
             <PostHeadingWrapper style={style}>
                 <Modal centered bodyStyle={{
                     fontSize: '16px'

@@ -1,10 +1,12 @@
 import { Col, Modal } from 'antd';
+import { useMemo } from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import Friend from '../../../containers/Friend';
 import HomePage from '../../../containers/Home';
 import { HomeWrapper, MainContentWrapper } from '../../../containers/Home/Home.style';
+import PostPage from '../../../containers/Post';
 import PostModal from '../../../containers/Post/PostModal';
 import Saved from '../../../containers/Post/Saved';
 import Settings from '../../../containers/Settings';
@@ -16,6 +18,7 @@ import { getUserRequests, getUserSuggestions } from '../../../redux/user/action'
 import Box from '../../Common/Box';
 import Container from '../../Common/Container';
 import ConversationPopup from '../../Common/ConversationPopup';
+import Post from '../../Common/Post';
 import PrivateRoute from '../PrivateRoute';
 import { LayoutWrapper } from './DefaultLayout.style';
 import Header from './Header';
@@ -72,34 +75,25 @@ const LayoutRoutes = () => {
     }, [isLogin])
 
 
-
-
     return (
         <Routes>
             <Route path="/" element={
-                <PrivateRoute>
-                    <HomePage />
-                </PrivateRoute>
+                <HomePage />
             } />
             <Route path="/friend" element={
-                <PrivateRoute>
-                    <Friend />
-                </PrivateRoute>
+                <Friend />
             } />
             <Route path="/settings" element={
-                <PrivateRoute>
-                    <Settings />
-                </PrivateRoute>
+                <Settings />
             } />
             <Route path="/saved" element={
-                <PrivateRoute>
-                    <Saved />
-                </PrivateRoute>
+                <Saved />
+            } />
+            <Route path="/posts/:slug" element={
+                <PostPage />
             } />
             <Route path="/:slug" element={
-                <PrivateRoute>
-                    <Profile />
-                </PrivateRoute>
+                <Profile />
             } />
         </Routes>
     )

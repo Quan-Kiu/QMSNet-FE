@@ -33,7 +33,7 @@ const PostAction = ({ post, isPostDetail, setReply }) => {
     useEffect(() => {
         setIsSaves(user?.saved?.includes(post?._id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user.saved])
+    }, [user?.saved])
 
     const dispatch = useDispatch();
     return (<PostActionWrapper>
