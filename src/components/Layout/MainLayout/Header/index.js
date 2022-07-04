@@ -1,4 +1,4 @@
-import { LoginOutlined, SearchOutlined } from '@ant-design/icons'
+import { LoginOutlined, SearchOutlined, ToolOutlined } from '@ant-design/icons'
 import { Avatar, Button, Col, Dropdown, Form, Input, Menu, Modal, Radio, Row, Select } from 'antd'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -103,6 +103,13 @@ const Header = props => {
           icon: <SaveIcon />,
           label: <Link to="/saved">Đã lưu</Link>,
           key: '1',
+        },
+        {
+          icon: <ToolOutlined />,
+          label: <Link style={{
+            color: 'red'
+          }} to="/admin">Quản trị trang web</Link>,
+          key: '2',
         },
         {
           type: 'divider',

@@ -20,7 +20,7 @@ const AppRoutes = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(refreshToken())
-        const socket = io('192.168.1.5:5000');
+        const socket = io(`${process.env.REACT_APP_BACKEND_SERVER}`);
         dispatch(getSocket(socket));
         return () => {
             socket.close();
@@ -44,8 +44,8 @@ const AppRoutes = () => {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/verify/:id" element={<Verify />} />
                 <Route path="/forgotPassword/:id" element={<ForgotPassword />} />
+                <Route path="/admin" element={<AdminLayout />} />
                 <Route path="*" element={<DefaultLayout />} />
-                {/* <Route path="*" element={<AdminLayout />} /> */}
             </Routes>
         </>
     );

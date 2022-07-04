@@ -12,7 +12,7 @@ padding-right: 10rem;
 
 const Layout = props => {
   return (
-    <LayoutWrapper>
+    <LayoutWrapper onScroll={props?.onScroll}>
       {props.children}
     </LayoutWrapper>
   )

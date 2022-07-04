@@ -1,11 +1,10 @@
 import { message } from "antd";
-import { all, call, fork, put, takeEvery, select } from "redux-saga/effects";
+import { all, call, fork, put, select, takeEvery, takeLatest } from "redux-saga/effects";
 import { GET, PATCH, POST, postEndpoint, profileEndpoint } from "../../constants";
 import callAPi from "../../utils/apiRequest";
 import { updateProfileSuccess } from "../auth/action";
-import { getPosts } from "../post/action";
 import { handleRealtime } from "../root-saga";
-import { getPostUserDetailSuccess, getUserRequests, getUserRequestsSuccess, getUserSuggestions, getUserSuggestionsSuccess, GET_POST_USER_DETAIL, GET_USER_REQUESTS, GET_USER_SUGGESTIONS, setUserDetailSuccess, SET_USER_DETAIL, SET_USER_SETTINGS, userFailed, USER_BLOCK, USER_FOLLOW } from "./action";
+import { getPostUserDetailSuccess, getUserRequestsSuccess, getUserSuggestionsSuccess, GET_POST_USER_DETAIL, GET_USER_REQUESTS, GET_USER_SUGGESTIONS, setUserDetailSuccess, SET_USER_DETAIL, SET_USER_SETTINGS, userFailed, USER_BLOCK, USER_FOLLOW } from "./action";
 
 
 function* handlegetUserDetail() {
@@ -78,7 +77,7 @@ function* handleUserFollow() {
                 if (!payload?.simple) {
                     yield put(setUserDetailSuccess(res?.data?.follower))
                 }
-                if (userDetail._id === res.data.following._id) {
+                if (userDetail?._id === res?.data?.following?._id) {
                     yield put(setUserDetailSuccess(res?.data?.following))
 
                 }
@@ -109,9 +108,11 @@ function* handleUserBlock() {
 
 }
 function* handleGetPostUserDetail() {
-    yield takeEvery(GET_POST_USER_DETAIL, function* ({ payload }) {
+    yield takeLatest(GET_POST_USER_DETAIL, function* ({ payload, newUser }) {
         try {
-            const res = yield callAPi(postEndpoint.POSTS + `getByUser/${payload}`, GET);
+            const { postUserDetail } = yield select(state => state.user);
+
+            const res = yield callAPi(postEndpoint.POSTS + `getByUser/${payload}?page=${newUser ? 1 : Number(postUserDetail.pagination.page) + 1}&limit=${postUserDetail.pagination.limit}`, POST);
             if (res && res.success) {
                 yield put(getPostUserDetailSuccess({ ...res.data, user_id: payload }));
 

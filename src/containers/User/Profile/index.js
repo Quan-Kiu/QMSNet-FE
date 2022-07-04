@@ -1,7 +1,7 @@
 import { EditFilled, MailOutlined, UserAddOutlined, UserDeleteOutlined, WarningOutlined } from '@ant-design/icons'
-import { Button, Col, Form, Modal, Popover, Row, Space } from 'antd'
+import { Button, Col, Form, message, Modal, Popover, Row, Space } from 'antd'
 import moment from 'moment'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { MoreIcon } from '../../../assets/icon'
@@ -13,6 +13,7 @@ import Layout from '../../../components/Common/Layout'
 import Post from '../../../components/Common/Post'
 import UploadWithUpdate from '../../../components/Common/UploadWithUpdate'
 import { maritalStatus } from '../../../constants'
+import useScrollInfinity from '../../../hooks/useScrollInfinity'
 import { setTabActive } from '../../../redux/app/action'
 import { addConversation, openConversation } from '../../../redux/conversation/action'
 import { getPostUserDetail, userBlock, userFollow } from '../../../redux/user/action'
@@ -31,11 +32,47 @@ const Profile = props => {
     const [isShowModal, setIsShowModal] = useState(false);
     const isFollowed = useMemo(() => !!userDetail?.followers?.includes(user._id), [userDetail]);
     const popoverRef = useRef();
+    const currentRef = useRef();
     const [followModal, setFollowModal] = useState({
         visible: false,
         userIds: null,
         title: ''
     });
+    const postsRef = useRef(false);
+
+
+    useEffect(() => {
+        currentRef.current = false;
+    }, [postUserDetail.pagination.page])
+
+    const handleScroll = useCallback(async () => {
+        const isOver = postUserDetail.pagination.count !== 1;
+        if (
+            window?.innerHeight + window?.pageYOffset >=
+            postsRef?.current?.offsetHeight
+        ) {
+            if (!isOver && !currentRef.current) {
+                currentRef.current = true;
+                dispatch(getPostUserDetail(userDetail?._id))
+            }
+            if (isOver) {
+                currentRef.current = false;
+                message.info('Bạn đã xem hết bài viết')
+                window.removeEventListener('scroll', handleScroll);
+            }
+
+
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [postUserDetail.pagination.page]);
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [handleScroll]);
+
 
     useEffect(() => {
         dispatch(setTabActive(""))
@@ -45,7 +82,7 @@ const Profile = props => {
                 userIds: null,
                 title: ''
             })
-            dispatch(getPostUserDetail(userDetail?._id));
+            dispatch(getPostUserDetail(userDetail?._id, true));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userDetail])
@@ -191,9 +228,9 @@ const Profile = props => {
                 </div>
 
             </Modal>
-            <Layout>
+            <Layout >
 
-                <ProfileWrapper>
+                <ProfileWrapper ref={postsRef}>
                     <Box style={
                         {
                             marginBottom: '10px'
@@ -310,7 +347,7 @@ const Profile = props => {
                                 </div>
                             </Box>
                         </Col>
-                        <Col xl={16} lg={16} md={24}>
+                        <Col xl={16} lg={16} md={24} >
 
                             {postUserDetail?.posts?.length > 0 ? postUserDetail?.posts?.map((post) => <Post post={post} isPostDetail={true} />) : <Box style={{
                                 display: 'flex',

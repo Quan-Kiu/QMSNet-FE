@@ -7,7 +7,6 @@ const useScrollInfinity = (page, action, ref, isOver, scrollRef) => {
     const current = useRef();
     const dispatch = useDispatch();
     const handleScroll = useCallback(async () => {
-
         if (
             scrollRef?.innerHeight + scrollRef?.pageYOffset >=
             ref?.current?.offsetHeight - (!isOver ? 2000 : 0)

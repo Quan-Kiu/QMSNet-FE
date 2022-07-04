@@ -12,6 +12,15 @@ const initialState = {
         total: 8,
 
     },
+    postUserDetail: {
+        posts: [],
+        user_id: '',
+        pagination: {
+            count: 10,
+            limit: 10,
+            page: 0,
+        }
+    },
     requestLoading: false,
     requests: {
         users: [],
@@ -93,9 +102,13 @@ const userReducer = (state = initialState, action) => {
                 followLoading: false,
             }
         case GET_POST_USER_DETAIL_SUCCESS:
+            const posts = state.postUserDetail.user_id === action.payload.user_id ? [...state.postUserDetail.posts, ...action.payload.posts] : action.payload.posts
             return {
                 ...state,
-                postUserDetail: action.payload,
+                postUserDetail: {
+                    ...action.payload,
+                    posts
+                },
                 postLoading: false,
             }
         case SET_USER_SETTINGS:

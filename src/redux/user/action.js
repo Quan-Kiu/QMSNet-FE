@@ -16,9 +16,10 @@ export const setUserDetail = (payload) => ({
     type: SET_USER_DETAIL,
     payload,
 })
-export const getPostUserDetail = (payload) => ({
+export const getPostUserDetail = (payload, newUser) => ({
     type: GET_POST_USER_DETAIL,
     payload,
+    newUser
 })
 export const getPostUserDetailSuccess = (payload) => ({
     type: GET_POST_USER_DETAIL_SUCCESS,
