@@ -5,7 +5,7 @@ import { Button, Col, Popover, Row } from 'antd';
 import { MoreIcon, UnsaveIcon } from '../../../../assets/icon';
 import { useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { setDetailModal, setPostDetail } from '../../../../redux/post/action';
+import { postAction, setDetailModal, setPostDetail } from '../../../../redux/post/action';
 
 const SavedItemWrapper = styled.div`
 padding: 1rem;
@@ -62,12 +62,11 @@ const SavedItem = ({ post }) => {
     const [isShowPopover, setIsShowPopover] = useState();
     const dispatch = useDispatch();
 
-
     return (
         <SavedItemWrapper>
             <Row gutter={[32, 32]} align="middle">
                 <Col xl={4} md={4} sm={6} sx={8}>
-                    <img className="main-image" src={post?.media[0]?.url || post?.user?.avatar?.url} alt="logo" />
+                    <img className="main-image" src={post?.media && post?.media.length > 0 ? post?.media[0]?.url : post?.user?.avatar?.url} alt="logo" />
                 </Col>
                 <Col xl={18} md={18} sm={16} sx={14}>
                     <div className="content">
@@ -95,7 +94,12 @@ const SavedItem = ({ post }) => {
                         <label htmlFor="more-actions" >
                             <Popover visible={isShowPopover} overlayClassName='postActions' placement="top" content={<>
                                 <div className="postActions" >
-                                    <Row onMouseDown={() => { }}>
+                                    <Row onMouseDown={() => {
+                                        dispatch(postAction({
+                                            type: 'unsave',
+                                            id: post?._id,
+                                        }))
+                                    }}>
                                         <Col>
                                             <UnsaveIcon />
                                         </Col>

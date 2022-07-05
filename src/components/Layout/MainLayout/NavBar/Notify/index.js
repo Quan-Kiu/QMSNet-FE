@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { readNotify } from '../../../../../redux/notify/action';
 import { setDetailModal } from '../../../../../redux/post/action';
 import { setUserDetail } from '../../../../../redux/user/action';
+import { setReportModal } from '../../../../../redux/app/action';
 
 const Notify = ({ notify }) => {
   const dispatch = useDispatch();
@@ -25,14 +26,17 @@ const Notify = ({ notify }) => {
         return dispatch(setDetailModal(notify.postId, notify.commentId))
       case 5:
         return dispatch(setDetailModal(notify.postId, notify.commentId))
+      case 6:
+        return dispatch(setReportModal(notify.reportId))
       default:
         break;
     }
   }
 
+
   return (
     <NotifyWrapper onClick={handleOnClick} className={`${notify?.isRead && 'isRead'}`}>
-      <Avatar size="large" src={notify?.user?.avatar?.url} />
+      <Avatar size="large" src={notify?.user?.avatar?.url || 'http://res.cloudinary.com/quankiu/image/upload/v1656676441/qmedia/xuezrusaqdmu4wstb5nk.png'} />
       <div className="right">
         <div className="content" style={{
           display: 'flex',
@@ -43,7 +47,7 @@ const Notify = ({ notify }) => {
           <div style={{
             flex: '1',
           }}>
-            <span>{notify?.user?.username}</span> {notify?.text} <div className="preview-content">
+            {notify?.action !== 6 && <span>{notify?.user?.username}</span>} {notify?.text} <div className="preview-content">
               {notify?.content}
             </div>
           </div>

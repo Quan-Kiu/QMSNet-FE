@@ -25,7 +25,7 @@ const PostHeadingWrapper = styled.div`
 
 `;
 
-const PostHeading = ({ post, style }) => {
+const PostHeading = ({ post, style, hiddenAction }) => {
     const [showConfirmDelete, setShowConfirmDelete] = useState(null);
     const [isShowPopover, setIsShowPopover] = useState(false);
     const [isShowReportModal, setIsShowReportModal] = useState(false);
@@ -140,12 +140,12 @@ const PostHeading = ({ post, style }) => {
                                     </Row>}
                                 </div>
                             </>} trigger="click">
-                                <MoreIcon onClick={() => {
+                                {!hiddenAction && <MoreIcon onClick={() => {
                                     popoverRef.current.focus();
                                     setIsShowPopover(true)
                                 }} style={{
                                     cursor: 'pointer'
-                                }} />
+                                }} />}
                             </Popover>
                         </label>
 

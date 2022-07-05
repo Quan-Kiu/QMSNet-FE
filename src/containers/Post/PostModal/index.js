@@ -31,8 +31,8 @@ const PostModal = props => {
     useEffect(() => {
         if (props.id === postDetail?._id && props.params) {
             const cmtE = document.getElementById(props.params)
-            cmtE.classList.add('color-change');
-            cmtE.scrollIntoView(false);
+            cmtE?.classList?.add('color-change');
+            cmtE?.scrollIntoView(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [postDetail])

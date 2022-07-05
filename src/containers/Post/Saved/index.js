@@ -19,11 +19,20 @@ const Saved = () => {
         },
     });
 
-    const fetch = async () => {
+    const fetch = async (reset) => {
         setLoading(true);
+        if (reset) {
+            setData({
+                posts: [],
+                pagination: {
+                    page: 0,
+                    limit: 10,
+                },
+            });
+        }
         try {
 
-            const res = await callAPi(postEndpoint.POSTS + `getAll?page=${Number(data?.pagination?.page) + 1}&limit=${data?.pagination?.limit}`, POST, {
+            const res = await callAPi(postEndpoint.POSTS + `getSavedByUser?page=${reset ? 1 : Number(data?.pagination?.page) + 1}&limit=${data?.pagination?.limit}`, POST, {
                 postIds: user.saved
             })
             if (res && res.success) {
@@ -37,9 +46,10 @@ const Saved = () => {
 
     }
     useEffect(() => {
-        fetch()
+        fetch(true)
 
-    }, [])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user])
     return (
         <Layout>
             <SavedWrapper>

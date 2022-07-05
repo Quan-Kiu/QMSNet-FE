@@ -104,13 +104,7 @@ const Header = props => {
           label: <Link to="/saved">Đã lưu</Link>,
           key: '1',
         },
-        {
-          icon: <ToolOutlined />,
-          label: <Link style={{
-            color: 'red'
-          }} to="/admin">Quản trị trang web</Link>,
-          key: '2',
-        },
+
         {
           type: 'divider',
         },

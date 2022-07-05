@@ -11,6 +11,7 @@ import Box from '../../../components/Common/Box'
 import FollowModal from '../../../components/Common/FollowModal'
 import Layout from '../../../components/Common/Layout'
 import Post from '../../../components/Common/Post'
+import ReportModal from '../../../components/Common/ReportModal'
 import UploadWithUpdate from '../../../components/Common/UploadWithUpdate'
 import { maritalStatus } from '../../../constants'
 import useScrollInfinity from '../../../hooks/useScrollInfinity'
@@ -40,6 +41,8 @@ const Profile = props => {
     });
     const postsRef = useRef(false);
     const params = useParams();
+    const [isShowPopover, setIsShowPopover] = useState(false);
+    const [isShowReportModal, setIsShowReportModal] = useState(false);
 
 
     useEffect(() => {
@@ -197,6 +200,7 @@ const Profile = props => {
 
     return (
         <>
+            <ReportModal report={'user'} visible={isShowReportModal} setVisible={setIsShowReportModal} type="A" />
             {<FollowModal visible={followModal.visible} setVisible={setFollowModal} title={followModal.title} userIds={followModal.userIds} />}
             <Modal width={800} maskStyle={{
                 color: 'black'
@@ -312,6 +316,7 @@ const Profile = props => {
 
                                                     }} />
                                                     <Row onMouseDown={(e) => {
+                                                        setIsShowReportModal(userDetail?._id)
                                                     }}>
                                                         <Col>
                                                             <WarningOutlined />

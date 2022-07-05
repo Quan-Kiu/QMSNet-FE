@@ -32,7 +32,7 @@ const ReportModal = props => {
 
     const handleReport = async (values) => {
         try {
-            const data = { ...values, [props?.report]: props?.visible, type: typeSelect }
+            const data = { ...values, [props?.report]: props?.visible, reportType: typeSelect }
             const res = await axiosClient.post(`/admin/reports/create`, data);
             if (res.success) {
                 props.setVisible(null);
@@ -60,7 +60,7 @@ const ReportModal = props => {
 
                 <Form form={form} onFinish={handleReport}>
 
-                    <Form.Item name="type" >
+                    <Form.Item name="reportType" >
                         <Select size="large" options={options} fieldNames={{
                             label: 'name',
                             value: '_id'

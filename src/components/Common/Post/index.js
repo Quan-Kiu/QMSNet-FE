@@ -69,7 +69,7 @@ const Post = ({ post }) => {
                         {post?.comments?.slice(
                             post.comments.length - 2,
                             post.comments.length
-                        ).map((cmt) => <Comment comment={cmt} />)}
+                        ).map((cmt) => cmt?.user?.status === 'A' && <Comment comment={cmt} />)}
 
                     </div>
                     <CommentInput isPostUser post={post} />

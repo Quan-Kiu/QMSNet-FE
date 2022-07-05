@@ -4,7 +4,8 @@ const initialState = {
     WIDTH: window.innerWidth,
     appLoading: null,
     tabActive: 'home',
-    notify: null
+    notify: null,
+    reportModal: null,
 };
 
 const app = (state = initialState, action) => {
@@ -28,6 +29,11 @@ const app = (state = initialState, action) => {
             return {
                 ...state,
                 notify: action.payload,
+            };
+        case APP_ACTION.setReportModal:
+            return {
+                ...state,
+                reportModal: action.payload,
             };
         default:
             return state;

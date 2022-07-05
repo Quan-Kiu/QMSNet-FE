@@ -17,7 +17,7 @@ const Comment = (props) => {
     const dispatch = useDispatch();
     const [isLiked, setIsLiked] = useState(!!props?.comment?.likes?.includes(user._id));
     const [isReplyShow, setIsReplyShow] = useState(() => {
-        const replys = postDetail?.comments?.filter((cmt) => cmt?.reply && cmt?.reply === props?.comment?._id);
+        const replys = postDetail?.comments?.filter((cmt) => cmt?.reply && cmt?.reply === props?.comment?._id && cmt?.user?.status === 'A');
         const isShow = replys?.some((cmt) => cmt._id === props?.params);
 
         return {
@@ -167,7 +167,7 @@ const Comment = (props) => {
                                 {isReplyShow.show ? "Ẩn câu trả lời" : `Xem câu trả lời(${isReplyShow.replys.length})`}
                             </Col>
                         </Row>
-                        {isReplyShow.show && isReplyShow.replys.map((cmt) => <CommentWrapper id={!props.simple && cmt._id}>
+                        {isReplyShow.show && isReplyShow.replys.map((cmt) => cmt?.user?.status === 'A' && <CommentWrapper id={!props.simple && cmt._id}>
                             <AvatarCard avatarHidden={props.simple} src={cmt?.user?.avatar?.url} content={<>
                                 <Row gutter={10} wrap={false}>
                                     <Col flex={1}>

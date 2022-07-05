@@ -11,13 +11,14 @@ import PostModal from '../../../containers/Post/PostModal';
 import Saved from '../../../containers/Post/Saved';
 import Settings from '../../../containers/Settings';
 import Profile from '../../../containers/User/Profile';
-import { setTabActive } from '../../../redux/app/action';
+import { setReportModal, setTabActive } from '../../../redux/app/action';
 import { authSelector } from '../../../redux/auth/reducer';
 import { getPosts, setDetailModal, setPostDetail } from '../../../redux/post/action';
 import { getUserRequests, getUserSuggestions } from '../../../redux/user/action';
 import Box from '../../Common/Box';
 import Container from '../../Common/Container';
 import ConversationPopup from '../../Common/ConversationPopup';
+import MyReportModal from '../../Common/MyReportModal';
 import Post from '../../Common/Post';
 import PrivateRoute from '../PrivateRoute';
 import { LayoutWrapper } from './DefaultLayout.style';
@@ -30,7 +31,7 @@ const LayoutRoutes = () => {
     const { tabActive } = useSelector((state) => state.app);
     const { isLogin } = useSelector(authSelector);
     const { userDetail } = useSelector((state) => state.user);
-    const { user } = useSelector((state) => state.auth);
+    const { user, token } = useSelector((state) => state.auth);
     const navigate = useNavigate();
 
 
@@ -71,6 +72,7 @@ const LayoutRoutes = () => {
             dispatch(getUserSuggestions())
             dispatch(getUserRequests())
         }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLogin])
 
@@ -102,9 +104,16 @@ const LayoutRoutes = () => {
 const DefaultLayout = (props) => {
     const { user } = useSelector(authSelector);
     const { postDetail, detailModal } = useSelector(state => state.post);
+    const { reportModal } = useSelector(state => state.app);
     const dispatch = useDispatch();
 
     return <LayoutWrapper>
+
+        <Modal onCancel={() => {
+            dispatch(setReportModal(null));
+        }} centered={true} destroyOnClose={true} visible={reportModal} footer={null} title={"Thông báo vi phạm"}>
+            <MyReportModal id={reportModal} />
+        </Modal>
 
         <Modal afterClose={() => {
             dispatch(setPostDetail(null));
