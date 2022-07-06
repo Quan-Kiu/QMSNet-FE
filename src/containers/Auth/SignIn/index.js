@@ -6,6 +6,7 @@ import Box from '../../../components/Common/Box'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { forgotPassword, loginStart } from '../../../redux/auth/action'
+import { setAppLoading } from '../../../redux/app/action'
 
 const SignIn = () => {
   const [form] = Form.useForm();
@@ -15,6 +16,7 @@ const SignIn = () => {
   const [forgotPasswordModal, setForgotPasswordModal] = useState(false);
 
   const handleOnFinishForm = (values) => {
+    dispatch(setAppLoading(true))
     dispatch(loginStart(values))
   }
 

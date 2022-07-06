@@ -29,13 +29,13 @@ const Request = ({ data, suggestion, showFullName }) => {
                             <div className="username" onClick={() => {
                                 dispatch(setUserDetail(data))
                             }}>
-                                {data?.username}
+                                {(!data?.deleted && data?.status === 'A') ? data?.username : 'Người dùng QMNets'}
                             </div>
                             <span>
-                                {showFullName ? data.fullname : suggestion ? 'Gợi ý cho bạn.' : 'đã theo dõi bạn.'}
+                                {(!data?.deleted && data?.status === 'A') && (showFullName ? data.fullname : suggestion ? 'Gợi ý cho bạn.' : 'đã theo dõi bạn.')}
                             </span>
                         </Col>
-                        <Col style={{
+                        {(!data?.deleted && data?.status === 'A') && <Col style={{
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'flex-end'
@@ -61,7 +61,7 @@ const Request = ({ data, suggestion, showFullName }) => {
                                 }))
                             }} className="q-button" type="primary" >Theo dõi</Button>}
 
-                        </Col>
+                        </Col>}
 
                     </Row>
                 }

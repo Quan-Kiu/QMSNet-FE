@@ -1,4 +1,4 @@
-import { Avatar } from 'antd'
+import { Avatar, message } from 'antd'
 import { timeAgo } from '../../../../../utils/time_utils'
 import { NotifyWrapper } from './Notify.style'
 import { useDispatch } from 'react-redux';
@@ -13,6 +13,9 @@ const Notify = ({ notify }) => {
   const handleOnClick = () => {
     if (!notify?.isRead) {
       dispatch(readNotify(notify._id));
+    }
+    if (!notify?.postId || !notify?.user) {
+      return message.error('Không thể truy cập')
     }
 
     switch (notify?.action) {
@@ -47,7 +50,7 @@ const Notify = ({ notify }) => {
           <div style={{
             flex: '1',
           }}>
-            {notify?.action !== 6 && <span>{notify?.user?.username}</span>} {notify?.text} <div className="preview-content">
+            {notify?.action !== 6 && <span>{notify?.user?.username || 'Người dùng QMNets'}</span>} {notify?.text} <div className="preview-content">
               {notify?.content}
             </div>
           </div>

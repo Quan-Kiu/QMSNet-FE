@@ -12,10 +12,12 @@ import { getSocket } from '../redux/socket/action';
 import NotifyModal from '../components/Common/NotifyModal';
 import Verify from './Auth/Verify';
 import ForgotPassword from './Auth/ForgotPassword';
+import AppLoading from '../components/Common/AppLoading';
 
 
 const AppRoutes = () => {
     const { isLogin } = useSelector(authSelector);
+    const { appLoading } = useSelector(state => state.app);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
@@ -42,6 +44,7 @@ const AppRoutes = () => {
 
     return (
         <>
+            {appLoading && <AppLoading />}
             <NotifyModal />
 
             <Routes>

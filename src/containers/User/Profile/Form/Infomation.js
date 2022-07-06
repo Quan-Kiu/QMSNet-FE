@@ -63,7 +63,7 @@ const Information = props => {
   useEffect(() => {
     const fetchApi = async () => {
       const res = await axios.get('https://provinces.open-api.vn/api/?depth=2');
-      if (res.data?.length > 0) {
+      if (res?.data?.length > 0) {
         setProvince(res.data);
       }
     }
@@ -79,7 +79,7 @@ const Information = props => {
 
       <Collapse bordered={false} accordion defaultActiveKey={'general'} expandIconPosition={"right"}  >
         <Collapse.Panel header="Thông tin chung" key="general">
-          <Form.Item initialValue={user.fullname} label="Họ và tên" name="fullname">
+          <Form.Item initialValue={user?.fullname} label="Họ và tên" name="fullname">
             <Input size="large"></Input>
           </Form.Item>
           <Form.Item label="Ngày sinh" name="dob">

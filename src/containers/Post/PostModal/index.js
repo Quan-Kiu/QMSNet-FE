@@ -15,6 +15,7 @@ import { PostModalWrapper } from './PostModal.style'
 
 const PostModal = props => {
     const { postDetail, postDetailLoading } = useSelector((state) => state.post)
+    const { user } = useSelector((state) => state.auth)
     const isSimplePost = postDetail?.styles?.background === '#fff' && postDetail?.media?.length === 0;
     const dispatch = useDispatch();
     const [reply, setReply] = useState(null);
@@ -76,7 +77,7 @@ const PostModal = props => {
                                     content: postDetail?.content
 
                                 }} onlyTime={true} />}
-                            {postDetail?.comments?.filter((cmt => !cmt.reply))?.map((cmt) => <Comment onReply={handleOnReplyClick} simple={false} params={props.params} isPostDetail={true} comment={cmt} />)}
+                            {postDetail?.comments?.filter((cmt => !cmt.reply && cmt?.user && !cmt?.user?.blocks.includes(user._id) && !user?.blocks.includes(cmt?.user?._id)))?.map((cmt) => <Comment onReply={handleOnReplyClick} simple={false} params={props.params} isPostDetail={true} comment={cmt} />)}
                         </div>
                         <PostAction setReply={setReply} isPostDetail={true} post={postDetail} />
                         <CommentInput setReply={setReply} reply={reply} post={postDetail} isPostDetail={true} />

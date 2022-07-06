@@ -2,7 +2,7 @@ import { DeleteOutlined, EditOutlined, GlobalOutlined, SaveOutlined } from '@ant
 import { Popover, Row, Col, Modal, Button } from 'antd'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { MoreIcon, SaveIcon } from '../../../assets/icon'
 import { deleteMessage } from '../../../redux/conversation/action'
 import { deletePost, setDetailModal, toggleModal } from '../../../redux/post/action'
@@ -20,6 +20,7 @@ import { PostWrapper } from './Post.style'
 
 const Post = ({ post }) => {
     const [showConfirmDelete, setShowConfirmDelete] = useState(null);
+    const { user } = useSelector(state => state.auth)
     const dispatch = useDispatch();
     return (<>
         <Modal centered bodyStyle={{
@@ -69,7 +70,7 @@ const Post = ({ post }) => {
                         {post?.comments?.slice(
                             post.comments.length - 2,
                             post.comments.length
-                        ).map((cmt) => cmt?.user?.status === 'A' && <Comment comment={cmt} />)}
+                        ).map((cmt) => cmt?.user && !cmt?.user?.blocks.includes(user._id) && !user?.blocks.includes(cmt?.user?._id) && cmt?.user?.status === 'A' && <Comment comment={cmt} />)}
 
                     </div>
                     <CommentInput isPostUser post={post} />

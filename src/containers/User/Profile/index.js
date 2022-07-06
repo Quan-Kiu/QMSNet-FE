@@ -151,7 +151,7 @@ const Profile = props => {
             <img src="/assets/images/phone.png" alt="phone" />
             <div className="bod">{userDetail?.mobile}</div>
         </Space>}
-        {userDetail?.email && (!userDetail?.userSettings?.PRIVACY?.email || userDetail?.userSettings?.PRIVACY?.email === 1) && <Space>
+        {userDetail?.email && (!userDetail?.userSettings?.PRIVACY?.email || userDetail?.userSettings?.PRIVACY?.email === 1 || userDetail?._id === user?._id) && <Space>
             <img src="/assets/images/mail.png" alt="mail" />
             <div className="bod">{userDetail?.email}</div>
         </Space>}
@@ -160,7 +160,7 @@ const Profile = props => {
             <div className="bod">Sinh ngày {moment(userDetail?.dob).format('DD/MM/YYYY')}</div>
         </Space>}
 
-        {(!userDetail?.userSettings?.PRIVACY?.followers || userDetail?.userSettings?.PRIVACY?.followers === 1) && <Space>
+        {(!userDetail?.userSettings?.PRIVACY?.followers || userDetail?.userSettings?.PRIVACY?.followers === 1 || userDetail?._id === user?._id) && <Space>
             <img src="/assets/images/followers.png" alt="followers" />
             <div className="followers">Có <b style={{
                 cursor: 'pointer'
@@ -172,7 +172,7 @@ const Profile = props => {
                 })
             }}>{userDetail?.followers.length}</b> người theo dõi</div>
         </Space>}
-        {(!userDetail?.userSettings?.PRIVACY?.following || userDetail?.userSettings?.PRIVACY?.following === 1) && <Space>
+        {(!userDetail?.userSettings?.PRIVACY?.following || userDetail?.userSettings?.PRIVACY?.following === 1 || userDetail?._id === user?._id) && <Space>
 
             <img src="/assets/images/followers.png" alt="followers" />
             <div className="following">Đang theo dõi <b style={{

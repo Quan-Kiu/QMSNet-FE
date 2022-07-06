@@ -14,6 +14,8 @@ const Settings = props => {
     const [key, setKey] = useState('profile')
     const location = useLocation();
 
+
+
     useEffect(() => {
         if (location.state) {
             setKey(location.state)

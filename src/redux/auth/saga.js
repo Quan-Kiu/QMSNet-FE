@@ -3,7 +3,7 @@ import { all, call, fork, put, takeEvery, select } from "redux-saga/effects";
 import { authEndPoint, GET, PATCH, POST } from "../../constants";
 import callAPi from "../../utils/apiRequest";
 import { removeItem, setItem } from "../../utils/localStorage";
-import { setNotifyModal } from "../app/action";
+import { setAppLoading, setNotifyModal } from "../app/action";
 import { setUserDetailSuccess } from "../user/action";
 import { authFailed, CHANGE_PASSWORD, FORGOT_PASSWORD, loginSuccess, LOGIN_START, LOGOUT, logoutSuccess, REFRESH_TOKEN, REGISTER, SEND_MAIL, updateProfileSuccess, UPDATE_PROFILE } from "./action";
 
@@ -15,10 +15,13 @@ function* handleLogin() {
             if (res && res.success) {
                 yield fork(setItem, 'token', res.data.accessToken);
                 yield put(loginSuccess(res.data));
+                yield put(setAppLoading(false))
 
             }
         } catch (error) {
             yield put(authFailed());
+            yield put(setAppLoading(false))
+
             yield put(setNotifyModal(error))
 
         }
@@ -52,6 +55,7 @@ function* handleForgotPassword() {
             }
         } catch (error) {
             yield put(authFailed());
+
             yield put(setNotifyModal(error))
         }
     })
@@ -78,12 +82,15 @@ function* handleRegister() {
 function* handleRefreshToken() {
     yield takeEvery(REFRESH_TOKEN, function* () {
         try {
+            yield put(setAppLoading(true))
             const res = yield call(callAPi, authEndPoint.REFRESH_TOKEN, GET);
             if (res && res?.success) {
                 yield fork(setItem, 'token', res.data.accessToken);
                 yield put(loginSuccess(res.data));
+                yield put(setAppLoading(false))
             }
         } catch (error) {
+            yield put(setAppLoading(false))
         }
     })
 }

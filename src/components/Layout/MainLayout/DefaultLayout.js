@@ -15,6 +15,7 @@ import { setReportModal, setTabActive } from '../../../redux/app/action';
 import { authSelector } from '../../../redux/auth/reducer';
 import { getPosts, setDetailModal, setPostDetail } from '../../../redux/post/action';
 import { getUserRequests, getUserSuggestions } from '../../../redux/user/action';
+import AppLoading from '../../Common/AppLoading';
 import Box from '../../Common/Box';
 import Container from '../../Common/Container';
 import ConversationPopup from '../../Common/ConversationPopup';
@@ -104,10 +105,12 @@ const LayoutRoutes = () => {
 const DefaultLayout = (props) => {
     const { user } = useSelector(authSelector);
     const { postDetail, detailModal } = useSelector(state => state.post);
-    const { reportModal } = useSelector(state => state.app);
+    const { reportModal, appLoading } = useSelector(state => state.app);
     const dispatch = useDispatch();
 
     return <LayoutWrapper>
+
+
 
         <Modal onCancel={() => {
             dispatch(setReportModal(null));
