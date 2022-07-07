@@ -40,7 +40,10 @@ const Request = ({ data, suggestion, showFullName }) => {
                             alignItems: 'center',
                             justifyContent: 'flex-end'
                         }}>
-                            {isFollowed ? <Button onClick={() => {
+                            {data?._id === user?._id ? <Button onClick={() => {
+                                dispatch(setUserDetail(user))
+
+                            }} className="q-button" type="primary" >Trang cá nhân</Button> : isFollowed ? <Button onClick={() => {
                                 setLoading(true)
                                 dispatch(userFollow({
                                     path: 'unfollow' + '/' + data?._id,

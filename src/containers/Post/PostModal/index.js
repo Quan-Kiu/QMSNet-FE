@@ -54,7 +54,7 @@ const PostModal = props => {
                         <Skeleton avatar paragraph={{ rows: 10 }} />
                     </Col>
                 </>
-                : <> {!isSimplePost && <Col span={14} className="left">
+                : <> {!isSimplePost && <Col xl={14} md={14} sm={24} xs={24} className="left">
                     {postDetail?.styles?.background !== "#fff" ? <div style={postDetail?.styles} className="content-with-style">
                         {postDetail?.content}
                     </div>
@@ -62,7 +62,7 @@ const PostModal = props => {
                         <Carousel media={postDetail?.media} />
                     }
                 </Col>}
-                    <Col span={isSimplePost ? 24 : 10} className="right">
+                    <Col xl={isSimplePost ? 24 : 10} md={isSimplePost ? 24 : 10} sm={24} xs={24} className="right">
                         <AvatarCard className="post-detail-header" src={postDetail?.user?.avatar?.url} content={
                             <PostHeading style={{
                                 padding: '1rem 0'
