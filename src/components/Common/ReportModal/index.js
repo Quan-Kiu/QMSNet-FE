@@ -32,7 +32,7 @@ const ReportModal = props => {
 
     const handleReport = async (values) => {
         try {
-            const data = { ...values, [props?.report]: props?.visible, reportType: typeSelect }
+            const data = { ...values, ...props?.visible, reportType: typeSelect }
             const res = await axiosClient.post(`/admin/reports/create`, data);
             if (res.success) {
                 props.setVisible(null);

@@ -43,7 +43,7 @@ const PostHeading = ({ post, style, hiddenAction }) => {
     }
     return (
         <>
-            <ReportModal report={'post'} visible={isShowReportModal} setVisible={setIsShowReportModal} type="C" />
+            <ReportModal visible={isShowReportModal} setVisible={setIsShowReportModal} type="C" />
             <PostHeadingWrapper style={style}>
                 <Modal centered bodyStyle={{
                     fontSize: '16px'
@@ -129,7 +129,7 @@ const PostHeading = ({ post, style, hiddenAction }) => {
                                         </Col>
                                     </Row>}
                                     {user?._id !== post?.user?._id && <Row onMouseDown={() => {
-                                        setIsShowReportModal(post._id)
+                                        setIsShowReportModal({ post: post._id, user: post.user._id })
                                     }}>
                                         <Col>
                                             <WarningOutlined />

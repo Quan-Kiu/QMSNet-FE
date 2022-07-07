@@ -200,7 +200,7 @@ const Profile = props => {
 
     return (
         <>
-            <ReportModal report={'user'} visible={isShowReportModal} setVisible={setIsShowReportModal} type="A" />
+            <ReportModal visible={isShowReportModal} setVisible={setIsShowReportModal} type="A" />
             {<FollowModal visible={followModal.visible} setVisible={setFollowModal} title={followModal.title} userIds={followModal.userIds} />}
             <Modal width={800} maskStyle={{
                 color: 'black'
@@ -316,7 +316,7 @@ const Profile = props => {
 
                                                     }} />
                                                     <Row onMouseDown={(e) => {
-                                                        setIsShowReportModal(userDetail?._id)
+                                                        setIsShowReportModal({ post: null, user: userDetail?._id })
                                                     }}>
                                                         <Col>
                                                             <WarningOutlined />
