@@ -16,7 +16,7 @@ const UploadAttachment = ({ onImageChange, maxCount, data }) => {
       uid: `${i + 1}`,
       name: defaultFileList[i].public_id,
       status: 'done',
-      type: 'image/' + defaultFileList[i].url.substring(defaultFileList[i].url.lastIndexOf('.') + 1),
+      type: (defaultFileList[i].url.match('/image/') ? 'image/' : 'video') + defaultFileList[i].url.substring(defaultFileList[i].url.lastIndexOf('.') + 1),
       response: {
         public_id: defaultFileList[i].public_id,
         url: defaultFileList[i].url
@@ -32,10 +32,13 @@ const UploadAttachment = ({ onImageChange, maxCount, data }) => {
       onImageChange(null);
       setFileList(newFileList);
     } else {
-
       setFileList(newFileList);
 
       if (file?.status === 'done') {
+        const final = toMediaArr(newFileList);
+        onImageChange(final);
+      }
+      if (file?.status === 'removed') {
         const final = toMediaArr(newFileList);
         onImageChange(final);
       }

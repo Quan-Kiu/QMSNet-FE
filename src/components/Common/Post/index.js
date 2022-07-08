@@ -52,7 +52,7 @@ const Post = ({ post }) => {
                     <div style={{
                         background: post?.styles?.background,
                         color: post?.styles?.color,
-                    }} className={`text-content ${post?.styles?.background !== "#fff" && 'with-style'}`} >
+                    }} className={`text-content ${post?.styles?.background !== "#ffffff" && 'with-style'}`} >
                         {post?.content}
                     </div>
                     <Carousel media={post?.media} />

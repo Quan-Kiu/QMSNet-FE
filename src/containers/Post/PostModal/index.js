@@ -55,7 +55,7 @@ const PostModal = props => {
                     </Col>
                 </>
                 : <> {!isSimplePost && <Col xl={14} md={14} sm={24} xs={24} className="left">
-                    {postDetail?.styles?.background !== "#fff" ? <div style={postDetail?.styles} className="content-with-style">
+                    {postDetail?.styles?.background !== "#ffffff" ? <div style={postDetail?.styles} className="content-with-style">
                         {postDetail?.content}
                     </div>
                         :

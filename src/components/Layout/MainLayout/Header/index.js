@@ -1,8 +1,9 @@
 import { LoginOutlined, SearchOutlined, ToolOutlined } from '@ant-design/icons'
-import { Avatar, Button, Col, Dropdown, Form, Input, Menu, Modal, Radio, Row, Select } from 'antd'
+import { Avatar, Button, Col, Dropdown, Form, Input, Menu, message, Modal, Radio, Row, Select } from 'antd'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import axiosClient from '../../../../api/axiosClient'
 import { CreateIcon, ProfileIcon, SaveIcon } from '../../../../assets/icon'
 import { setTabActive } from '../../../../redux/app/action'
 import { logout } from '../../../../redux/auth/action'
@@ -18,7 +19,7 @@ import { HeaderWrapper } from './Header.style'
 
 
 const bgs = [{
-  background: '#fff',
+  background: '#ffffff',
   color: 'black',
 },
 {
@@ -40,19 +41,21 @@ const Header = props => {
   const { user } = useSelector(authSelector);
   const { showModal } = useSelector(PostSelector);
   const textAreaInputRef = useRef();
+  const [options, setOptions] = useState([]);
   const [currentBG, setCurrentBG] = useState(showModal?.styles || {
-    background: '#fff',
-    color: 'black',
+    background: '#ffffff',
+    color: '#000000',
   });
   const [form] = Form.useForm();
   const dispatch = useDispatch();
+  const defaultBG = options?.find((bg) => bg?.background === '#ffffff')
 
   const handleModal = () => {
     dispatch(toggleModal())
   }
 
   useEffect(() => {
-    setCurrentBG(showModal?.styles || { background: '#fff', color: 'black' });
+    setCurrentBG(showModal?.styles || defaultBG);
 
   }, [showModal])
 
@@ -63,12 +66,12 @@ const Header = props => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showModal])
-  const onImageChange = useCallback((files) => {
+  const onImageChange = (files) => {
     form.setFieldsValue({
       media: files
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
   const handleSubmit = () => {
     const formData = form.getFieldsValue();
@@ -76,8 +79,11 @@ const Header = props => {
     formData.content = textAreaInputRef.current.value || showModal?.content;
     formData.status = formData?.status || 1;
     formData.styles = currentBG;
-    if (formData?.styles?.background !== "#fff" && formData?.media) {
+    if (formData?.styles?.background !== "#ffffff" && formData?.media) {
       delete formData?.media
+    }
+    if (!formData?.content && (!formData?.media || formData?.media.length === 0)) {
+      return message.error('Vui lòng nhập nội dung bài viết')
     }
     if (!showModal?._id) {
       dispatch(addPost(formData))
@@ -123,6 +129,34 @@ const Header = props => {
     />
   );
 
+  const fetchApi = async () => {
+    try {
+      const res = await axiosClient.post(`/admin/postStyles/getAll`, {
+        filter: [
+          {
+            type: 'type',
+            name: props?.type,
+            operator: 'LIKE'
+
+          },
+          {
+            type: 'deleted',
+            name: false,
+            operator: 'EQUAL'
+
+          },
+
+        ]
+      });
+      if (res.success) {
+        setOptions(res.data.rows);
+      }
+    } catch (error) {
+    }
+  }
+  useEffect(() => {
+    fetchApi()
+  }, [])
 
   return (
     <>
@@ -150,7 +184,7 @@ const Header = props => {
 
               <div className="post__content">
                 <Form.Item name="content">
-                  {currentBG.background !== '#fff' ? <>
+                  {currentBG?.background !== '#ffffff' ? <>
                     <textarea ref={textAreaInputRef} onKeyDown={(e) => {
                       var key = e.keyCode || e.charCode;
                       if (textInputRef.current.offsetHeight > 200) {
@@ -178,7 +212,7 @@ const Header = props => {
                   }} ref={textAreaInputRef} className="content" rows={6} placeholder='Bạn đang nghĩ gì thế?'></textarea>}
                 </Form.Item>
               </div>
-              {currentBG.background === '#fff' &&
+              {currentBG?.background === '#ffffff' &&
                 <UploadAttachment data={showModal?.media} onImageChange={onImageChange} maxCount={4} />}
               <Row justify="space-between">
 
@@ -191,7 +225,7 @@ const Header = props => {
                     setCurrentBG(e.target.value);
 
                   }} >
-                    {bgs.map((bg) => <Radio.Button value={bg}><div style={{
+                    {options.map((bg) => <Radio.Button value={bg}><div style={{
                       width: "30px",
                       height: "100%",
                       background: bg.background,
@@ -202,7 +236,7 @@ const Header = props => {
                 <Col className="emoji-choose">
                   <ChooseEmoji content={textInputRef?.current?.value} setContent={(value) => {
                     if (textAreaInputRef.current) {
-                      if (currentBG.background === '#fff') {
+                      if (currentBG.background === '#ffffff') {
                         textAreaInputRef.current.value += value;
                       }
                       if (textInputRef?.current?.offsetHeight <= 200) {

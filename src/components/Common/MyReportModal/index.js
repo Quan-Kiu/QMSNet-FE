@@ -81,7 +81,7 @@ const MyReportModal = props => {
                                 borderTop: 'thin solid rgba(0,0,0,0.1)',
                                 background: report?.post?.styles?.background,
                                 color: report?.post?.styles?.color,
-                            }} className={`text-content ${report?.post?.styles?.background !== "#fff" && 'with-style'}`} >
+                            }} className={`text-content ${report?.post?.styles?.background !== "#ffffff" && 'with-style'}`} >
                                 {report?.post?.content}
                             </div>
                             <Carousel media={report?.post?.media} />

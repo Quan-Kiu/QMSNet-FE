@@ -14,13 +14,22 @@ const ReportModal = props => {
     const fetchApi = async () => {
         try {
             const res = await axiosClient.post(`/admin/reportTypes/getAll`, {
+                page: 1,
+                limit: 100000,
                 filter: [
                     {
                         type: 'type',
                         name: props?.type,
                         operator: 'LIKE'
 
-                    }
+                    },
+                    {
+                        type: 'deleted',
+                        name: false,
+                        operator: 'EQUAL'
+
+                    },
+
                 ]
             });
             if (res.success) {
