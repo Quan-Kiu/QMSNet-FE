@@ -14,11 +14,11 @@ const ForgotPassword = props => {
             try {
                 const res = await axiosClient.get(`/generatePassword/${params?.id}`);
                 if (res.success) {
-                    navigate('/');
+                    navigate('/signin');
                     dispatch(setNotifyModal(res))
                 }
             } catch (error) {
-                navigate('/');
+                navigate('/signin');
                 dispatch(setNotifyModal(error))
             }
         }

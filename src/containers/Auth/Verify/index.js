@@ -16,11 +16,11 @@ const Verify = props => {
             try {
                 const res = await axiosClient.get(`/verify/${params?.id}`);
                 if (res.success) {
-                    navigate('/');
+                    navigate('/signin');
                     dispatch(setNotifyModal(res))
                 }
             } catch (error) {
-                navigate('/');
+                navigate('/signin');
                 dispatch(setNotifyModal(error))
             }
         }

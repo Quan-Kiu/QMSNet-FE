@@ -3,10 +3,10 @@ import { getItem } from '../utils/localStorage';
 
 const axiosClient = axios.create({
     baseURL: `${process.env.REACT_APP_BACKEND_SERVER}/api`,
+    withCredentials: true,
     headers: {
         'content-type': 'application/json',
     },
-    // withCredentials: true
 });
 
 axiosClient.interceptors.request.use(async (config) => {

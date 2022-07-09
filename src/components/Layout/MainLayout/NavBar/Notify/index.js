@@ -14,7 +14,7 @@ const Notify = ({ notify }) => {
     if (!notify?.isRead) {
       dispatch(readNotify(notify._id));
     }
-    if (!notify?.user) {
+    if (notify?.action !== 6 && !notify?.user) {
       return message.error('Không thể truy cập')
     }
 

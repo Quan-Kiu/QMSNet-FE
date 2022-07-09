@@ -49,7 +49,17 @@ const SignUp = () => {
           </Form.Item>
           <Form.Item
             name="username"
-            rules={[{ required: true, message: 'Vui lòng nhập tên người dùng!' }]}
+            rules={[{ required: true, message: 'Vui lòng nhập tên người dùng!' }
+              ,
+            {
+              max: 6,
+              message: 'Tên đăng nhập ít nhất 6 kí tự'
+            },
+            {
+              max: 15,
+              message: 'Tên đăng nhập nhiều nhất 15 kí tự'
+            },
+            ]}
           >
             <Input placeholder="Tên người dùng" size="large" />
           </Form.Item>

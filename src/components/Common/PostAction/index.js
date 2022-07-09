@@ -30,6 +30,8 @@ const PostAction = ({ post, isPostDetail, setReply }) => {
 
     })
 
+    document.title = 'QMNets - Admin Manager'
+
     useEffect(() => {
         setIsSaves(user?.saved?.includes(post?._id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -69,7 +71,8 @@ const PostAction = ({ post, isPostDetail, setReply }) => {
                         }} />
                     </Col>
                     <Col>
-                        <DirectIcon />
+                        <a href={`https://www.facebook.com/sharer/sharer.php?t=quanquan&u=${process.env.REACT_APP_CLIENT_SERVER}/posts/${post?._id}`} target="_blank"><DirectIcon >
+                        </DirectIcon></a>
                     </Col>
                 </Row>
 
