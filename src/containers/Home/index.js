@@ -7,6 +7,7 @@ import Container from '../../components/Common/Container';
 import Loader from '../../components/Common/Loader';
 import Post from '../../components/Common/Post';
 import Sidebar from '../../components/Layout/MainLayout/Sidebar';
+import { md, xl } from '../../constants';
 import useScrollInfinity from '../../hooks/useScrollInfinity';
 import UseWindow from '../../hooks/useWindowResize';
 import { authSelector } from '../../redux/auth/reducer';
@@ -38,7 +39,7 @@ const HomePage = (props) => {
             </div>}
             <Container className="container" >
                 <Col xl={16} lg={16} md={24} sm={24} xs={24} style={{
-                    paddingRight: '5rem',
+                    paddingRight: windowSize.width >= xl ? '5rem' : windowSize.width >= md ? '3rem' : '1rem',
                 }}>
 
                     <MainContentWrapper ref={homeRef}>

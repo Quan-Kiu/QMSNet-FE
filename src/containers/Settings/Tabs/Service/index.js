@@ -6,8 +6,10 @@ import styled from 'styled-components'
 import { changePassword } from '../../../../redux/auth/action';
 
 const ServiceForm = styled(Form)`
+
 padding-right: 2rem;
 padding-top: 2rem;
+padding-left: 2rem;
 .ant-form-item-required::before{
     display: none !important;
   }

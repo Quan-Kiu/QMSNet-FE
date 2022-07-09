@@ -8,11 +8,14 @@ import Service from './Tabs/Service'
 import Privacy from './Tabs/Privacy'
 import Block from './Tabs/Block'
 import { useLocation } from 'react-router-dom'
+import UseWindow from '../../hooks/useWindowResize'
 const TabPane = Tabs.TabPane
 
 const Settings = props => {
     const [key, setKey] = useState('profile')
     const location = useLocation();
+    const [sizes] = UseWindow()
+
 
 
 
@@ -28,7 +31,7 @@ const Settings = props => {
                 <Tabs activeKey={key} onTabClick={(key) => {
                     setKey(key)
 
-                }} tabPosition={"left"}>
+                }} tabPosition={sizes.width >= 800 ? "left" : "top"}>
                     <TabPane tab={<>
                         <img src="/assets/images/setting.png" alt="" />
                         Chỉnh sửa trang cá nhân

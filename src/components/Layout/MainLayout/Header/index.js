@@ -82,7 +82,7 @@ const Header = props => {
     if (formData?.styles?.background !== "#ffffff" && formData?.media) {
       delete formData?.media
     }
-    if (!formData?.content && (!formData?.media || formData?.media.length === 0)) {
+    if (!formData?.content) {
       return message.error('Vui lòng nhập nội dung bài viết')
     }
     if (!showModal?._id) {

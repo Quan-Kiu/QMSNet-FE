@@ -10,6 +10,7 @@ import BlockBtn from '../../../components/Common/BlockBtn'
 import Box from '../../../components/Common/Box'
 import FollowModal from '../../../components/Common/FollowModal'
 import Layout from '../../../components/Common/Layout'
+import Loader from '../../../components/Common/Loader'
 import Post from '../../../components/Common/Post'
 import ReportModal from '../../../components/Common/ReportModal'
 import UploadWithUpdate from '../../../components/Common/UploadWithUpdate'
@@ -23,7 +24,7 @@ import { ProfileWrapper } from './Profile.style'
 
 const Profile = props => {
     const { user, status } = useSelector((state) => state.auth);
-    const { userDetail, postUserDetail, followLoading } = useSelector((state) => state.user);
+    const { userDetail, postUserDetail, followLoading, postLoading } = useSelector((state) => state.user);
     const { conversations, totalActive } = useSelector((state) => state.conversation);
     const [isShowEditModal, setIsShowEditModal] = useState(false);
     const [isShowEditDetailModal, setIsShowEditDetailModal] = useState(false);
@@ -249,8 +250,8 @@ const Profile = props => {
                         }
                     }>
 
-                        <Row className="header-profile" justify="space-between" align="middle">
-                            <Col >
+                        <Row gutter={[12, 12]} className="header-profile" justify="space-between" align="middle">
+                            <Col xl={12} lg={24} md={24} sm={24} xs={24}>
                                 <AvatarCard style={{
                                     alignItems: "center"
                                 }} src={userDetail?.avatar.url} className={'avatar'} content={<>
@@ -265,8 +266,8 @@ const Profile = props => {
                                     <div className="fullname">{userDetail?.fullname}</div>
                                 </>} />
                             </Col>
-                            <Col className='header-profile__right'>
-                                <Row gutter={24} align="stretch">
+                            <Col xl={12} lg={24} md={24} sm={24} xs={24} className='header-profile__right' >
+                                <Row gutter={24} align="stretch" justify="end">
                                     <Col>
                                         {user?._id !== userDetail?._id && <Button size="large" loading={followLoading} icon={isFollowed ? <UserDeleteOutlined /> : <UserAddOutlined />} onClick={handleFollow} className="q-button" type="primary">{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}</Button>}
                                         {user?._id === userDetail?._id && <Button size="large" className="q-button q-button-outline" icon={<EditFilled />} onClick={handleShowEditModal}>Chỉnh sửa thông tin cá nhân</Button>}
@@ -342,7 +343,7 @@ const Profile = props => {
                     </Box>
                     <Row gutter={[32, 32]}>
 
-                        <Col xl={8} lg={8} md={24} className="about">
+                        <Col xl={8} lg={8} md={24} sm={24} xs={24} className="about">
                             <Box>
                                 <div className="story">
                                     <div className="section-title">Tiểu sử</div>
@@ -360,7 +361,7 @@ const Profile = props => {
                                 </div>
                             </Box>
                         </Col>
-                        <Col xl={16} lg={16} md={24} >
+                        <Col xl={16} lg={16} md={24} sm={24} xs={24}>
 
                             {postUserDetail?.posts?.length > 0 ? postUserDetail?.posts?.map((post) => <Post post={post} isPostDetail={true} />) : <Box style={{
                                 display: 'flex',
@@ -372,6 +373,7 @@ const Profile = props => {
                             }}>
                                 Không có bài viết
                             </Box>}
+                            <Loader loading={postLoading} />
                         </Col>
                     </Row>
                 </ProfileWrapper>

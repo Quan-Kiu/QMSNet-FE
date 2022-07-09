@@ -8,6 +8,7 @@ import { setUserSettings } from '../../../../redux/user/action';
 const PrivacyWrapper = styled.div`
 padding-right: 2rem;
 padding-top: 2rem;
+padding-left: 2rem;
 .ant-form-item-required::before{
     display: none !important;
   }

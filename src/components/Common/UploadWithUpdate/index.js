@@ -1,12 +1,20 @@
 import { Button, Col, Image, message, Progress, Row, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import axios from 'axios';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { updateProfile } from '../../../redux/auth/action';
+import Loader from '../Loader'
 
 const Wrapper = styled.div`
+position: relative;
+.loader{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
   img{
     border-radius: 50%;
     object-fit:contain;
@@ -26,9 +34,13 @@ const Wrapper = styled.div`
 const UploadWithUpdate = () => {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false)
   const uploadRef = useRef();
 
   const onChange = ({ fileList: newFileList }) => {
+    if (!loading) {
+      setLoading(true);
+    }
     if (newFileList[0]?.status === 'done') {
       dispatch(updateProfile({
         avatar: {
@@ -36,8 +48,17 @@ const UploadWithUpdate = () => {
           public_id: newFileList[0]?.response?.public_id,
         }
       }))
+
     };
   }
+
+  useEffect(() => {
+    if (loading) {
+      setLoading(false);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
   const uploadImage = async options => {
     const { action, onSuccess, onError, file, onProgress } = options;
@@ -57,8 +78,10 @@ const UploadWithUpdate = () => {
         fmData,
         config
       );
+
       onSuccess(res.data);
     } catch (err) {
+      setLoading(false);
       message.error(err.message);
       onError({ err });
     }
@@ -79,7 +102,6 @@ const UploadWithUpdate = () => {
             action="https://api.cloudinary.com/v1_1/quankiu/upload"
             listType="picture-card"
             customRequest={uploadImage}
-            // onPreview={onPreview}
             onChange={onChange}
             howUploadList={false}
           >
@@ -93,8 +115,8 @@ const UploadWithUpdate = () => {
     <Row style={{
       flexDirection: "column",
     }} className='edit-preview' align="middle">
-      <Image loading={true} width={200} src={user?.avatar?.url}></Image>
-
+      <Image width={200} src={user?.avatar?.url}></Image>
+      <Loader loading={loading} />
     </Row>
 
   </Wrapper>

@@ -4,7 +4,7 @@ import { LoaderWrapper } from './Loader.style'
 
 const Loader = props => {
     return (
-        props.loading && <LoaderWrapper>
+        props.loading && <LoaderWrapper className="loader">
             <div
                 className="lds-spinner"
                 style={{ width: `${props.width || '50px'} `, height: `${props.height || '50px'}` }}
