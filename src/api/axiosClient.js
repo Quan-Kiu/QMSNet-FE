@@ -24,8 +24,8 @@ axiosClient.interceptors.response.use(
         return response;
     },
     (error) => {
-        // Handle errors
-        if (error.response.data.code === 4) {
+        console.log(error);
+        if (error.response.status === 401) {
             return window.location.reload();
         }
         throw error.response.data;

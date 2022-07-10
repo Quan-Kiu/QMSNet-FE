@@ -7,7 +7,7 @@ import notifySaga from './notify/saga';
 
 export function* handleRealtime(type, name, payload) {
     const socket = yield select(state => state.socket)
-    socket.data[type](name, payload);
+    socket?.data && socket.data[type](name, payload);
 }
 
 

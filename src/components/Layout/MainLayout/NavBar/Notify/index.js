@@ -1,16 +1,19 @@
-import { Avatar, message } from 'antd'
-import { timeAgo } from '../../../../../utils/time_utils'
-import { NotifyWrapper } from './Notify.style'
+import { Avatar, Col, message, Popover, Row } from 'antd';
 import { useDispatch } from 'react-redux';
-import { readNotify } from '../../../../../redux/notify/action';
+import { setReportModal } from '../../../../../redux/app/action';
+import { deleteNotify, readNotify, unreadNotify } from '../../../../../redux/notify/action';
 import { setDetailModal } from '../../../../../redux/post/action';
 import { setUserDetail } from '../../../../../redux/user/action';
-import { setReportModal } from '../../../../../redux/app/action';
+import { timeAgo } from '../../../../../utils/time_utils';
+import { NotifyWrapper } from './Notify.style';
 
+import { CheckOutlined, CloseSquareOutlined } from '@ant-design/icons';
+import { MoreIcon } from '../../../../../assets/icon/index';
 const Notify = ({ notify }) => {
   const dispatch = useDispatch();
 
   const handleOnClick = () => {
+    console.log('aa');
     if (!notify?.isRead) {
       dispatch(readNotify(notify._id));
     }
@@ -38,33 +41,73 @@ const Notify = ({ notify }) => {
 
 
   return (
-    <NotifyWrapper onClick={handleOnClick} className={`${notify?.isRead && 'isRead'}`}>
-      <Avatar size="large" src={notify?.user?.avatar?.url || 'http://res.cloudinary.com/quankiu/image/upload/v1656676441/qmedia/xuezrusaqdmu4wstb5nk.png'} />
-      <div className="right">
-        <div className="content" style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '5px'
+    <>
+      <NotifyWrapper onClick={handleOnClick} className={`${notify?.isRead && 'isRead'}`}>
+        <Avatar size="large" src={notify?.user?.avatar?.url || 'http://res.cloudinary.com/quankiu/image/upload/v1656676441/qmedia/xuezrusaqdmu4wstb5nk.png'} />
+        <div className="right">
+          <div className="content" style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px'
 
-        }}>
-          <div style={{
-            flex: '1',
           }}>
-            {notify?.action !== 6 && <span>{notify?.user?.username || 'Người dùng QMNets'}</span>} {notify?.text} <div className="preview-content">
-              {notify?.content}
+            <div style={{
+              flex: '1',
+            }}>
+              {notify?.action !== 6 && <span>{notify?.user?.username || 'Người dùng QMNets'}</span>} {notify?.text} <div className="preview-content">
+                {notify?.content}
+              </div>
             </div>
+            {notify?.media?.length > 0 && <div className="notify-media">
+              {notify?.media[0]?.url.match('/image/') ? <img src={notify?.media[0]?.url} alt={notify?.media[0]?.url} /> : <video controls={false}  >
+                <source src={notify?.media[0]?.url} type="video/mp4" />
+              </video>}
+            </div>}
           </div>
-          {notify?.media?.length > 0 && <div className="notify-media">
-            {notify?.media[0]?.url.match('/image/') ? <img src={notify?.media[0]?.url} alt={notify?.media[0]?.url} /> : <video controls={false}  >
-              <source src={notify?.media[0]?.url} type="video/mp4" />
-            </video>}
-          </div>}
+          <div className="createdAt">
+            {timeAgo(notify?.updatedAt, false)}
+          </div>
         </div>
-        <div className="createdAt">
-          {timeAgo(notify?.updatedAt, false)}
-        </div>
-      </div>
-    </NotifyWrapper>
+        <Popover overlayClassName='postActions' trigger="click" content={<div className="postActions" >
+          <Row onClick={(e) => {
+            dispatch(unreadNotify(notify?._id))
+            e.preventDefault()
+            e.stopPropagation()
+          }}>
+            <Col>
+              <CheckOutlined />
+            </Col>
+            <Col>
+              Đánh dấu chưa đọc
+            </Col>
+          </Row>
+          <Row onClick={(e) => {
+            dispatch(deleteNotify(notify?._id))
+            e.preventDefault()
+            e.stopPropagation()
+          }}>
+            <Col>
+              <CloseSquareOutlined />
+            </Col>
+            <Col>
+              Gỡ thông báo này
+            </Col>
+          </Row>
+
+
+
+        </div>}>
+          <div className="more-action" onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+          }}>
+            <MoreIcon />
+          </div>
+        </Popover>
+
+      </NotifyWrapper>
+    </>
   )
 }
 

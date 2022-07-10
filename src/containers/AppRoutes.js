@@ -26,6 +26,7 @@ const AppRoutes = () => {
         const socket = io(`${process.env.REACT_APP_BACKEND_SERVER}`);
         dispatch(getSocket(socket));
         return () => {
+
             socket.close();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps

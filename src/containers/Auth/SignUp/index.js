@@ -52,7 +52,7 @@ const SignUp = () => {
             rules={[{ required: true, message: 'Vui lòng nhập tên người dùng!' }
               ,
             {
-              max: 6,
+              min: 6,
               message: 'Tên đăng nhập ít nhất 6 kí tự'
             },
             {

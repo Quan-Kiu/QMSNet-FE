@@ -4,6 +4,7 @@ const initialState = {
     user: null,
     loading: false,
     isLogin: false,
+    isLogout: false,
     status: {
         success: false,
     }
@@ -38,6 +39,7 @@ const authReducer = (state = initialState, action) => {
                 token: 'token',
                 loading: false,
                 isLogin: true,
+                isLogout: false,
 
             }
         case LOGOUT_SUCCESS:
@@ -47,6 +49,7 @@ const authReducer = (state = initialState, action) => {
                 token: null,
                 loading: false,
                 isLogin: false,
+                isLogout: true,
             }
         case AUTH_FAILED:
             return {

@@ -30,7 +30,7 @@ import Siderbar from './Sidebar';
 const LayoutRoutes = () => {
     const location = useLocation();
     const { tabActive } = useSelector((state) => state.app);
-    const { isLogin } = useSelector(authSelector);
+    const { isLogin, isLogout } = useSelector(authSelector);
     const { userDetail } = useSelector((state) => state.user);
     const { user, token } = useSelector((state) => state.auth);
     const navigate = useNavigate();
@@ -76,6 +76,13 @@ const LayoutRoutes = () => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLogin])
+    useEffect(() => {
+        if (isLogout) {
+            navigate(`/signin`)
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLogout])
 
 
     return (

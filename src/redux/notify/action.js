@@ -1,5 +1,7 @@
 export const GET_NOTIFY = 'GET_NOTIFY';
 export const READ_NOTIFY = 'READ_NOTIFY';
+export const UNREAD_NOTIFY = 'UNREAD_NOTIFY';
+export const DELETE_NOTIFY = 'DELETE_NOTIFY';
 export const READ_NOTIFY_ALL = 'READ_NOTIFY_ALL';
 export const GET_NOTIFY_SUCCESS = 'GET_NOTIFY_SUCCESS';
 export const NOTIFY_FAILED = 'NOTIFY_FAILED';
@@ -13,6 +15,14 @@ export const getNotifySuccess = (payload) => ({
 })
 export const readNotify = (payload) => ({
     type: READ_NOTIFY,
+    payload: payload
+})
+export const unreadNotify = (payload) => ({
+    type: UNREAD_NOTIFY,
+    payload: payload
+})
+export const deleteNotify = (payload) => ({
+    type: DELETE_NOTIFY,
     payload: payload
 })
 export const readNotifyAll = (payload) => ({

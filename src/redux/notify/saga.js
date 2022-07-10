@@ -1,9 +1,9 @@
 import { all, fork, put, select, takeEvery } from "redux-saga/effects";
-import { GET } from "../../constants";
+import { DELETE, GET } from "../../constants";
 import { message } from 'antd'
 import callAPi from "../../utils/apiRequest";
 import { postFailed } from "../post/action";
-import { getNotify, getNotifySuccess, GET_NOTIFY, notifyFailed, READ_NOTIFY, READ_NOTIFY_ALL } from "./action";
+import { DELETE_NOTIFY, getNotify, getNotifySuccess, GET_NOTIFY, notifyFailed, READ_NOTIFY, READ_NOTIFY_ALL, UNREAD_NOTIFY } from "./action";
 
 function* handleGetNotifies() {
     yield takeEvery(GET_NOTIFY, function* ({ payload }) {
@@ -14,8 +14,6 @@ function* handleGetNotifies() {
             if (res && res.success) {
                 yield put(getNotifySuccess(res.data));
 
-            } else {
-                throw new Error(res.message)
             }
         } catch (error) {
             yield put(notifyFailed());
@@ -32,8 +30,40 @@ function* handleReadNotifies() {
             if (res && res.success) {
                 yield put(getNotify());
 
-            } else {
-                throw new Error(res.message)
+            }
+        } catch (error) {
+            yield put(notifyFailed());
+            message.error(error.message);
+        }
+    })
+
+}
+function* handleUnReadNotifies() {
+    yield takeEvery(UNREAD_NOTIFY, function* ({ payload }) {
+
+        try {
+            const res = yield callAPi(`notify/unread/${payload}`, GET);
+            if (res && res.success) {
+                yield put(getNotify());
+                message.success(res.message);
+
+            }
+        } catch (error) {
+            yield put(notifyFailed());
+            message.error(error.message);
+        }
+    })
+
+}
+function* handleDeleteNotifies() {
+    yield takeEvery(DELETE_NOTIFY, function* ({ payload }) {
+
+        try {
+            const res = yield callAPi(`notify/${payload}`, DELETE);
+            if (res && res.success) {
+                yield put(getNotify());
+                message.success(res.message);
+
             }
         } catch (error) {
             yield put(notifyFailed());
@@ -49,8 +79,6 @@ function* handleReadAllNotifies() {
             const res = yield callAPi(`notify/readAll`, GET);
             if (res && res.success) {
                 yield put(getNotify());
-            } else {
-                throw new Error(res.message)
             }
         } catch (error) {
             yield put(notifyFailed());
@@ -65,6 +93,9 @@ function* rootSaga() {
         fork(handleGetNotifies),
         fork(handleReadNotifies),
         fork(handleReadAllNotifies),
+        fork(handleUnReadNotifies),
+        fork(handleUnReadNotifies),
+        fork(handleDeleteNotifies),
     ])
 }
 

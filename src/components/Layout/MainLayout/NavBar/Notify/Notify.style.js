@@ -8,13 +8,40 @@ padding: 1rem;
 margin: 0 -1rem;
 cursor: pointer;
 border-radius:.5rem;
-position: relative;
 padding-right: 3rem;
+z-index: 1;
 .notify-media{
     width: 50px;
     *{
         width: 100%;
     }
+}
+
+position: relative;
+&:hover{
+    .more-action{
+        display: flex;
+    }
+}
+.more-action{
+    display: none;
+    top:50%;
+    border: thin solid rgba(0,0,0,0.2);
+    z-index: 2;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    background: white;
+    box-shadow: 1px 1
+    align-items: center;
+    justify-content: center;
+    border-radius:50%;
+    svg{
+
+        fill: black !important;
+    }
+    position: absolute;
+    right: 25px;
 }
 &:after {
     content: '';
