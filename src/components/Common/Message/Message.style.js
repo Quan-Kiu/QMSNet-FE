@@ -44,7 +44,7 @@ export const MessageWrapper = styledComponents.div`
         padding: 1rem;
         font-size: 1.5rem;
         border-radius:15px;
-        word-break: break-all;
+        word-break: break-word;
 
 
     }
