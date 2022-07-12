@@ -19,7 +19,6 @@ const CarouselWrapper = styled.div`
         svg{
             width: 30px;
             height: 30px;
-            color: white;
             
         }
         transform: translateY(-50%); 
@@ -32,7 +31,7 @@ const CarouselWrapper = styled.div`
     }
 `;
 
-const Carousel = ({ media }) => {
+const Carousel = ({ media, controlColor = "black" }) => {
     const carouselRef = useRef();
     return (media?.length > 0 && <CarouselWrapper>
         <CarouselAntd ref={carouselRef}>
@@ -42,10 +41,16 @@ const Carousel = ({ media }) => {
         </CarouselAntd>
         {media.length > 1 && <> <Button className="actions next" type="text" onClick={() => {
             carouselRef.current.next();
-        }}><RightCircleFilled /></Button>
+        }}><RightCircleFilled style={{
+            fill: controlColor,
+            color: controlColor
+        }} /></Button>
             <Button className="actions prev" type="text" onClick={() => {
                 carouselRef.current.prev();
-            }}><LeftCircleFilled /></Button></>}
+            }}><LeftCircleFilled style={{
+                fill: controlColor,
+                color: controlColor
+            }} /></Button></>}
 
     </CarouselWrapper>)
 }

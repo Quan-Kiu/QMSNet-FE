@@ -18,6 +18,11 @@ export const CommentWrapper = styledComponents.div`
         cursor: pointer;
     }
 
+    .content{
+        white-space: pre-wrap;
+        
+    }
+
    
 
     

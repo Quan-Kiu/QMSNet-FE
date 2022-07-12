@@ -59,7 +59,7 @@ const PostModal = props => {
                         {postDetail?.content}
                     </div>
                         :
-                        <Carousel media={postDetail?.media} />
+                        <Carousel controlColor='white' media={postDetail?.media} />
                     }
                 </Col>}
                     <Col xl={isSimplePost ? 24 : 10} md={isSimplePost ? 24 : 10} sm={24} xs={24} className="right">
@@ -70,7 +70,7 @@ const PostModal = props => {
                         } />
 
                         <div className="comments">
-                            {postDetail?.content && postDetail.styles.background === '#fff' &&
+                            {postDetail?.content && postDetail.styles.background === '#ffffff' &&
                                 <Comment simple={false} comment={{
                                     user: postDetail?.user,
                                     createdAt: postDetail?.createdAt,

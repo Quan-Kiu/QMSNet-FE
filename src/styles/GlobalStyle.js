@@ -449,6 +449,18 @@ ul,li{
     }
 }
 
+.text-content{
+    font-size: 16px !important;
+}
+
+.ant-carousel{
+    img{
+        min-height: 400px;
+        max-height: 600px;
+        object-fit: contain;
+    }
+}
+
 
 
 // Message
