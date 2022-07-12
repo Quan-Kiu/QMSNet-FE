@@ -1,6 +1,7 @@
 import { Button } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import Box from '../../../components/Common/Box'
 import Layout from '../../../components/Common/Layout'
 import Loader from '../../../components/Common/Loader'
 import { POST, postEndpoint } from '../../../constants'
@@ -54,6 +55,11 @@ const Saved = () => {
         <Layout>
             <SavedWrapper>
                 {data?.posts?.map((p) => <SavedItem post={p} />)}
+                {data?.posts?.length < 1 && <Box style={{
+                    textAlign: 'center',
+                    fontWeight: '500',
+                    fontSize: '16px'
+                }}>Bạn chưa lưu bài viết nào.</Box>}
                 <Loader loading={loading} />
                 {data?.pagination?.count === 10 && <Button style={{
                     width: '100%',

@@ -24,9 +24,10 @@ axiosClient.interceptors.response.use(
         return response;
     },
     (error) => {
-        console.log(error);
         if (error.response.status === 401) {
-            return window.location.href = '/';
+            if (window.location.pathname !== '/' && window.location.pathname !== '/signin') {
+                return window.location.href = '/';
+            }
         }
         throw error.response.data;
     }

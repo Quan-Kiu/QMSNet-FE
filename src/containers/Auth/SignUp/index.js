@@ -98,7 +98,7 @@ const SignUp = () => {
         padding: '3rem'
       }}>
         <div className="navigate">
-          Bạn chưa có tài khoản ư? <Link to={'/'}>Đăng nhập</Link>
+          Bạn chưa có tài khoản ư? <Link to={'/signin'}>Đăng nhập</Link>
         </div>
       </Box>
     </AuthWrapper>

@@ -205,7 +205,7 @@ const ConversationItem = props => {
                     </div> : <div className="footer">
                         <ImageIcon onClick={() => fileRef.current.click()} />
                         <Form.Item name="text" noStyle>
-                            <Input ref={inputRef} onKeyDown={(e) => {
+                            <Input autoFocus={true} ref={inputRef} onKeyDown={(e) => {
                                 if (e.keyCode === 13) {
 
                                     form.submit()

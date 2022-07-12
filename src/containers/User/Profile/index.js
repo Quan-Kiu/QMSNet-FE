@@ -272,7 +272,7 @@ const Profile = props => {
                                         {user?._id !== userDetail?._id && <Button size="large" loading={followLoading} icon={isFollowed ? <UserDeleteOutlined /> : <UserAddOutlined />} onClick={handleFollow} className="q-button" type="primary">{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}</Button>}
                                         {user?._id === userDetail?._id && <Button size="large" className="q-button q-button-outline" icon={<EditFilled />} onClick={handleShowEditModal}>Chỉnh sửa thông tin cá nhân</Button>}
                                     </Col>
-                                    {isFollowed &&
+                                    {isFollowed && user?._id !== userDetail?._id &&
                                         <Col>
                                             <Button onClick={() => {
                                                 const isExist = conversations.find((cv) => cv.participants[0]._id === userDetail._id || cv.participants[1]._id === userDetail._id);

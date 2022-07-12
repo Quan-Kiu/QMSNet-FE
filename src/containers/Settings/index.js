@@ -9,6 +9,7 @@ import Privacy from './Tabs/Privacy'
 import Block from './Tabs/Block'
 import { useLocation } from 'react-router-dom'
 import UseWindow from '../../hooks/useWindowResize'
+import Support from './Tabs/Support'
 const TabPane = Tabs.TabPane
 
 const Settings = props => {
@@ -61,6 +62,14 @@ const Settings = props => {
                         </>
                     } key="block">
                         <Block />
+                    </TabPane>
+                    <TabPane tab={
+                        <>
+                            <img src="/assets/images/support.png" alt="" />
+                            Hộp thư liên hệ, hỗ trợ
+                        </>
+                    } key="support">
+                        <Support />
                     </TabPane>
                 </Tabs>
             </SettingWrapper>
