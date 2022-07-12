@@ -76,13 +76,13 @@ const LayoutRoutes = () => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLogin])
-    useEffect(() => {
-        if (isLogout) {
-            navigate(`/signin`)
-        }
+    // useEffect(() => {
+    //     if (isLogout) {
+    //         navigate(`/signin`)
+    //     }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isLogout])
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [isLogout])
 
 
     return (

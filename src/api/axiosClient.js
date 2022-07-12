@@ -26,7 +26,7 @@ axiosClient.interceptors.response.use(
     (error) => {
         console.log(error);
         if (error.response.status === 401) {
-            return window.location.reload();
+            return window.location.href = '/';
         }
         throw error.response.data;
     }
