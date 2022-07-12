@@ -94,7 +94,6 @@ function* rootSaga() {
         fork(handleReadNotifies),
         fork(handleReadAllNotifies),
         fork(handleUnReadNotifies),
-        fork(handleUnReadNotifies),
         fork(handleDeleteNotifies),
     ])
 }

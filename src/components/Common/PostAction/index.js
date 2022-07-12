@@ -30,8 +30,6 @@ const PostAction = ({ post, isPostDetail, setReply }) => {
 
     })
 
-    document.title = 'QMNets - Admin Manager'
-
     useEffect(() => {
         setIsSaves(user?.saved?.includes(post?._id));
         // eslint-disable-next-line react-hooks/exhaustive-deps

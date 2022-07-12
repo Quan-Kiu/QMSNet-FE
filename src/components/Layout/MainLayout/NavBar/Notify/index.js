@@ -13,7 +13,6 @@ const Notify = ({ notify }) => {
   const dispatch = useDispatch();
 
   const handleOnClick = () => {
-    console.log('aa');
     if (!notify?.isRead) {
       dispatch(readNotify(notify._id));
     }
