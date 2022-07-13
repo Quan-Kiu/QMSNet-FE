@@ -20,9 +20,9 @@ const Requests = props => {
       </Row>
       <div className="requests">
         {requests?.users?.slice(requests?.users?.length - 2,
-          requests?.users?.length).map((rq) => <Request data={rq} />)}
+          requests?.users?.length).map((rq, index) => <Request key={rq?._id || index} data={rq} />)}
         {suggestions?.users?.slice(suggestions?.users?.length - 2,
-          suggestions?.users?.length).map((rq) => <Request data={rq} suggestion />)}
+          suggestions?.users?.length).map((rq, index) => <Request key={rq?._id || index} data={rq} suggestion />)}
       </div>
     </RequestsWrapper>
   )

@@ -70,7 +70,7 @@ const HomePage = (props) => {
                             }}>
                                 Không có bài viết
                             </Box>}
-                            {data?.map((post) => <Post post={post} />)}
+                            {data?.map((post) => <Post key={post?._id} post={post} />)}
                         </div>
                         <Loader loading={loading} />
                     </MainContentWrapper>

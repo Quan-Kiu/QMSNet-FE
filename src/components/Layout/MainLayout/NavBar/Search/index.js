@@ -103,7 +103,7 @@ const Search = () => {
                 </div>
                 <div className="search-history-list">
                     {searchs.length > 0 && !isLoading && searchs.map((s, index) => <SearchItem onClick={() => onSearchItemClick(s)} key={index} user={s} />)}
-                    {searchs.length === 0 && searchHistory?.length > 0 && searchHistory.map((user, index) => <SearchHistory position={index} key={index} user={user} />)}
+                    {searchs.length === 0 && searchHistory?.length > 0 && searchHistory.map((user, index) => <SearchHistory position={index} key={user?._id || index} user={user} />)}
                     {isLoading && <Spin className="search-loading" indicator={antIcon} />}
                 </div>
             </Form>

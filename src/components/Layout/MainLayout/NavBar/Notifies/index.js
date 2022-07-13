@@ -59,7 +59,7 @@ const Notifies = props => {
                 </div>
             </div>
             <div className="notify-list">
-                {notifies?.map((n) => <Notify notify={n} />)}
+                {notifies?.map((n, index) => <Notify key={n?._id || index} notify={n} />)}
             </div>
         </NotifiesWrapper>
     )

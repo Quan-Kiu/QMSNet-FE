@@ -225,7 +225,7 @@ const Header = props => {
                     setCurrentBG(e.target.value);
 
                   }} >
-                    {options.map((bg) => <Radio.Button value={bg}><div style={{
+                    {options.map((bg) => <Radio.Button key={bg?._id} value={bg}><div style={{
                       width: "30px",
                       height: "100%",
                       background: bg.background,

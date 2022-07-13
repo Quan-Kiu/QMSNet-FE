@@ -105,7 +105,7 @@ const NavBar = props => {
         <>
             <NavBarWrapper>
 
-                {navbars.map((nav) => <NavBarItem popup={nav?.popup} {...navProps} active={tabActive === nav.key} navKey={nav.key} path={nav?.path} key={props.key} label={nav.label} icon={nav.icon} />)}
+                {navbars.map((nav) => <NavBarItem popup={nav?.popup} {...navProps} active={tabActive === nav.key} navKey={nav.key} path={nav?.path} key={nav.key} label={nav.label} icon={nav.icon} />)}
             </NavBarWrapper>
         </>
 

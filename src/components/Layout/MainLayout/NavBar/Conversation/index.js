@@ -24,7 +24,6 @@ const Conversation = props => {
     const handleFilterChange = (e) => {
         if (conversations.length > 0) {
 
-            console.log(inputRef.current)
             const search = inputRef?.current?.input?.value
                 .toLowerCase()
                 .replace(/ /g, '');
@@ -46,8 +45,8 @@ const Conversation = props => {
             </div>
             <Input ref={inputRef} onChangeCapture={handleFilterChange} size="large" prefix={<SearchOutlined />} placeholder="Tìm kiếm" ></Input>
             <div className="body">
-                {!inputRef?.current?.input?.value && conversations.map((cv) => cv._id && <ConversationItem data={cv} />)}
-                {searchs.length > 0 && inputRef?.current?.input?.value && searchs.map((cv) => cv._id && <ConversationItem data={cv} />)}
+                {!inputRef?.current?.input?.value && conversations.map((cv) => cv?._id && <ConversationItem key={cv?._id} data={cv} />)}
+                {searchs.length > 0 && inputRef?.current?.input?.value && searchs.map((cv) => cv?._id && <ConversationItem data={cv} />)}
 
             </div>
 

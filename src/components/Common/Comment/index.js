@@ -56,7 +56,7 @@ const Comment = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props?.comment])
     return (
-        <CommentWrapper id={!props.simple && props?.comment._id}>
+        <CommentWrapper id={!props.simple ? props?.comment?._id.toString() : undefined}>
             <Modal centered bodyStyle={{
                 fontSize: '16px'
             }} visible={showConfirmDelete} footer={<Row justify="end">

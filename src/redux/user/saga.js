@@ -28,7 +28,6 @@ function* handleGetUserSuggestions() {
     yield takeEvery(GET_USER_SUGGESTIONS, function* ({ payload }) {
         try {
             const { suggestions } = yield select(state => state.user)
-            console.log(suggestions)
             const res = yield call(callAPi, profileEndpoint.USERS + `/suggestions`, POST, {
                 userIgnore: suggestions?.userIgnore || []
             });

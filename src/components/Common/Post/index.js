@@ -22,6 +22,7 @@ const Post = ({ post }) => {
     const [showConfirmDelete, setShowConfirmDelete] = useState(null);
     const { user } = useSelector(state => state.auth)
     const dispatch = useDispatch();
+    const [readMore, setReadMore] = useState(false);
     return (<>
         <Modal centered bodyStyle={{
             fontSize: '16px'
@@ -52,9 +53,18 @@ const Post = ({ post }) => {
                     <div style={{
                         background: post?.styles?.background,
                         color: post?.styles?.color,
-                    }} className={`text-content ${post?.styles?.background !== "#ffffff" && 'with-style'}`} >
+                    }} className={`text-content ${!readMore && 'collapse'}  ${post?.styles?.background !== "#ffffff" && 'with-style'}`} >
                         {post?.content}
                     </div>
+                    {!readMore && (post?.content?.split('\n') || [])?.length > 3 && <span onClick={() => {
+                        setReadMore(true)
+                    }} style={{
+                        cursor: 'pointer',
+                        fontSize: '15px',
+                        display: 'inline-block',
+                        fontWeight: '500',
+                        marginBottom: '10px'
+                    }}>Xem thêm</span>}
                     <Carousel media={post?.media} />
                     <PostAction post={post} />
 
@@ -70,7 +80,7 @@ const Post = ({ post }) => {
                         {post?.comments?.slice(
                             post.comments.length - 2,
                             post.comments.length
-                        )?.map((cmt) => cmt?.user && !cmt?.user?.blocks.includes(user?._id) && !user?.blocks.includes(cmt?.user?._id) && cmt?.user?.status === 'A' && <Comment comment={cmt} />)}
+                        )?.map((cmt) => cmt?.user && !cmt?.user?.blocks.includes(user?._id) && !user?.blocks.includes(cmt?.user?._id) && cmt?.user?.status === 'A' && <Comment key={cmt?._id} comment={cmt} />)}
 
                     </div>
                     <CommentInput isPostUser post={post} />

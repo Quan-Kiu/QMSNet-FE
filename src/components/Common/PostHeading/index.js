@@ -32,7 +32,6 @@ const PostHeading = ({ post, style, hiddenAction }) => {
     const popoverRef = useRef(null);
     const { user } = useSelector(state => state.auth);
     const isSaved = user?.saved?.includes(post?._id);
-    console.log(isSaved)
     const dispatch = useDispatch();
     const handleSavePost = () => {
 

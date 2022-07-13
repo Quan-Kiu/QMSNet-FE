@@ -35,7 +35,7 @@ const Carousel = ({ media, controlColor = "black" }) => {
     const carouselRef = useRef();
     return (media?.length > 0 && <CarouselWrapper>
         <CarouselAntd ref={carouselRef}>
-            {media.map((media) => media?.url.match('/image/') ? <img src={media?.url} alt={media?.url} /> : <video controls  >
+            {media?.map((media) => media?.url.match('/image/') ? <img key={media?.url} src={media?.url} alt={media?.url} /> : <video controls key={media?.url} >
                 <source src={media?.url} type="video/mp4" />
             </video>)}
         </CarouselAntd>

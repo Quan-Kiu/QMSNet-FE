@@ -195,7 +195,7 @@ const ConversationItem = props => {
 
                     </div>
                     <div className="body" onScroll={handleOnScrollTop} >
-                        {props?.data?.messages?.map((m, index) => <Message key={index} data={m} nextMess={props?.data?.messages[index - 1] || null} prevMess={props?.data?.messages[index + 1] || null} recipient={recipient} type={m?.sender === user._id ? 'me' : 'friend'} />)}
+                        {props?.data?.messages?.map((m, index) => <Message key={m?._id || index} data={m} nextMess={props?.data?.messages[index - 1] || null} prevMess={props?.data?.messages[index + 1] || null} recipient={recipient} type={m?.sender === user._id ? 'me' : 'friend'} />)}
                     </div>
                     {user?.blocks?.includes(recipient?._id || props?.data?.fakeId) || recipient?.blocks?.includes(user?._id) || recipient?.deleted || (recipient?.status && recipient?.status !== 'A') ? <div className="footer" style={{
                         textAlign: "center",
