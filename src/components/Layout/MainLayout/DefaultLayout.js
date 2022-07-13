@@ -67,9 +67,7 @@ const LayoutRoutes = () => {
 
     useEffect(() => {
         if (isLogin) {
-            dispatch(getPosts({
-                postIds: [...user.following, '62bd4800bfda3cce913e51e8']
-            }));
+            dispatch(getPosts());
             dispatch(getUserSuggestions())
             dispatch(getUserRequests())
         }

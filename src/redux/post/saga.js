@@ -10,10 +10,13 @@ import { PostSelector } from "./reducer";
 
 
 function* handleGetPosts() {
+
     yield takeLatest(GET_POSTS_START, function* ({ payload }) {
         try {
+            const { user } = yield select(state => state.auth)
+            console.log(user)
             const { page } = yield select(state => state.post)
-            const res = yield callAPi(postEndpoint.POSTS + `getAll?page=${(Number(page) + 1) || 1}&limit=20&sort=-createdAt`, POST, payload);
+            const res = yield callAPi(postEndpoint.POSTS + `getAll?page=${(Number(page) + 1) || 1}&limit=20&sort=-createdAt`, POST, payload = { postIds: [...user.following] });
             if (res && res.success) {
                 yield put(getPostsSuccess(res.data));
 
