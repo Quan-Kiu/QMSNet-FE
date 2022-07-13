@@ -15,13 +15,12 @@ export const PostWrapper = styledComponents.div`
 
     .text-content{
         margin: 1rem 0;
-        margin-bottom: 0 !important;
         white-space: pre-line;
         font-size: 2rem;
         &.collapse{
             overflow: hidden;
             text-overflow: ellipsis;
-            -webkit-line-clamp: 3;
+            -webkit-line-clamp: 5;
             display: -webkit-box;
             -webkit-box-orient: vertical;
         }
