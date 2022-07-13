@@ -14,8 +14,8 @@ const ConversationItem = ({ data }) => {
     const isOnline = onlines?.find((cv) => cv._id === data?._id);
 
     const unReadConversation = conversations?.reduce((prev, n) => {
-        if (n?.read && !(n?.read?.some((u) => u === user._id))) {
-            return [...prev, n._id]
+        if (n?.read && !(n?.read?.some((u) => u === user?._id))) {
+            return [...prev, n?._id]
         } else {
             return prev;
         }

@@ -454,11 +454,12 @@ ul,li{
 }
 
 .ant-carousel{
-    img{
+    img,video{
         min-height: 400px;
         max-height: 600px;
         object-fit: contain;
     }
+
 }
 
 

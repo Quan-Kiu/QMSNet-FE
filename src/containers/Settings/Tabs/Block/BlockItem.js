@@ -38,7 +38,7 @@ const BlockItem = ({ user, onUnBlock }) => {
                 <div className="username">{user?.username}</div>
             </Col>
             <Col>
-                {account.blocks.includes(user._id) ? <Button onClick={() => onUnBlock(user._id)} className='q-button q-button-outline'>
+                {account.blocks.includes(user?._id) ? <Button onClick={() => onUnBlock(user._id)} className='q-button q-button-outline'>
                     Hủy chặn
                 </Button> : <Button type="primary" className="q-button" onClick={() => dispatch(setUserDetail(user))} >
                     Đi tới trang cá nhân

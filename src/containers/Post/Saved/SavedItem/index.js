@@ -66,7 +66,7 @@ const SavedItem = ({ post }) => {
         <SavedItemWrapper>
             <Row gutter={[32, 32]} align="middle">
                 <Col xl={4} md={4} sm={6} sx={8}>
-                    <img className="main-image" src={post?.media && post?.media.length > 0 ? post?.media[0]?.url : post?.user?.avatar?.url} alt="logo" />
+                    <img className="main-image" src={post?.media[0]?.url.includes('/image/') ? post?.media[0]?.url : post?.user?.avatar?.url} alt="logo" />
                 </Col>
                 <Col xl={18} md={18} sm={16} sx={14}>
                     <div className="content">

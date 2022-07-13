@@ -70,7 +70,7 @@ const Post = ({ post }) => {
                         {post?.comments?.slice(
                             post.comments.length - 2,
                             post.comments.length
-                        ).map((cmt) => cmt?.user && !cmt?.user?.blocks.includes(user._id) && !user?.blocks.includes(cmt?.user?._id) && cmt?.user?.status === 'A' && <Comment comment={cmt} />)}
+                        )?.map((cmt) => cmt?.user && !cmt?.user?.blocks.includes(user?._id) && !user?.blocks.includes(cmt?.user?._id) && cmt?.user?.status === 'A' && <Comment comment={cmt} />)}
 
                     </div>
                     <CommentInput isPostUser post={post} />

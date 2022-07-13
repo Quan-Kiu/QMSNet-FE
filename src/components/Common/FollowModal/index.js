@@ -64,7 +64,7 @@ const FollowModal = ({ visible, title, setVisible, userIds }) => {
             })
         }} title={title} footer={null}>
             <div className="follows" onScroll={handleOnScrollBot}>
-                {data.users.map((user) => <Request data={user} suggestion={!account.followers.includes(user._id)} showFullName />)}
+                {data?.users?.map((user) => <Request data={user} suggestion={!account.followers.includes(user?._id)} showFullName />)}
                 <Loader loading={loading} />
             </div>
         </Modal>

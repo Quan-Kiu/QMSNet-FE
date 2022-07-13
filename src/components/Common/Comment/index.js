@@ -15,7 +15,7 @@ const Comment = (props) => {
     const { user } = useSelector((state) => state.auth)
     const { postDetail } = useSelector((state) => state.post)
     const dispatch = useDispatch();
-    const [isLiked, setIsLiked] = useState(!!props?.comment?.likes?.includes(user._id));
+    const [isLiked, setIsLiked] = useState(!!props?.comment?.likes?.includes(user?._id));
     const [isReplyShow, setIsReplyShow] = useState(() => {
         const replys = postDetail?.comments?.filter((cmt) => cmt?.reply && cmt?.reply === props?.comment?._id && cmt?.user?.status === 'A');
         const isShow = replys?.some((cmt) => cmt._id === props?.params);
@@ -32,7 +32,7 @@ const Comment = (props) => {
         }
         const data = cmt || props.comment;
         dispatch(comment({
-            link: `${data._id}/${type || (isLiked ? 'unlike' : 'like')}`, method: PATCH, isPostDetail: props?.isPostDetail
+            link: `${data?._id}/${type || (isLiked ? 'unlike' : 'like')}`, method: PATCH, isPostDetail: props?.isPostDetail
         }))
     }
 

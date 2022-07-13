@@ -25,7 +25,7 @@ axiosClient.interceptors.response.use(
     },
     (error) => {
         if (error.response.status === 401) {
-            if (window.location.pathname !== '/' && window.location.pathname !== '/signin' && window.location.pathname.includes('/forgotPassword') && window.location.pathname.includes('/verify')) {
+            if (window.location.pathname !== '/' && window.location.pathname !== '/signin' && !window.location.pathname.includes('/forgotPassword/') && !window.location.pathname.includes('/verify/')) {
                 return window.location.href = '/';
             }
         }
