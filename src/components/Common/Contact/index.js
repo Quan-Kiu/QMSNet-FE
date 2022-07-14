@@ -10,7 +10,9 @@ const Contact = props => {
     const { user } = useSelector(state => state.auth);
     const dispatch = useDispatch();
     const contact = props.data.participants.find((p) => p._id !== user?._id);
+
     return (
+
         <ContactWrapper >
             <Row className="pseudo">
                 <Col span={8}>

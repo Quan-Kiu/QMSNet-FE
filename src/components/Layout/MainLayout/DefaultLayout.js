@@ -32,7 +32,6 @@ const LayoutRoutes = () => {
     const { tabActive } = useSelector((state) => state.app);
     const { isLogin, isLogout } = useSelector(authSelector);
     const { userDetail } = useSelector((state) => state.user);
-    const { user, token } = useSelector((state) => state.auth);
     const navigate = useNavigate();
 
 

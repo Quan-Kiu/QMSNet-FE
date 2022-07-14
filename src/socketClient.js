@@ -65,12 +65,13 @@ const SocketClient = () => {
     }, [socket?.data, dispatch])
 
     useEffect(() => {
-        const friends = conversation?.conversations?.map((cv) => cv.participants?.find((p) => p._id !== auth?.user?._id)?._id);
+        const friends = conversation?.conversations?.map((cv) => cv?.participants?.find((p) => p?._id !== auth?.user?._id && !p?.blocks?.includes(auth?.user?._id) && !auth?.user?.blocks?.includes(p?._id))?._id);
         socket?.data?.emit('checkUserOnline', {
             user_id: auth?.user?._id,
             friends,
         });
         return () => socket?.data?.off('checkUserOnline');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket.data, conversation, auth?.user?._id]);
 
     useEffect(() => {
@@ -91,9 +92,10 @@ const SocketClient = () => {
     }, [socket?.data, conversation, dispatch])
     useEffect(() => {
         socket?.data?.on('checkUserOnlineToClient', ((data) => {
-            const newConversation = conversation?.conversations?.find((cv) => cv?.participants?.some((p) => p._id === data));
+            const newConversation = conversation?.conversations?.find((cv) => cv?.participants?.some((p) => p._id === data && !auth?.user?.blocks?.includes(data) && !p?.blocks.includes(auth?.user?._id)));
+            console.log(newConversation)
             if (newConversation) {
-                const isExist = online?.data?.find((cv) => cv._id === newConversation._id);
+                const isExist = online?.data?.find((cv) => cv?._id === newConversation?._id);
                 if (!isExist) {
                     const current = online?.data || [];
                     dispatch(setOnline([...current, newConversation]))
