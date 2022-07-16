@@ -42,7 +42,6 @@ const Profile = props => {
     });
     const postsRef = useRef(false);
     const params = useParams();
-    const [isShowPopover, setIsShowPopover] = useState(false);
     const [isShowReportModal, setIsShowReportModal] = useState(false);
 
 

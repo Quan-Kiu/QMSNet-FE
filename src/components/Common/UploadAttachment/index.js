@@ -1,11 +1,11 @@
-import { Col, Image, Progress, Row } from 'antd';
+import { Col, Image, message, Progress, Row, Upload } from 'antd';
 // import { imageUrl } from '../../constants/ApiUrl';
 // import { arrayToString } from '../../util/handleImage';
 import { CloseOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useState } from 'react';
 import { UploadWrapper } from './UploadAttachment.style';
-import { toMediaArr } from '../../../utils/image_utils';
+import { checkImage, toMediaArr } from '../../../utils/image_utils';
 
 const UploadAttachment = ({ onImageChange, maxCount, data }) => {
   const [preview, setPreview] = useState(false);
@@ -54,6 +54,9 @@ const UploadAttachment = ({ onImageChange, maxCount, data }) => {
         onProgress({ percent: (event.loaded / event.total) * 100 });
       }
     };
+
+
+
     fmData.append('upload_preset', 'ijubicjh');
     fmData.append('cloud_name', 'quankiu');
     fmData.append('file', file);
@@ -100,6 +103,14 @@ const UploadAttachment = ({ onImageChange, maxCount, data }) => {
       <UploadWrapper
         action="https://api.cloudinary.com/v1_1/quankiu/upload"
         listType="picture-card"
+        beforeUpload={(file) => {
+          const error = checkImage(file);
+          if (error) {
+            message.error(error)
+          }
+
+          return !error || Upload.LIST_IGNORE;
+        }}
         customRequest={uploadImage}
         itemRender={(props, file, files, actions) => {
           return <div className="media-preview">

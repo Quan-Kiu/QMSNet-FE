@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { updateProfile } from '../../../redux/auth/action';
+import { checkImage } from '../../../utils/image_utils';
 import Loader from '../Loader'
 
 const Wrapper = styled.div`
@@ -40,6 +41,9 @@ const UploadWithUpdate = () => {
   const onChange = ({ fileList: newFileList }) => {
     if (!loading) {
       setLoading(true);
+    }
+    if (!newFileList[0]?.status) {
+      setLoading(false);
     }
     if (newFileList[0]?.status === 'done') {
       dispatch(updateProfile({
@@ -99,6 +103,15 @@ const UploadWithUpdate = () => {
           <Upload
             maxCount={1}
             ref={uploadRef}
+            beforeUpload={(file) => {
+              const error = checkImage(file, true);
+              if (error) {
+                setLoading(false);
+                message.error(error)
+              }
+
+              return !error || Upload.LIST_IGNORE;
+            }}
             action="https://api.cloudinary.com/v1_1/quankiu/upload"
             listType="picture-card"
             customRequest={uploadImage}

@@ -13,29 +13,7 @@ export const PostWrapper = styledComponents.div`
 }
     
 
-    .text-content{
-        margin: 1rem 0;
-        white-space: pre-line;
-        font-size: 2rem;
-        &.collapse{
-            overflow: hidden;
-            text-overflow: ellipsis;
-            -webkit-line-clamp: 5;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-        }
-        &.with-style{
-            text-align: center;
-            word-break: break-all;
-            user-select: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height:400px;
-            padding: 3rem;
-        }
-
-    }
+    
 
 
     .post__comment{

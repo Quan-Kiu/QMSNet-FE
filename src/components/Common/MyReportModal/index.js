@@ -65,6 +65,11 @@ const MyReportModal = props => {
                 <div className="type">
                     Ghi chú: <b>{report?.resultNote}</b>
                 </div>
+                <div style={{
+                    color: 'red'
+                }}>
+                    Lưu ý: Vi phạm nội dung trên hệ thống quá 3 lần tài khoản của bạn sẽ bị khóa.
+                </div>
                 {report?.reportType?.type === 'C' && <div className="project">
                     <div className="title">
                         <b>Nội dung vi phạm</b>

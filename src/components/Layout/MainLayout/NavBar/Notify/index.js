@@ -42,7 +42,7 @@ const Notify = ({ notify }) => {
   return (
     <>
       <NotifyWrapper onClick={handleOnClick} className={`${notify?.isRead && 'isRead'}`}>
-        <Avatar size="large" src={notify?.user?.avatar?.url || 'http://res.cloudinary.com/quankiu/image/upload/v1656676441/qmedia/xuezrusaqdmu4wstb5nk.png'} />
+        <Avatar size="large" src={notify?.user?.avatar?.url || '/assets/images/QMNets.png'} />
         <div className="right">
           <div className="content" style={{
             display: 'flex',
@@ -69,7 +69,10 @@ const Notify = ({ notify }) => {
         </div>
         <Popover overlayClassName='postActions' trigger="click" content={<div className="postActions" >
           <Row onClick={(e) => {
-            dispatch(unreadNotify(notify?._id))
+            if (notify?.isRead)
+              dispatch(unreadNotify(notify?._id))
+            else
+              dispatch(readNotify(notify?._id))
             e.preventDefault()
             e.stopPropagation()
           }}>
@@ -77,7 +80,7 @@ const Notify = ({ notify }) => {
               <CheckOutlined />
             </Col>
             <Col>
-              Đánh dấu chưa đọc
+              {notify?.isRead ? 'Đánh dấu là chưa đọc' : 'Đánh dấu là đã đọc'}
             </Col>
           </Row>
           <Row onClick={(e) => {

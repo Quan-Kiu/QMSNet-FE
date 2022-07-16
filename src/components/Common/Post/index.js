@@ -53,7 +53,7 @@ const Post = ({ post }) => {
                     <div style={{
                         background: post?.styles?.background,
                         color: post?.styles?.color,
-                    }} className={`text-content ${!readMore && 'collapse'}  ${post?.styles?.background !== "#ffffff" && 'with-style'}`} >
+                    }} className={`text-content ${!readMore && post?.styles?.background === "#ffffff" && 'collapse'}  ${post?.styles?.background !== "#ffffff" && 'with-style'}`} >
                         {post?.content}
                     </div>
                     {!readMore && (post?.content?.split('\n') || [])?.length > 3 && <span onClick={() => {

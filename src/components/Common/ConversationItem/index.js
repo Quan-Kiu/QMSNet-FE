@@ -8,6 +8,7 @@ import { ImageIcon, LikeIcon } from '../../../assets/icon'
 import { authSelector } from '../../../redux/auth/reducer'
 import { addMessage, deleteConversation, getMessage, toggleConversation } from '../../../redux/conversation/action'
 import { setUserDetail, userBlock } from '../../../redux/user/action'
+import { checkImage } from '../../../utils/image_utils'
 import BlockBtn from '../BlockBtn'
 import ChooseEmoji from '../ChooseEmoji'
 import ConfirmModal from '../ConfirmModal'
@@ -55,16 +56,13 @@ const ConversationItem = props => {
 
 
     const handleOnFileChange = async (e) => {
-        const files = e.target.files;
-        if (files.length === 0) {
-            return message.error('Vui lòng chọn file');
+        const file = e.target.files[0];
+
+        const error = checkImage(file);
+
+        if (error) {
+            return message.error(error)
         }
-        const file = files[0];
-        if (
-            file.type !== 'image/jpeg' &&
-            file.type !== 'image/png'
-        )
-            return 'File của bạn không hợp lệ.';
 
         setMediaLoading(true);
 

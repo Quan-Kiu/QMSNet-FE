@@ -118,7 +118,7 @@ const DefaultLayout = (props) => {
 
         <Modal onCancel={() => {
             dispatch(setReportModal(null));
-        }} centered={true} destroyOnClose={true} visible={reportModal} footer={null} title={"Thông báo vi phạm"}>
+        }} centered={true} destroyOnClose={true} width={800} visible={reportModal} footer={null} title={"Thông báo vi phạm"}>
             <MyReportModal id={reportModal} />
         </Modal>
 
