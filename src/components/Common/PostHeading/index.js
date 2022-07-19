@@ -107,6 +107,7 @@ const PostHeading = ({ post, style, hiddenAction }) => {
                                         dispatch(postAction({
                                             type: 'disableComment',
                                             id: post?._id,
+                                            isPostDetail: true,
                                         }))
                                     }}>
                                         <Col>

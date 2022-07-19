@@ -102,7 +102,7 @@ const Search = () => {
                     }}>Xoá tất cả</div>
                 </div>
                 <div className="search-history-list">
-                    {searchs.length > 0 && !isLoading && searchs.map((s, index) => <SearchItem onClick={() => onSearchItemClick(s)} key={index} user={s} />)}
+                    {searchs.length > 0 && !isLoading && searchs.map((s, index) => <SearchItem onClick={() => onSearchItemClick(s)} key={s?._id || index} user={s} />)}
                     {searchs.length === 0 && searchHistory?.length > 0 && searchHistory.map((user, index) => <SearchHistory position={index} key={user?._id || index} user={user} />)}
                     {isLoading && <Spin className="search-loading" indicator={antIcon} />}
                 </div>

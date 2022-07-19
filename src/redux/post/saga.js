@@ -16,7 +16,7 @@ function* handleGetPosts() {
             const { user } = yield select(state => state.auth)
             const { page } = yield select(state => state.post)
             const idSelect = user ? user?.following : [];
-            const res = yield callAPi(postEndpoint.POSTS + `getAll?page=${(Number(page) + 1) || 1}&limit=10&sort=-createdAt`, POST, payload = { postIds: idSelect });
+            const res = yield callAPi(postEndpoint.POSTS + `getAll?page=${(Number(page) + 1) || 1}&limit=5&sort=-createdAt`, POST, payload = { postIds: idSelect });
             if (res && res.success) {
                 yield put(getPostsSuccess(res.data));
 
