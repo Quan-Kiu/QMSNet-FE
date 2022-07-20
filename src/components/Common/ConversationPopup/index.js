@@ -106,7 +106,7 @@ const ConversationPopup = props => {
             </Row>
 
             <Form.Item className='search' name="conversation" label={'Đến'}>
-              <Input onChange={handleFilterChange}></Input>
+              <Input autoFocus={true} onChange={handleFilterChange}></Input>
             </Form.Item>
 
           </div>
