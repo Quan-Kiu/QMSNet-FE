@@ -83,7 +83,7 @@ const Information = props => {
             <Input size="large"></Input>
           </Form.Item>
           <Form.Item label="Ngày sinh" name="dob">
-            <DatePicker size="large" defaultValue={user?.dob ? moment(user?.dob) : null} style={{
+            <DatePicker placeholder="Sinh nhật" size="large" defaultValue={user?.dob ? moment(user?.dob) : null} style={{
               width: '100%'
             }} dropdownClassName="q-date-picker" format={'DD/MM/YYYY'} />
           </Form.Item>
