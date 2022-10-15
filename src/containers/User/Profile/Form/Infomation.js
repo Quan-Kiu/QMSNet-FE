@@ -54,7 +54,6 @@ label{
     }   
   }
 `;
-
 const Information = props => {
   const dispatch = useDispatch();
   const { user, loading } = useSelector(authSelector);
